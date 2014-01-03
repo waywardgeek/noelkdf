@@ -67,6 +67,7 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
     uint64 *threadKeys = (uint64 *)malloc(NUM_THREADS*THREAD_KEY_SIZE);
     PBKDF2_SHA256(in, inlen, salt, saltlen, 1, (uint8 *)(void *)threadKeys, NUM_THREADS*THREAD_KEY_SIZE);
     // Note: here is where we should clear the password, but the const qualifier forbids it
+    // memset(in, '\0', inlen); // It's a good idea to clear the password ASAP!
     pthread_t threads[NUM_THREADS];
     struct ContextStruct c[NUM_THREADS];
     int rc;
