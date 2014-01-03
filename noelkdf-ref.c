@@ -14,6 +14,7 @@ struct ContextStruct {
     const uint8 *salt;
     uint32 saltSize;
     uint32 numPages;
+    uint32 cpuWorkMultiplier;
 };
 
 // Hash the next page.
@@ -34,23 +35,26 @@ static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
     uint64 *mem = c->mem;
 
-    // Initialize first page
-    PBKDF2_SHA256((uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE, c->salt, c->saltSize, 1,
-        (uint8 *)(void *)mem, PAGE_LENGTH*sizeof(uint64));
+    while(c->cpuWorkMultiplier--) {
+        // Initialize first page
+        PBKDF2_SHA256((uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE, c->salt, c->saltSize, 1,
+            (uint8 *)(void *)mem, PAGE_LENGTH*sizeof(uint64));
 
-    // Create pages sequentially by hashing the previous page with a random page.
-    uint64 i;
-    uint64 *toPage = mem + PAGE_LENGTH, *fromPage, *prevPage = mem;
-    for(i = 1; i < c->numPages; i++) {
-        // Select a random from page
-        fromPage = mem + PAGE_LENGTH*(*prevPage % i);
-        hashPage(toPage, prevPage, fromPage);
-        prevPage = toPage;
-        toPage += PAGE_LENGTH;
+        // Create pages sequentially by hashing the previous page with a random page.
+        uint64 i;
+        uint64 *toPage = mem + PAGE_LENGTH, *fromPage, *prevPage = mem;
+        for(i = 1; i < c->numPages; i++) {
+            // Select a random from page
+            fromPage = mem + PAGE_LENGTH*(*prevPage % i);
+            hashPage(toPage, prevPage, fromPage);
+            prevPage = toPage;
+            toPage += PAGE_LENGTH;
+        }
+
+        // Hash the last page over the thread key
+        PBKDF2_SHA256((uint8 *)(void *)prevPage, PAGE_LENGTH*sizeof(uint64), c->salt, c->saltSize, 1,
+            (uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE);
     }
-    // Hash the last page over the thread key
-    PBKDF2_SHA256((uint8 *)(void *)prevPage, PAGE_LENGTH*sizeof(uint64), c->salt, c->saltSize, 1,
-        (uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE);
     pthread_exit(NULL);
 }
 
@@ -73,6 +77,7 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
         c[t].salt = salt;
         c[t].saltSize = saltlen;
         c[t].threadKey = threadKeys + t*THREAD_KEY_LENGTH;
+        c[t].cpuWorkMultiplier = t_cost;
         rc = pthread_create(&threads[t], NULL, hashMem, (void *)(c + t));
         if (rc){
             fprintf(stderr, "Unable to start threads\n");
