@@ -1,5 +1,5 @@
 // This file simply fills 2GB of RAM with no hashing.  It's a useful benchmark for
-// keystretch, which hopefully should aproach this speed.
+// noelkdf, which hopefully should aproach this speed.
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
