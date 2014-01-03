@@ -8,6 +8,7 @@ typedef unsigned long long uint64;
 #define NUM_THREADS 2
 #define PAGE_LENGTH ((16*1024)/sizeof(uint64)) // 16KB
 #define THREAD_KEY_SIZE 256 // In bytes
+#define THREAD_KEY_LENGTH (THREAD_KEY_SIZE/sizeof(uint64)) // In bytes
 
 // This is the prototype required for the password hashing competition.
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.

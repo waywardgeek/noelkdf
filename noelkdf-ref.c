@@ -10,10 +10,10 @@
 
 struct ContextStruct {
     uint64 *mem;
+    uint64 *threadKey;
     const uint8 *salt;
     uint32 saltSize;
     uint32 numPages;
-    uint8 *threadKey;
 };
 
 // Hash the next page.
@@ -35,7 +35,7 @@ static void *hashMem(void *contextPtr) {
     uint64 *mem = c->mem;
 
     // Initialize first page
-    PBKDF2_SHA256(c->threadKey, THREAD_KEY_SIZE, c->salt, c->saltSize, 1,
+    PBKDF2_SHA256((uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE, c->salt, c->saltSize, 1,
         (uint8 *)(void *)mem, PAGE_LENGTH*sizeof(uint64));
 
     // Create pages sequentially by hashing the previous page with a random page.
@@ -48,7 +48,9 @@ static void *hashMem(void *contextPtr) {
         prevPage = toPage;
         toPage += PAGE_LENGTH;
     }
-    printf("%llu\n", mem[rand() % (c->numPages*PAGE_LENGTH)]);
+    // Hash the last page over the thread key
+    PBKDF2_SHA256((uint8 *)(void *)prevPage, PAGE_LENGTH*sizeof(uint64), c->salt, c->saltSize, 1,
+        (uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE);
     pthread_exit(NULL);
 }
 
@@ -58,8 +60,8 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
         unsigned int t_cost, unsigned int m_cost) {
     uint32 numPages = m_cost*(1LL << 20)/(NUM_THREADS*PAGE_LENGTH*sizeof(uint64));
     uint64 *mem = (uint64 *)malloc(numPages*PAGE_LENGTH*NUM_THREADS*sizeof(uint64));
-    uint8 *threadKeys = (uint8 *)malloc(NUM_THREADS*THREAD_KEY_SIZE);
-    PBKDF2_SHA256(in, inlen, salt, saltlen, 1, threadKeys, NUM_THREADS*THREAD_KEY_SIZE);
+    uint64 *threadKeys = (uint64 *)malloc(NUM_THREADS*THREAD_KEY_SIZE);
+    PBKDF2_SHA256(in, inlen, salt, saltlen, 1, (uint8 *)(void *)threadKeys, NUM_THREADS*THREAD_KEY_SIZE);
     // Note: here is where we should clear the password, but the const qualifier forbids it
     pthread_t threads[NUM_THREADS];
     struct ContextStruct c[NUM_THREADS];
@@ -70,7 +72,7 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
         c[t].numPages = numPages;
         c[t].salt = salt;
         c[t].saltSize = saltlen;
-        c[t].threadKey = threadKeys + t*THREAD_KEY_SIZE;
+        c[t].threadKey = threadKeys + t*THREAD_KEY_LENGTH;
         rc = pthread_create(&threads[t], NULL, hashMem, (void *)(c + t));
         if (rc){
             fprintf(stderr, "Unable to start threads\n");
@@ -81,5 +83,7 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
     for(t = 0; t < NUM_THREADS; t++) {
         (void)pthread_join(threads[t], NULL);
     }
+    PBKDF2_SHA256((uint8 *)(void *)threadKeys, NUM_THREADS*THREAD_KEY_SIZE, c->salt, c->saltSize, 1,
+        out, outlen);
     return 0;
 }
