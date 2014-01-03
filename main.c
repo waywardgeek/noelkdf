@@ -130,7 +130,7 @@ int main(int argc, char **argv) {
     readArguments(argc, argv, &derivedKeySize, &password, &passwordSize, &salt, &saltSize, &cpuWorkMultiplier, &memorySize);
     verifyParameters(cpuWorkMultiplier, memorySize, derivedKeySize, saltSize, passwordSize);
     uint8 *derivedKey = (uint8 *)calloc(derivedKeySize, sizeof(uint8));
-    if(!PHS(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize, cpuWorkMultiplier, memorySize)) {
+    if(PHS(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize, cpuWorkMultiplier, memorySize)) {
         fprintf(stderr, "Key stretching failed.\n");
         return 1;
     }
