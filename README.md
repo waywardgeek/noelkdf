@@ -37,3 +37,11 @@ of say from 128 to 256 bits.  When we see the stop parameter matches a thread ke
 would stop hashing.  This has not been implemented, but it is an intended mode of the
 algorithm.  This could be particularly usefule for TrueCrypt or any other tool which
 supports deniability.
+
+License
+-------
+
+I, Bill Cox, place this code into the public domain.  There are no hidden back-doors or
+intentional weaknesses, and I blieve it violates no patents.  I will file no patents on
+any material in this project.  I have included sha.c and sha.h which I copied from the
+scrypt project, and which is available through the BSD license.
