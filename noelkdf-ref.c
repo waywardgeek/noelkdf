@@ -46,9 +46,11 @@ static void *hashMem(void *contextPtr) {
     // Create pages sequentially by hashing the previous page with a random page.
     uint32 i;
     uint32 *toPage = mem + PAGE_LENGTH, *fromPage, *prevPage = mem;
+    uint32 fromAddress = mem[1];
     for(i = 1; i < c->numPages; i++) {
         // Select a random from page
-        fromPage = mem + PAGE_LENGTH*(*prevPage % i);
+        fromAddress ^= prevPage[fromAddress % PAGE_LENGTH];
+        fromPage = mem + PAGE_LENGTH*(fromAddress % i);
         hashPage(toPage, prevPage, fromPage);
         prevPage = toPage;
         toPage += PAGE_LENGTH;
