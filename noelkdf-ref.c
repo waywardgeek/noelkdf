@@ -8,8 +8,6 @@
 #include "sha256.h"
 #include "noelkdf.h"
 
-FILE *outFile;
-
 struct ContextStruct {
     uint32 *mem;
     uint32 *threadKey;
@@ -22,17 +20,14 @@ struct ContextStruct {
 static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage) {
     uint32 i;
     *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage - 1 + PAGE_LENGTH));
-    fprintf(outFile, "%u\n", *(toPage-1));
     prevPage++;
     fromPage++;
     for(i = 1; i < PAGE_LENGTH - 1; i++) {
         *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage - 1));
-        fprintf(outFile, "%u\n", *(toPage-1));
         prevPage++;
         fromPage++;
     }
     *toPage = *prevPage + ((*fromPage * *(prevPage + 1 - PAGE_LENGTH)) ^ *(fromPage - 1));
-    fprintf(outFile, "%u\n", *toPage);
 }
 
 static void *hashMem(void *contextPtr) {
@@ -66,7 +61,6 @@ static void *hashMem(void *contextPtr) {
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.
 int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost) {
-    outFile = fopen("foo", "w");
     uint32 numPages = m_cost*(1LL << 20)/(NUM_THREADS*PAGE_LENGTH*sizeof(uint32));
     uint32 *mem = (uint32 *)malloc(numPages*PAGE_LENGTH*NUM_THREADS*sizeof(uint32));
     PBKDF2_SHA256(in, inlen, salt, saltlen, 2048, out, outlen);
@@ -98,6 +92,5 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
         }
         PBKDF2_SHA256((uint8 *)(void *)threadKeys, NUM_THREADS*THREAD_KEY_SIZE, salt, saltlen, 1, out, outlen);
     }
-    fclose(outFile);
     return 0;
 }
