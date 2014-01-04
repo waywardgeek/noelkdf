@@ -9,16 +9,16 @@
 #include "noelkdf.h"
 
 struct ContextStruct {
-    uint64 *mem;
-    uint64 *threadKey;
+    uint32 *mem;
+    uint32 *threadKey;
     const uint8 *salt;
     uint32 saltSize;
     uint32 numPages;
 };
 
 // Hash the next page.
-static inline void hashPage(uint64 *toPage, uint64 *prevPage, uint64 *fromPage) {
-    uint64 i;
+static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage) {
+    uint32 i;
     *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage - 1 + PAGE_LENGTH));
     prevPage++;
     fromPage++;
@@ -32,15 +32,16 @@ static inline void hashPage(uint64 *toPage, uint64 *prevPage, uint64 *fromPage) 
 
 static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
-    uint64 *mem = c->mem;
+    uint32 *mem = c->mem;
 
+    printf("mem size: %lu\n", PAGE_LENGTH*sizeof(uint32)*c->numPages);
     // Initialize first page
     PBKDF2_SHA256((uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE, c->salt, c->saltSize, 1,
-        (uint8 *)(void *)mem, PAGE_LENGTH*sizeof(uint64));
+        (uint8 *)(void *)mem, PAGE_LENGTH*sizeof(uint32));
 
     // Create pages sequentially by hashing the previous page with a random page.
-    uint64 i;
-    uint64 *toPage = mem + PAGE_LENGTH, *fromPage, *prevPage = mem;
+    uint32 i;
+    uint32 *toPage = mem + PAGE_LENGTH, *fromPage, *prevPage = mem;
     for(i = 1; i < c->numPages; i++) {
         // Select a random from page
         fromPage = mem + PAGE_LENGTH*(*prevPage % i);
@@ -50,7 +51,7 @@ static void *hashMem(void *contextPtr) {
     }
 
     // Hash the last page over the thread key
-    PBKDF2_SHA256((uint8 *)(void *)prevPage, PAGE_LENGTH*sizeof(uint64), c->salt, c->saltSize, 1,
+    PBKDF2_SHA256((uint8 *)(void *)prevPage, PAGE_LENGTH*sizeof(uint32), c->salt, c->saltSize, 1,
         (uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE);
     pthread_exit(NULL);
 }
@@ -59,12 +60,12 @@ static void *hashMem(void *contextPtr) {
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.
 int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost) {
-    uint32 numPages = m_cost*(1LL << 20)/(NUM_THREADS*PAGE_LENGTH*sizeof(uint64));
-    uint64 *mem = (uint64 *)malloc(numPages*PAGE_LENGTH*NUM_THREADS*sizeof(uint64));
+    uint32 numPages = m_cost*(1LL << 20)/(NUM_THREADS*PAGE_LENGTH*sizeof(uint32));
+    uint32 *mem = (uint32 *)malloc(numPages*PAGE_LENGTH*NUM_THREADS*sizeof(uint32));
     PBKDF2_SHA256(in, inlen, salt, saltlen, 2048, out, outlen);
     // Note: here is where we should clear the password, but the const qualifier forbids it
     // memset(in, '\0', inlen); // It's a good idea to clear the password ASAP!
-    uint64 *threadKeys = (uint64 *)malloc(NUM_THREADS*THREAD_KEY_SIZE);
+    uint32 *threadKeys = (uint32 *)malloc(NUM_THREADS*THREAD_KEY_SIZE);
     int i;
     for(i = 0; i < t_cost; i++) {
         PBKDF2_SHA256(out, outlen, salt, saltlen, 1, (uint8 *)(void *)threadKeys, NUM_THREADS*THREAD_KEY_SIZE);
