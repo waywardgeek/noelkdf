@@ -92,7 +92,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
 
     // Allocate memory
     uint32 pageLength = (page_size << 10)/sizeof(uint32);
-    uint32 numPages = m_cost*(1LL << 20)/(num_threads*pageLength*sizeof(uint32));
+    uint32 numPages = m_cost*(1LL << 20)/(num_threads*pageLength*sizeof(uint32)) + 1;
     uint32 *mem = (uint32 *)malloc(numPages*pageLength*num_threads*sizeof(uint32));
     pthread_t *threads = (pthread_t *)malloc(num_threads*sizeof(pthread_t));
     uint32 *threadKeys = (uint32 *)malloc(num_threads*THREAD_KEY_SIZE);
