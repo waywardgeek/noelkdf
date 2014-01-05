@@ -25,24 +25,6 @@ struct ContextStruct {
     uint32 parallelism;
 };
 
-/*
-// Hash the next page.
-#define PAGE_LENGTH 4096
-static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
-        uint32 pageLength, uint32 parallelism) {
-    *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage - 1 + PAGE_LENGTH));
-    prevPage++;
-    fromPage++;
-    uint32 i;
-    for(i = 1; i < PAGE_LENGTH - 1; i++) {
-        *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage - 1));
-        prevPage++;
-        fromPage++;
-    }
-    *toPage = *prevPage + ((*fromPage * *(prevPage + 1 - PAGE_LENGTH)) ^ *(fromPage - 1));
-}
-*/
-
 // Hash the next page.
 static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
         uint32 pageLength, uint32 parallelism) {
@@ -162,5 +144,5 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.
 int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost) {
-    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 8, 2, 4096, 0);
+    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 64, 2, 4096, 0);
 }
