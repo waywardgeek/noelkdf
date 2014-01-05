@@ -169,14 +169,16 @@ static void verifyParameters(uint32 cpuWorkMultiplier, uint64 memorySize, uint32
     }
 }
 
-// Dump memory in dieharder input format.
+// Dump memory in dieharder input format.  We skip numToSkip KB of initial memory since it
+// may not be very random yet.
 static void dumpMemory(uint32 *mem, uint32 memorySize) {
     uint64 memoryLength = (1LL << 20)*memorySize/sizeof(uint32);
+    uint32 numToSkip = memoryLength >> 7;
     printf("type: d\n"
         "count: %llu\n"
-        "numbit: 32\n", memoryLength);
+        "numbit: 32\n", memoryLength - numToSkip);
     uint32 i;
-    for(i = 0; i < memoryLength; i++) {
+    for(i = numToSkip; i < memoryLength; i++) {
         printf("%u\n", mem[i]);
     }
 }
