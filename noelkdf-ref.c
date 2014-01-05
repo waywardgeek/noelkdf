@@ -33,7 +33,7 @@ static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
     *toPage = 0; // In case parallism == 1, and we try to read *toPage before it's written
     uint32 i;
     for(i = 0; i < numSequences; i++) {
-        uint32 *fromSequence = fromPage + parallelism*(sequenceAddr % numSequences);
+        uint32 *fromSequence = fromPage + parallelism*(sequenceAddr & (numSequences-1));
         sequenceAddr ^= *fromSequence;
         uint32 j;
         for(j = 0; j < parallelism; j++) {

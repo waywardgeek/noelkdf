@@ -143,10 +143,22 @@ static void verifyParameters(uint32 cpuWorkMultiplier, uint64 memorySize, uint32
         usage("page_size must be >= 1");
     }
     if(parallelism < 1 || ((1024*pageSize)/parallelism)*parallelism != 1024*pageSize) {
-        usage("parallelism must divide page_size evenly");
+        usage("parallelism must be >= 1");
     }
     if(numThreads < 1) {
         usage("num_threads must be >= 1");
+    }
+    while((pageSize & 1) == 0) {
+        pageSize >>= 1;
+    }
+    if(pageSize != 1) {
+        usage("page_size must be a power of 2");
+    }
+    while((parallelism & 1) == 0) {
+        parallelism >>= 1;
+    }
+    if(parallelism != 1) {
+        usage("parallelism must be a power of 2");
     }
 }
 
