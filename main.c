@@ -16,14 +16,18 @@ static void usage(char *format, ...) {
     va_start(ap, format);
     vfprintf(stderr, (char *)format, ap);
     va_end(ap);
-    fprintf(stderr, "\nUsage: noelkdf outlen password salt t_cost m_cost num_hash_rounds parallelism num_threads page_size\n"
+    fprintf(stderr, "\nUsage: noelkdf outlen password salt t_cost m_cost num_hash_rounds +\n"
+        "        parallelism num_threads page_size free_memory dump\n"
         "    outlen is the output derived key in bytes\n"
         "    t_cost is an integer multiplier CPU work\n"
         "    m_cost is the ammount of memory to use in MB\n"
         "    num_hash_rounds is the number of SHA256 hashes used to derive the intermediate key\n"
         "    parallelism is the number of inner loops that can be run in parallel\n"
         "    num_threads is the number of threads used in hashing\n"
-        "    page_size is the length of memory hashed in the inner loop, in KB\n");
+        "    page_size is the length of memory hashed in the inner loop, in KB\n"
+        "    when free_memory is non-zero, we free hashed memory before exiting\n"
+        "    when dump is non-zero, write to stdout dieharder input.  Use like:\n"
+        "        dieharder -a -g 202 -f foo\n");
     exit(1);
 }
 
@@ -101,8 +105,9 @@ static void printHex(
 
 static void readArguments(int argc, char **argv, uint32 *derivedKeySize, char **password, uint32 *passwordSize,
         uint8 **salt, uint32 *saltSize, uint32 *cpuWorkMultiplier, uint32 *memorySize,
-        uint32 *numHashRounds, uint32 *parallelism, uint32 *numThreads, uint32 *pageSize) {
-    if(argc != 10) {
+        uint32 *numHashRounds, uint32 *parallelism, uint32 *numThreads, uint32 *pageSize,
+        bool *freeMemory, bool *dump) {
+    if(argc != 12) {
         usage("Incorrect number of arguments");
     }
     *derivedKeySize = readUint32(argv, 1);
@@ -115,6 +120,8 @@ static void readArguments(int argc, char **argv, uint32 *derivedKeySize, char **
     *parallelism = readUint32(argv, 7);
     *numThreads = readUint32(argv, 8);
     *pageSize = readUint32(argv, 9);
+    *freeMemory = readUint32(argv, 10);
+    *dump = readUint32(argv, 11);
 }
 
 // Verify the input parameters are reasonalble.
@@ -162,24 +169,42 @@ static void verifyParameters(uint32 cpuWorkMultiplier, uint64 memorySize, uint32
     }
 }
 
+// Dump memory in dieharder input format.
+static void dumpMemory(uint32 *mem, uint32 memorySize) {
+    uint64 memoryLength = (1LL << 20)*memorySize/sizeof(uint32);
+    printf("type: d\n"
+        "count: %llu\n"
+        "numbit: 32\n", memoryLength);
+    uint32 i;
+    for(i = 0; i < memoryLength; i++) {
+        printf("%u\n", mem[i]);
+    }
+}
+
 int main(int argc, char **argv) {
     uint32 memorySize;
     uint32 cpuWorkMultiplier, derivedKeySize, saltSize, passwordSize;
     uint32 numHashRounds, parallelism, numThreads, pageSize;
     uint8 *salt;
     char *password;
+    bool freeMemory, dump;
     readArguments(argc, argv, &derivedKeySize, &password, &passwordSize, &salt, &saltSize, &cpuWorkMultiplier, &memorySize,
-        &numHashRounds, &parallelism, &numThreads, &pageSize);
+        &numHashRounds, &parallelism, &numThreads, &pageSize, &freeMemory, &dump);
     verifyParameters(cpuWorkMultiplier, memorySize, derivedKeySize, saltSize, passwordSize,
         numHashRounds, parallelism, numThreads, pageSize);
     uint8 *derivedKey = (uint8 *)calloc(derivedKeySize, sizeof(uint8));
+    uint32 *mem;
     if(NoelKDF(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize, cpuWorkMultiplier, memorySize,
-            numHashRounds, parallelism, numThreads, pageSize, true)) {
+            numHashRounds, parallelism, numThreads, pageSize, true, dump || !freeMemory, &mem)) {
         fprintf(stderr, "Key stretching failed.\n");
         return 1;
     }
-    printHex(derivedKey, derivedKeySize);
-    printf("\n");
+    if(!dump) {
+        printHex(derivedKey, derivedKeySize);
+        printf("\n");
+    } else {
+        dumpMemory(mem, memorySize);
+    }
     memset(derivedKey, '\0', derivedKeySize*sizeof(uint8));
     free(derivedKey);
     return 0;

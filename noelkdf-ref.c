@@ -84,9 +84,11 @@ static void *hashMem(void *contextPtr) {
 //  parallelism     - number of inner loops allowed to run in parallel - should match
 //                    user's machine for best protection
 //  clear_in        - when true, overwrite the in buffer with 0's early on
+//  return_memory   - when true, the hash data stored in memory is returned without being
+//                    freed in the memPtr variable
 int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned int parallelism,
-        unsigned int num_threads, unsigned int page_size, int clear_in) {
+        unsigned int num_threads, unsigned int page_size, int clear_in, int return_memory, uint32 **memPtr) {
 
     // Allocate memory
     uint32 pageLength = (page_size << 10)/sizeof(uint32);
@@ -140,10 +142,14 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
     }
 
     // Free memory.  The optimized version should try to insure that memory is cleared.
-    //free(mem);
-    //free(threads);
-    //free(threadKeys);
-    //free(c);
+    free(threads);
+    free(threadKeys);
+    free(c);
+    if(return_memory) {
+        *memPtr = mem;
+    } else {
+        free(mem);
+    }
     return 0;
 }
 
@@ -151,5 +157,5 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.
 int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost) {
-    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 64, 2, 4096, 0);
+    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 64, 2, 4096, 0, 0, NULL);
 }
