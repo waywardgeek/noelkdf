@@ -73,18 +73,19 @@ static void *hashMem(void *contextPtr) {
 
 // This version allows for some more options than PHS.  They are:
 //  num_threads     - the number of threads to run in parallel
-//  page_length     - length of memory blocks hashed at a time
+//  page_size     - length of memory blocks hashed at a time
 //  num_hash_rounds - number of SHA256 rounds to compute the intermediate key
 //  parallelism     - number of inner loops allowed to run in parallel - should match
 //                    user's machine for best protection
 //  clear_in        - when true, overwrite the in buffer with 0's early on
 int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, size_t saltlen,
-        unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned
-        int parallelism, unsigned int num_threads, unsigned int page_length, int clear_in) {
+        unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned int parallelism,
+        unsigned int num_threads, unsigned int page_size, int clear_in) {
 
     // Allocate memory
-    uint32 numPages = m_cost*(1LL << 20)/(num_threads*page_length*sizeof(uint32));
-    uint32 *mem = (uint32 *)malloc(numPages*page_length*num_threads*sizeof(uint32));
+    uint32 pageLength = (page_size << 10)/sizeof(uint32);
+    uint32 numPages = m_cost*(1LL << 20)/(num_threads*pageLength*sizeof(uint32));
+    uint32 *mem = (uint32 *)malloc(numPages*pageLength*num_threads*sizeof(uint32));
     pthread_t *threads = (pthread_t *)malloc(num_threads*sizeof(pthread_t));
     uint32 *threadKeys = (uint32 *)malloc(num_threads*THREAD_KEY_SIZE);
     struct ContextStruct *c = (struct ContextStruct *)malloc(num_threads*sizeof(struct ContextStruct));
@@ -112,12 +113,12 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
         // Launch threads.  Each hashes it's own separate block of memory, which improves performance.
         uint32 t;
         for(t = 0; t < num_threads; t++) {
-            c[t].mem = mem + t*numPages*page_length;
+            c[t].mem = mem + t*numPages*pageLength;
             c[t].numPages = numPages;
             c[t].salt = salt;
             c[t].saltSize = saltlen;
             c[t].threadKey = threadKeys + t*THREAD_KEY_LENGTH;
-            c[t].pageLength = page_length;
+            c[t].pageLength = pageLength;
             c[t].parallelism = parallelism;
             int rc = pthread_create(&threads[t], NULL, hashMem, (void *)(c + t));
             if (rc){

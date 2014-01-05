@@ -16,10 +16,14 @@ static void usage(char *format, ...) {
     va_start(ap, format);
     vfprintf(stderr, (char *)format, ap);
     va_end(ap);
-    fprintf(stderr, "\nUsage: phs_keystretch outlen password salt t_cost m_cost\n"
+    fprintf(stderr, "\nUsage: noelkdf outlen password salt t_cost m_cost num_hash_rounds parallelism num_threads page_size\n"
         "    outlen is the output derived key in bytes\n"
         "    t_cost is an integer multiplier CPU work\n"
-        "    m_cost is the ammount of memory to use in MB\n");
+        "    m_cost is the ammount of memory to use in MB\n"
+        "    num_hash_rounds is the number of SHA256 hashes used to derive the intermediate key\n"
+        "    parallelism is the number of inner loops that can be run in parallel\n"
+        "    num_threads is the number of threads used in hashing\n"
+        "    page_size is the length of memory hashed in the inner loop, in KB\n");
     exit(1);
 }
 
@@ -96,8 +100,9 @@ static void printHex(
 }
 
 static void readArguments(int argc, char **argv, uint32 *derivedKeySize, char **password, uint32 *passwordSize,
-        uint8 **salt, uint32 *saltSize, uint32 *cpuWorkMultiplier, uint64 *memorySize) {
-    if(argc != 6) {
+        uint8 **salt, uint32 *saltSize, uint32 *cpuWorkMultiplier, uint32 *memorySize,
+        uint32 *numHashRounds, uint32 *parallelism, uint32 *numThreads, uint32 *pageSize) {
+    if(argc != 10) {
         usage("Incorrect number of arguments");
     }
     *derivedKeySize = readUint32(argv, 1);
@@ -106,11 +111,16 @@ static void readArguments(int argc, char **argv, uint32 *derivedKeySize, char **
     *salt = readHexSalt(argv[3], saltSize);
     *cpuWorkMultiplier = readUint32(argv, 4);
     *memorySize = readUint32(argv, 5); // Number of MB
+    *numHashRounds = readUint32(argv, 6);
+    *parallelism = readUint32(argv, 7);
+    *numThreads = readUint32(argv, 8);
+    *pageSize = readUint32(argv, 9);
 }
 
 // Verify the input parameters are reasonalble.
 static void verifyParameters(uint32 cpuWorkMultiplier, uint64 memorySize, uint32
-        derivedKeySize, uint32 saltSize, uint32 passwordSize) {
+        derivedKeySize, uint32 saltSize, uint32 passwordSize,
+        uint32 numHashRounds, uint32 parallelism, uint32 numThreads, uint32 pageSize) {
     if(cpuWorkMultiplier < 1 || cpuWorkMultiplier > (1 << 20)) {
         usage("Invalid hashing multipler");
     }
@@ -126,17 +136,33 @@ static void verifyParameters(uint32 cpuWorkMultiplier, uint64 memorySize, uint32
     if(passwordSize == 0) {
         usage("Invalid password size");
     }
+    if(numHashRounds < 1) {
+        usage("num_hash_rounds must be >= 1");
+    }
+    if(pageSize < 1) {
+        usage("page_size must be >= 1");
+    }
+    if(parallelism < 1 || ((1024*pageSize)/parallelism)*parallelism != 1024*pageSize) {
+        usage("parallelism must divide page_size evenly");
+    }
+    if(numThreads < 1) {
+        usage("num_threads must be >= 1");
+    }
 }
 
 int main(int argc, char **argv) {
-    uint64 memorySize;
+    uint32 memorySize;
     uint32 cpuWorkMultiplier, derivedKeySize, saltSize, passwordSize;
+    uint32 numHashRounds, parallelism, numThreads, pageSize;
     uint8 *salt;
     char *password;
-    readArguments(argc, argv, &derivedKeySize, &password, &passwordSize, &salt, &saltSize, &cpuWorkMultiplier, &memorySize);
-    verifyParameters(cpuWorkMultiplier, memorySize, derivedKeySize, saltSize, passwordSize);
+    readArguments(argc, argv, &derivedKeySize, &password, &passwordSize, &salt, &saltSize, &cpuWorkMultiplier, &memorySize,
+        &numHashRounds, &parallelism, &numThreads, &pageSize);
+    verifyParameters(cpuWorkMultiplier, memorySize, derivedKeySize, saltSize, passwordSize,
+        numHashRounds, parallelism, numThreads, pageSize);
     uint8 *derivedKey = (uint8 *)calloc(derivedKeySize, sizeof(uint8));
-    if(PHS(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize, cpuWorkMultiplier, memorySize)) {
+    if(NoelKDF(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize, cpuWorkMultiplier, memorySize,
+            numHashRounds, parallelism, numThreads, pageSize, true)) {
         fprintf(stderr, "Key stretching failed.\n");
         return 1;
     }
