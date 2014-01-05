@@ -3,25 +3,37 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <stdbool.h>
 #include <pthread.h>
 #include "sha256.h"
 #include "noelkdf.h"
+
+typedef unsigned char uint8;
+typedef unsigned short uint16;
+typedef unsigned int uint32;
+typedef unsigned long long uint64;
+
+#define THREAD_KEY_SIZE 256 // In bytes
+#define THREAD_KEY_LENGTH (THREAD_KEY_SIZE/sizeof(uint32)) // In bytes
 
 struct ContextStruct {
     uint32 *mem;
     uint32 *threadKey;
     const uint8 *salt;
     uint32 saltSize;
+    uint32 pageLength;
     uint32 numPages;
+    uint32 parallelism;
 };
 
+/*
 // Hash the next page.
-static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage) {
-    uint32 i;
+#define PAGE_LENGTH 4096
+static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
+        uint32 pageLength, uint32 parallelism) {
     *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage - 1 + PAGE_LENGTH));
     prevPage++;
     fromPage++;
+    uint32 i;
     for(i = 1; i < PAGE_LENGTH - 1; i++) {
         *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage - 1));
         prevPage++;
@@ -29,68 +41,126 @@ static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage) 
     }
     *toPage = *prevPage + ((*fromPage * *(prevPage + 1 - PAGE_LENGTH)) ^ *(fromPage - 1));
 }
+*/
 
+// Hash the next page.
+static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
+        uint32 pageLength, uint32 parallelism) {
+    uint32 numSequences = pageLength/parallelism;
+    uint32 sequenceAddr = 0;
+    *toPage = 0; // In case parallism == 1, and we try to read *toPage before it's written
+    uint32 i;
+    for(i = 0; i < numSequences; i++) {
+        uint32 *fromSequence = fromPage + parallelism*(sequenceAddr % numSequences);
+        sequenceAddr ^= *fromSequence;
+        uint32 j;
+        for(j = 0; j < parallelism; j++) {
+            *toPage++ = *prevPage + ((*fromSequence * *(prevPage + 1)) ^ *(fromSequence + 1));
+            prevPage++;
+            fromSequence++;
+        }
+    }
+}
+
+// This is the function called by each thread.  It hashes a single continuous block of memory.
 static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
-    uint32 *mem = c->mem;
 
-    // Initialize first page
+    // Initialize first page from the thread key
     PBKDF2_SHA256((uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE, c->salt, c->saltSize, 1,
-        (uint8 *)(void *)mem, PAGE_LENGTH*sizeof(uint32));
+        (uint8 *)(void *)c->mem, c->pageLength*sizeof(uint32));
 
     // Create pages sequentially by hashing the previous page with a random page.
     uint32 i;
-    uint32 *toPage = mem + PAGE_LENGTH, *fromPage, *prevPage = mem;
-    uint32 fromAddress = mem[1];
+    uint32 *toPage = c->mem + c->pageLength, *fromPage, *prevPage = c->mem;
+    uint32 fromAddress = 0;
     for(i = 1; i < c->numPages; i++) {
         // Select a random from page
-        fromAddress ^= prevPage[fromAddress % PAGE_LENGTH];
-        fromPage = mem + PAGE_LENGTH*(fromAddress % i);
-        hashPage(toPage, prevPage, fromPage);
+        fromAddress ^= prevPage[fromAddress % c->pageLength];
+        fromPage = c->mem + c->pageLength*(fromAddress % i);
+        hashPage(toPage, prevPage, fromPage, c->pageLength, c->parallelism);
         prevPage = toPage;
-        toPage += PAGE_LENGTH;
+        toPage += c->pageLength;
     }
 
     // Hash the last page over the thread key
-    PBKDF2_SHA256((uint8 *)(void *)prevPage, PAGE_LENGTH*sizeof(uint32), c->salt, c->saltSize, 1,
+    PBKDF2_SHA256((uint8 *)(void *)prevPage, c->pageLength*sizeof(uint32), c->salt, c->saltSize, 1,
         (uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE);
     pthread_exit(NULL);
 }
 
-// This is the prototype required for the password hashing competition.
-// t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.
-int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
-        unsigned int t_cost, unsigned int m_cost) {
-    uint32 numPages = m_cost*(1LL << 20)/(NUM_THREADS*PAGE_LENGTH*sizeof(uint32));
-    uint32 *mem = (uint32 *)malloc(numPages*PAGE_LENGTH*NUM_THREADS*sizeof(uint32));
+// This version allows for some more options than PHS.  They are:
+//  num_threads     - the number of threads to run in parallel
+//  page_length     - length of memory blocks hashed at a time
+//  num_hash_rounds - number of SHA256 rounds to compute the intermediate key
+//  parallelism     - number of inner loops allowed to run in parallel - should match
+//                    user's machine for best protection
+//  clear_in        - when true, overwrite the in buffer with 0's early on
+int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, size_t saltlen,
+        unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned
+        int parallelism, unsigned int num_threads, unsigned int page_length, int clear_in) {
+
+    // Allocate memory
+    uint32 numPages = m_cost*(1LL << 20)/(num_threads*page_length*sizeof(uint32));
+    uint32 *mem = (uint32 *)malloc(numPages*page_length*num_threads*sizeof(uint32));
+    pthread_t *threads = (pthread_t *)malloc(num_threads*sizeof(pthread_t));
+    uint32 *threadKeys = (uint32 *)malloc(num_threads*THREAD_KEY_SIZE);
+    struct ContextStruct *c = (struct ContextStruct *)malloc(num_threads*sizeof(struct ContextStruct));
+    if(mem == NULL || threads == NULL || threadKeys == NULL || c == NULL) {
+        fprintf(stderr, "Unable to allocate memory\n");
+        return 0;
+    }
+
+    // Compute intermediate key which is used to hash memory
     PBKDF2_SHA256(in, inlen, salt, saltlen, 2048, out, outlen);
-    // Note: here is where we should clear the password, but the const qualifier forbids it
-    // memset(in, '\0', inlen); // It's a good idea to clear the password ASAP!
-    uint32 *threadKeys = (uint32 *)malloc(NUM_THREADS*THREAD_KEY_SIZE);
-    int i;
+    if(clear_in) {
+        // Note that an optimizer may drop this, and that data may leak through registers
+        // or elsewhere.  The hand optimized version should try to deal with these issues
+        memset(in, '\0', inlen);
+    }
+
+    // Using t_cost in this outer loop enables a hashed password to be strenthened in the
+    // future by increasing the t_cost parameter, without knowing the password.
+    uint32 i;
     for(i = 0; i < t_cost; i++) {
-        PBKDF2_SHA256(out, outlen, salt, saltlen, 1, (uint8 *)(void *)threadKeys, NUM_THREADS*THREAD_KEY_SIZE);
-        pthread_t threads[NUM_THREADS];
-        struct ContextStruct c[NUM_THREADS];
-        int rc;
-        long t;
-        for(t = 0; t < NUM_THREADS; t++) {
-            c[t].mem = mem + t*numPages*PAGE_LENGTH;
+
+        // Initialize the thread keys from the intermediate key
+        PBKDF2_SHA256(out, outlen, salt, saltlen, 1, (uint8 *)(void *)threadKeys, num_threads*THREAD_KEY_SIZE);
+
+        // Launch threads.  Each hashes it's own separate block of memory, which improves performance.
+        uint32 t;
+        for(t = 0; t < num_threads; t++) {
+            c[t].mem = mem + t*numPages*page_length;
             c[t].numPages = numPages;
             c[t].salt = salt;
             c[t].saltSize = saltlen;
             c[t].threadKey = threadKeys + t*THREAD_KEY_LENGTH;
-            rc = pthread_create(&threads[t], NULL, hashMem, (void *)(c + t));
+            c[t].pageLength = page_length;
+            c[t].parallelism = parallelism;
+            int rc = pthread_create(&threads[t], NULL, hashMem, (void *)(c + t));
             if (rc){
                 fprintf(stderr, "Unable to start threads\n");
                 return 1;
             }
         }
         // Wait for threads to finish
-        for(t = 0; t < NUM_THREADS; t++) {
+        for(t = 0; t < num_threads; t++) {
             (void)pthread_join(threads[t], NULL);
         }
-        PBKDF2_SHA256((uint8 *)(void *)threadKeys, NUM_THREADS*THREAD_KEY_SIZE, salt, saltlen, 1, out, outlen);
+        PBKDF2_SHA256((uint8 *)(void *)threadKeys, num_threads*THREAD_KEY_SIZE, salt, saltlen, 1, out, outlen);
     }
+
+    // Free memory.  The optimized version should try to insure that memory is cleared.
+    //free(mem);
+    //free(threads);
+    //free(threadKeys);
+    //free(c);
     return 0;
+}
+
+// This is the prototype required for the password hashing competition.
+// t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.
+int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
+        unsigned int t_cost, unsigned int m_cost) {
+    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 8, 2, 4096, 0);
 }
