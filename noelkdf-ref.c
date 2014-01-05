@@ -12,7 +12,7 @@ typedef unsigned short uint16;
 typedef unsigned int uint32;
 typedef unsigned long long uint64;
 
-#define THREAD_KEY_SIZE 256 // In bytes
+#define THREAD_KEY_SIZE 64 // In bytes
 #define THREAD_KEY_LENGTH (THREAD_KEY_SIZE/sizeof(uint32)) // In bytes
 
 struct ContextStruct {
@@ -34,7 +34,7 @@ static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
     uint32 i;
     for(i = 0; i < numSequences; i++) {
         uint32 *fromSequence = fromPage + parallelism*(sequenceAddr & (numSequences-1));
-        sequenceAddr ^= *fromSequence;
+        sequenceAddr += *fromSequence;
         uint32 j;
         for(j = 0; j < parallelism; j++) {
             *toPage++ = *prevPage + ((*fromSequence * *(prevPage + 1)) ^ *(fromSequence + 1));
@@ -48,12 +48,14 @@ static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
 static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
 
-    // Initialize first page from the thread key
-    PBKDF2_SHA256((uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE, c->salt, c->saltSize, 1,
-        (uint8 *)(void *)c->mem, c->pageLength*sizeof(uint32));
+    // Initialize first page from the thread key, repeating it until the page is full
+    memset(c->mem, '\0', c->pageLength*sizeof(uint32));
+    uint32 i;
+    for(i = 0; i < c->pageLength/THREAD_KEY_LENGTH; i++) {
+        memcpy(c->mem + i*THREAD_KEY_LENGTH, c->threadKey, THREAD_KEY_SIZE);
+    }
 
     // Create pages sequentially by hashing the previous page with a random page.
-    uint32 i;
     uint32 *toPage = c->mem + c->pageLength, *fromPage, *prevPage = c->mem;
     uint32 fromAddress = 0;
     for(i = 1; i < c->numPages; i++) {
@@ -65,9 +67,13 @@ static void *hashMem(void *contextPtr) {
         toPage += c->pageLength;
     }
 
-    // Hash the last page over the thread key
-    PBKDF2_SHA256((uint8 *)(void *)prevPage, c->pageLength*sizeof(uint32), c->salt, c->saltSize, 1,
-        (uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE);
+    // XOR the last page of data into the thread key.
+    for(i = 0; i < c->pageLength/THREAD_KEY_LENGTH; i++) {
+        int j;
+        for(j = 0; j < THREAD_KEY_LENGTH; j++) {
+            c->threadKey[j] ^= *prevPage++;
+        }
+    }
     pthread_exit(NULL);
 }
 
