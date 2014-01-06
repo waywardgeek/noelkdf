@@ -29,19 +29,33 @@ struct ContextStruct {
 static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
         uint32 pageLength, uint32 parallelism) {
     uint32 numSequences = pageLength/parallelism;
-    uint32 sequenceAddr = 0;
     *toPage = 0; // In case parallism == 1, and we try to read *toPage before it's written
+    uint32 hash = 0;
     uint32 i;
     for(i = 0; i < numSequences; i++) {
-        uint32 *fromSequence = fromPage + parallelism*(sequenceAddr & (numSequences-1));
-        sequenceAddr += *fromSequence;
+
+        // Do one sequential operation involving hash that can't be done in parallel
+        hash += *fromPage*1103515245 + 12345;
+        *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage + 1)) + hash;
+        prevPage++;
+        fromPage++;
+
+        // Now do the rest all in parallel
         uint32 j;
-        for(j = 0; j < parallelism; j++) {
-            *toPage++ = *prevPage + ((*fromSequence * *(prevPage + 1)) ^ *(fromSequence + 1));
+        for(j = 1; j < parallelism; j++) {
+            *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage + 1));
             prevPage++;
-            fromSequence++;
+            fromPage++;
         }
     }
+}
+
+// To eliminate timing attacks, pick an address less than i that depends only on i.
+// The mask parameter is the largest sequence of 1's less than i, so any value AND-ed with
+// it will also be less than i.  The constants are from Knuth's original random number
+// generator.  I've found it a fast and useful hash function.
+static inline uint32 hashAddress(uint32 i, uint32 mask) {
+    return i - ((i*1103515245 + 12345) & mask) - 1;
 }
 
 // This is the function called by each thread.  It hashes a single continuous block of memory.
@@ -49,19 +63,20 @@ static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
 
     // Initialize first page from the thread key, repeating it until the page is full
-    memset(c->mem, '\0', c->pageLength*sizeof(uint32));
     uint32 i;
-    for(i = 0; i < c->pageLength/THREAD_KEY_LENGTH; i++) {
+    for(i = 0; i < (c->pageLength + THREAD_KEY_LENGTH - 1)/THREAD_KEY_LENGTH; i++) {
         memcpy(c->mem + i*THREAD_KEY_LENGTH, c->threadKey, THREAD_KEY_SIZE);
     }
 
     // Create pages sequentially by hashing the previous page with a random page.
     uint32 *toPage = c->mem + c->pageLength, *fromPage, *prevPage = c->mem;
-    uint32 fromAddress = 0;
+    uint32 mask = 0;
     for(i = 1; i < c->numPages; i++) {
-        // Select a random from page
-        fromAddress ^= prevPage[fromAddress % c->pageLength];
-        fromPage = c->mem + c->pageLength*(fromAddress % i);
+        if(i > ((mask << 1) | 1)) {
+            mask = (mask << 1) | 1;
+        }
+        // Select a random-ish from page that depends only on i
+        fromPage = c->mem + c->pageLength*(hashAddress(i, mask));
         hashPage(toPage, prevPage, fromPage, c->pageLength, c->parallelism);
         prevPage = toPage;
         toPage += c->pageLength;
