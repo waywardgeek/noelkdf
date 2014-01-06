@@ -27,25 +27,28 @@ struct ContextStruct {
 
 // Hash the next page.
 static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
-        uint32 pageLength, uint32 parallelism) {
+        uint32 pageLength, uint32 parallelism, uint32 toPageNum) {
     uint32 numSequences = pageLength/parallelism;
     *toPage = 0; // In case parallism == 1, and we try to read *toPage before it's written
     uint32 hash = 0;
+    uint32 sequenceAddress = toPageNum*1103515245 + 12345;
     uint32 i;
     for(i = 0; i < numSequences; i++) {
+        uint32 *fromSequence = fromPage + (sequenceAddress & (numSequences-1));
+        sequenceAddress = sequenceAddress*1103515245 + 12345;
 
         // Do one sequential operation involving hash that can't be done in parallel
         hash += *fromPage*1103515245 + 12345;
-        *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage + 1)) + hash;
+        *toPage++ = *prevPage + ((*fromSequence * *(prevPage + 1)) ^ *(fromSequence + 1)) + hash;
         prevPage++;
-        fromPage++;
+        fromSequence++;
 
         // Now do the rest all in parallel
         uint32 j;
         for(j = 1; j < parallelism; j++) {
-            *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage + 1));
+            *toPage++ = *prevPage + ((*fromSequence * *(prevPage + 1)) ^ *(fromSequence + 1));
             prevPage++;
-            fromPage++;
+            fromSequence++;
         }
     }
 }
@@ -77,7 +80,7 @@ static void *hashMem(void *contextPtr) {
         }
         // Select a random-ish from page that depends only on i
         fromPage = c->mem + c->pageLength*(hashAddress(i, mask));
-        hashPage(toPage, prevPage, fromPage, c->pageLength, c->parallelism);
+        hashPage(toPage, prevPage, fromPage, c->pageLength, c->parallelism, i);
         prevPage = toPage;
         toPage += c->pageLength;
     }
