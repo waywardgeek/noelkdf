@@ -45,3 +45,9 @@ I, Bill Cox, place this code into the public domain.  There are no hidden back-d
 intentional weaknesses, and I blieve it violates no patents.  I will file no patents on
 any material in this project.  I have included sha.c and sha.h which I copied from the
 scrypt project, and which is available through the BSD license.
+
+TODO
+----
+
+Use the parallelism parameter for both max threads and SIMD.  Dynamically adapt number of
+threads to maximize speed.

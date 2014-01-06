@@ -14,6 +14,7 @@ typedef unsigned long long uint64;
 
 #define THREAD_KEY_SIZE 64 // In bytes
 #define THREAD_KEY_LENGTH (THREAD_KEY_SIZE/sizeof(uint32)) // In bytes
+#define MEGA_BLOCK_SIZE ((1 << 20)/sizeof(uint32)) // 1MB in 32-bit words
 
 struct ContextStruct {
     uint32 *mem;
@@ -111,7 +112,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
     // Allocate memory
     uint32 pageLength = (page_size << 10)/sizeof(uint32);
     uint32 numPages = m_cost*(1LL << 20)/(num_threads*pageLength*sizeof(uint32)) + 1;
-    uint32 *mem = (uint32 *)malloc(numPages*pageLength*num_threads*sizeof(uint32));
+    uint32 *mem = (uint32 *)malloc((uint64)numPages*pageLength*num_threads*sizeof(uint32) << t_cost);
     pthread_t *threads = (pthread_t *)malloc(num_threads*sizeof(pthread_t));
     uint32 *threadKeys = (uint32 *)malloc(num_threads*THREAD_KEY_SIZE);
     struct ContextStruct *c = (struct ContextStruct *)malloc(num_threads*sizeof(struct ContextStruct));
@@ -131,7 +132,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
     // Using t_cost in this outer loop enables a hashed password to be strenthened in the
     // future by increasing the t_cost parameter, without knowing the password.
     uint32 i;
-    for(i = 0; i < t_cost; i++) {
+    for(i = 0; i <= t_cost; i++) {
 
         // Initialize the thread keys from the intermediate key
         PBKDF2_SHA256(out, outlen, salt, saltlen, 1, (uint8 *)(void *)threadKeys, num_threads*THREAD_KEY_SIZE);
@@ -139,7 +140,8 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
         // Launch threads.  Each hashes it's own separate block of memory, which improves performance.
         uint32 t;
         for(t = 0; t < num_threads; t++) {
-            c[t].mem = mem + t*numPages*pageLength;
+            c[t].mem = mem + (uint64)t*numPages*pageLength;
+            printf("Memory for thread:%llu\n", (uint64)numPages*pageLength*sizeof(uint32));
             c[t].numPages = numPages;
             c[t].salt = salt;
             c[t].saltSize = saltlen;
@@ -157,6 +159,9 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
             (void)pthread_join(threads[t], NULL);
         }
         PBKDF2_SHA256((uint8 *)(void *)threadKeys, num_threads*THREAD_KEY_SIZE, salt, saltlen, 1, out, outlen);
+
+        // Double memory usage for the next loop.
+        numPages <<= 1;
     }
 
     // Free memory.  The optimized version should try to insure that memory is cleared.
@@ -175,5 +180,5 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.
 int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost) {
-    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 64, 2, 4096, 0, 0, NULL);
+    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 64, 16, 4096, 0, 0, NULL);
 }
