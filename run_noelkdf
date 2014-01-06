@@ -1,0 +1,4 @@
+#!/bin/bash
+
+#Usage: noelkdf outlen password salt t_cost m_cost num_hash_rounds parallelism num_threads page_size
+time ./noelkdf 32 "Don't tell" deadbeefbaddaddeadbeefbaddad 1 2048 2048 64 3 16 0 0
