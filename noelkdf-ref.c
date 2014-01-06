@@ -38,7 +38,7 @@ static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
         sequenceAddress = sequenceAddress*1103515245 + 12345;
 
         // Do one sequential operation involving hash that can't be done in parallel
-        hash += *fromPage*1103515245 + 12345;
+        hash += *fromSequence*1103515245 + 12345;
         *toPage++ = *prevPage + ((*fromSequence * *(prevPage + 1)) ^ *(fromSequence + 1)) + hash;
         prevPage++;
         fromSequence++;
