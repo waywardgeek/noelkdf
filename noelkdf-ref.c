@@ -65,15 +65,14 @@ static inline uint32 hashAddress(uint32 i, uint32 mask) {
 static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
 
-    // Initialize first page from the thread key, repeating it until the page is full
-    uint32 i;
-    for(i = 0; i < (c->pageLength + THREAD_KEY_LENGTH - 1)/THREAD_KEY_LENGTH; i++) {
-        memcpy(c->mem + i*THREAD_KEY_LENGTH, c->threadKey, THREAD_KEY_SIZE);
-    }
+    // Initialize first page from the thread key
+    PBKDF2_SHA256((uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE, c->salt, c->saltSize, 1,
+        (uint8 *)(void *)c->mem, c->pageLength*sizeof(uint32));
 
     // Create pages sequentially by hashing the previous page with a random page.
     uint32 *toPage = c->mem + c->pageLength, *fromPage, *prevPage = c->mem;
     uint32 mask = 0;
+    uint32 i;
     for(i = 1; i < c->numPages; i++) {
         if(i > ((mask << 1) | 1)) {
             mask = (mask << 1) | 1;
@@ -85,13 +84,9 @@ static void *hashMem(void *contextPtr) {
         toPage += c->pageLength;
     }
 
-    // XOR the last page of data into the thread key.
-    for(i = 0; i < c->pageLength/THREAD_KEY_LENGTH; i++) {
-        int j;
-        for(j = 0; j < THREAD_KEY_LENGTH; j++) {
-            c->threadKey[j] ^= *prevPage++;
-        }
-    }
+    // Hash the last page over the thread key
+    PBKDF2_SHA256((uint8 *)(void *)prevPage, c->pageLength*sizeof(uint32), c->salt, c->saltSize, 1,
+        (uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE);
     pthread_exit(NULL);
 }
 
