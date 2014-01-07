@@ -1,42 +1,39 @@
 NOELKDF
 =======
 
-My attempt at an efficient memory-hard key stretching algorithm based on scrypt
+This is my attempt at an efficient memory-hard key stretching algorithm based on scrypt.
+Various members of the community at password-hashing.net have contributed so generously to
+NoelKDF, that it is hard to claim as my own.  The best ideas I've simply "borrowed".
 
-Goals
------
+Features
+--------
 
-- Simplicity -- the KISS rule
-- Faster hashing, increaseing area*time because we'll be able to fill more RAM
-- Protect the key with user-selectable initial rounds of SHA-256 and then clear the
-  password
-- Operate well in a deniable mode, meaning only random parameters like salt can be stored
-- Benefit from 64-bit CPU widths without trashing 32-bit performance
+- Memory hard Key Derivation Function for password protection
+- Simplicity -- the KISS rule at it's best
+- Ultra-fast hashing, approaching the speed of memmove
+- Avoids cache timing attacks
+- User selectable parallelism, through threads and SIMD
+- "client independent update" to make server hashes more secure
+- Server relief support - hashing can be split between client and server
+- Friendly to crypto-systems that need deniability, such as TrueCrypt.
+- User-selectable initial rounds of hashing
 
-We simultaneously fill memory and hash.  When we're done filling memory, we're done.  This
-is more friendly for users who want to pick a time to run, rather than specifying the
-memory.
+Credit for Features "Borrowed"
+------------------------------
 
-Scrypt relies on Salsa20/8, which is a well known algorithm.  It's fast, but still several
-times slower than just filling memory with a counter.  At the same time, there seems to be
-little need for such a secure RNG.  It has only three goals, AFAIK:
+Alexander, aka Solar Designer, is he brains behind escript.  He has been over-the-top
+helpful.  Three ideas he fed me include the  parallelism parameter to limit parallelism on
+purpose, the power-of-two sliding window, and random segment hashing with a "page".  He
+also helped me understand modern CPU memory performance and SIMD capabilities, which has
+an enourmous impact.
 
-- It should generate data efficiently on a CPU, so we can make memory bandwidth the
-  bottleneck, just like it is for an attacker
-- It should not allow an attacker easily to compute V(i), without first computing
-  V(0)...V(i-1).  Here V is memory and i is the ith memory location.
-- It should have a large state, so the attacker can't just cache RNG states, and must fill
-  memory instead.
+Christian Forler, the inventor of Catena, showed me how to avoiding timing attacks through
+fixed addessing access pattern, and how to believe it works through pebble proofs.  Also,
+doubling memory and not just time with t_cost to provide "client independent update".
+Catena helped make the Server Relief idea mainstream.
 
-Faster hashing should make use of 64-bit data paths without killing the performance on
-32-bit machines.  It should focus on speed over proven security, but make it simple to
-prove property 2.
-
-Since we fill memory as we go, in addition to the salt, we could store a stop parameter,
-of say from 128 to 256 bits.  When we see the stop parameter matches a thread key, we
-would stop hashing.  This has not been implemented, but it is an intended mode of the
-algorithm.  This could be particularly usefule for TrueCrypt or any other tool which
-supports deniability.
+Scrypt, the basis for the whole thing.  Scrypt is awesome, and there are many ideas
+carried over.
 
 License
 -------
@@ -49,5 +46,4 @@ scrypt project, and which is available through the BSD license.
 TODO
 ----
 
-Use the parallelism parameter for both max threads and SIMD.  Dynamically adapt number of
-threads to maximize speed.
+Dynamically adapt number of threads to maximize speed.
