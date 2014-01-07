@@ -3,7 +3,7 @@ NOELKDF
 
 This is my attempt at an efficient memory-hard key stretching algorithm based on scrypt.
 Various members of the community at password-hashing.net have contributed so generously to
-NoelKDF, that it is hard to claim as my own.  The best ideas I've simply "borrowed".
+NoelKDF, that it is hard to claim as my own.
 
 Features
 --------
@@ -23,12 +23,12 @@ Credit for Features "Borrowed"
 
 Alexander, aka Solar Designer, is he brains behind escript.  He has been over-the-top
 helpful.  Three ideas he fed me include the  parallelism parameter to limit parallelism on
-purpose, the power-of-two sliding window, and random segment hashing with a "page".  He
+purpose, the power-of-two sliding window, and random segment hashing within a "page".  He
 also helped me understand modern CPU memory performance and SIMD capabilities, which has
-an enourmous impact.
+an enormous impact.
 
 Christian Forler, the inventor of Catena, showed me how to avoiding timing attacks through
-fixed addessing access pattern, and how to believe it works through pebble proofs.  Also,
+fixed addressing access pattern, and how to believe it works through pebble proofs.  Also,
 doubling memory and not just time with t_cost to provide "client independent update".
 Catena helped make the Server Relief idea mainstream.
 

@@ -56,8 +56,7 @@ static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
 
 // To eliminate timing attacks, pick an address less than i that depends only on i.
 // The mask parameter is the largest sequence of 1's less than i, so any value AND-ed with
-// it will also be less than i.  The constants are from Knuth's original random number
-// generator.  I've found it a fast and useful hash function.
+// it will also be less than i.  The constants are from glibc's rand() function.
 static inline uint32 hashAddress(uint32 i, uint32 mask) {
     return i - ((i*1103515245 + 12345) & mask) - 1;
 }
