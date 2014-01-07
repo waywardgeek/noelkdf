@@ -135,7 +135,6 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
         uint32 t;
         for(t = 0; t < num_threads; t++) {
             c[t].mem = mem + (uint64)t*numPages*pageLength;
-            printf("Memory for thread:%llu\n", (uint64)numPages*pageLength*sizeof(uint32));
             c[t].numPages = numPages;
             c[t].salt = salt;
             c[t].saltSize = saltlen;
