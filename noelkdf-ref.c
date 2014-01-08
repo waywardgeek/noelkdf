@@ -14,7 +14,6 @@ typedef unsigned long long uint64;
 
 #define THREAD_KEY_SIZE 64 // In bytes
 #define THREAD_KEY_LENGTH (THREAD_KEY_SIZE/sizeof(uint32)) // In bytes
-#define MEGA_BLOCK_SIZE ((1 << 20)/sizeof(uint32)) // 1MB in 32-bit words
 
 struct ContextStruct {
     uint32 *mem;
@@ -26,6 +25,16 @@ struct ContextStruct {
     uint32 parallelism;
 };
 
+// Simple hash function of one parameter from the old glibc rand() function.
+static inline uint32 H1(uint32 v) {
+    return v*1103515245 + 12345;
+}
+
+// New 4-input simple hash function that apears to be good enough.
+static inline uint32 H4(uint32 v1, uint32 v2, uint32 v3, uint32 v4) {
+    return v1 + ((v2 * v3) ^ v4);
+}
+
 // Hash the next page.
 static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
         uint32 pageLength, uint32 parallelism, uint32 toPageNum) {
@@ -35,15 +44,15 @@ static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
     uint32 i;
     for(i = 0; i < numSequences; i++) {
         // Do one sequential operation involving hash that can't be done in parallel
-        hash += *fromPage*1103515245 + 12345;
-        *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage + 1)) + hash;
+        hash += H1(*fromPage);
+        *toPage++ = H4(*prevPage, *fromPage, *(prevPage + 1), *(fromPage + 1)) + hash;
         prevPage++;
         fromPage++;
 
         // Now do the rest all in parallel
         uint32 j;
         for(j = 1; j < parallelism; j++) {
-            *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage + 1));
+            *toPage++ = H4(*prevPage, *fromPage, *(prevPage + 1), *(fromPage + 1));
             prevPage++;
             fromPage++;
         }
@@ -54,7 +63,7 @@ static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
 // The mask parameter is the largest sequence of 1's less than i, so any value AND-ed with
 // it will also be less than i.  The constants are from glibc's rand() function.
 static inline uint32 hashAddress(uint32 i, uint32 mask) {
-    return i - 1 - ((i*1103515245 + 12345) & mask);
+    return i - 1 - (H1(i) & mask);
 }
 
 // This is the function called by each thread.  It hashes a single continuous block of memory.
