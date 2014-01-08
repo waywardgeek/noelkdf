@@ -7,11 +7,16 @@
 
 #define MEM_SIZE (1LL << 31)
 #define MEM_LENGTH (MEM_SIZE/sizeof(unsigned long long))
-#define NUM_THREADS 2
+#define NUM_THREADS 1
 
 static void *moveMem(void *memPtr) {
     unsigned long long *mem = (unsigned long long *)memPtr;
-    memmove(mem, mem + 8, (MEM_LENGTH-1)*sizeof(unsigned long long)/NUM_THREADS);
+    //memmove(mem, mem + 8, (MEM_LENGTH-1)*sizeof(unsigned long long)/NUM_THREADS);
+    unsigned int i;
+    mem[0] = 1;
+    for(i = 1; i < MEM_LENGTH-1; i++) {
+        mem[i] = mem[i-1]*i;
+    }
     pthread_exit(NULL);
 }
 

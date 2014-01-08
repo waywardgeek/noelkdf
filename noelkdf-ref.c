@@ -36,34 +36,20 @@ static inline uint32 H4(uint32 v1, uint32 v2, uint32 v3, uint32 v4) {
 }
 
 // Hash the next page.
-static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
-        uint32 pageLength, uint32 parallelism, uint32 toPageNum) {
+static inline uint32 hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
+        uint32 pageLength, uint32 parallelism, uint32 hash) {
     uint32 numSequences = pageLength/parallelism;
-    *toPage = 0; // In case parallism == 1, and we try to read *toPage before it's written
-    uint32 hash = 0;
     uint32 i;
     for(i = 0; i < numSequences; i++) {
-        // Do one sequential operation involving hash that can't be done in parallel
-        hash += H1(*fromPage);
-        *toPage++ = H4(*prevPage, *fromPage, *(prevPage + 1), *(fromPage + 1)) + hash;
-        prevPage++;
-        fromPage++;
-
-        // Now do the rest all in parallel
+        hash += *prevPage ^ *fromPage;
         uint32 j;
-        for(j = 1; j < parallelism; j++) {
-            *toPage++ = H4(*prevPage, *fromPage, *(prevPage + 1), *(fromPage + 1));
+        for(j = 0; j < parallelism; j++) {
+            *toPage++ = H4(*prevPage, *(prevPage+1), *fromPage, *(fromPage+1)) ^ hash;
             prevPage++;
             fromPage++;
         }
     }
-}
-
-// To eliminate timing attacks, pick an address less than i that depends only on i.
-// The mask parameter is the largest sequence of 1's less than i, so any value AND-ed with
-// it will also be less than i.  The constants are from glibc's rand() function.
-static inline uint32 hashAddress(uint32 i, uint32 mask) {
-    return i - 1 - (H1(i) & mask);
+    return hash;
 }
 
 // This is the function called by each thread.  It hashes a single continuous block of memory.
@@ -76,15 +62,16 @@ static void *hashMem(void *contextPtr) {
 
     // Create pages sequentially by hashing the previous page with a random page.
     uint32 *toPage = c->mem + c->pageLength, *fromPage, *prevPage = c->mem;
+    uint32 hash = 0;
     uint32 mask = 0;
     uint32 i;
     for(i = 1; i < c->numPages; i++) {
-        if(i > ((mask << 1) | 1)) {
+        if(mask + 1 < i) {
             mask = (mask << 1) | 1;
         }
         // Select a random-ish from page that depends only on i
-        fromPage = c->mem + c->pageLength*(hashAddress(i, mask));
-        hashPage(toPage, prevPage, fromPage, c->pageLength, c->parallelism, i);
+        fromPage = c->mem + c->pageLength*(H1(i) & mask);
+        hash = hashPage(toPage, prevPage, fromPage, c->pageLength, c->parallelism, hash);
         prevPage = toPage;
         toPage += c->pageLength;
     }
