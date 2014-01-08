@@ -14,6 +14,7 @@ typedef unsigned long long uint64;
 
 #define THREAD_KEY_SIZE 64 // In bytes
 #define THREAD_KEY_LENGTH (THREAD_KEY_SIZE/sizeof(uint32)) // In bytes
+#define CHEAT_KILLER_LOCATIONS 1000 // Enough to put the hurt on him
 
 struct ContextStruct {
     uint32 *mem;
@@ -82,6 +83,24 @@ static void *hashMem(void *contextPtr) {
     pthread_exit(NULL);
 }
 
+// Use the resulting output hash, which does depend on the password, to hash a small
+// percentage of the total memory.  This forces all the threads' memory to be loaded at
+// once, and if there was an attack that worked based on pre-computation of addresses,
+// this pass should kill it.  We could obscure the resulting password-dependent cache miss
+// activity with "smoke", but at this point an attacker will have already done all the
+// work for a password guess.
+static void cheatKillerPass(uint32 *out, uint32 outLength, uint32 *mem, uint32 memLength) {
+    uint32 i, j = 0;
+    uint32 address = 0;
+    for(i = 0; i < CHEAT_KILLER_LOCATIONS; i++) {
+        if(j == outLength) {
+            j = 0;
+        }
+        address += out[j++];
+        out[j] ^= mem[address % memLength];
+    }
+}
+
 // This version allows for some more options than PHS.  They are:
 //  num_threads     - the number of threads to run in parallel
 //  page_size     - length of memory blocks hashed at a time
@@ -99,7 +118,8 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
     // Allocate memory
     uint32 pageLength = (page_size << 10)/sizeof(uint32);
     uint32 numPages = m_cost*(1LL << 20)/(num_threads*pageLength*sizeof(uint32)) + 1;
-    uint32 *mem = (uint32 *)malloc((uint64)numPages*pageLength*num_threads*sizeof(uint32) << t_cost);
+    uint32 memLength = (uint64)numPages*pageLength*num_threads << t_cost;
+    uint32 *mem = (uint32 *)malloc(memLength*sizeof(uint32));
     pthread_t *threads = (pthread_t *)malloc(num_threads*sizeof(pthread_t));
     uint32 *threadKeys = (uint32 *)malloc(num_threads*THREAD_KEY_SIZE);
     struct ContextStruct *c = (struct ContextStruct *)malloc(num_threads*sizeof(struct ContextStruct));
@@ -152,6 +172,8 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
         // Double memory usage for the next loop.
         numPages <<= 1;
     }
+
+    cheatKillerPass(out, outlen/sizeof(uint32), mem, memLength);
 
     // Free memory.  The optimized version should try to insure that memory is cleared.
     free(threads);
