@@ -32,24 +32,20 @@ static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
     uint32 numSequences = pageLength/parallelism;
     *toPage = 0; // In case parallism == 1, and we try to read *toPage before it's written
     uint32 hash = 0;
-    uint32 sequenceAddress = toPageNum*1103515245 + 12345;
     uint32 i;
     for(i = 0; i < numSequences; i++) {
-        uint32 *fromSequence = fromPage + (sequenceAddress & (numSequences-1));
-        sequenceAddress = sequenceAddress*1103515245 + 12345;
-
         // Do one sequential operation involving hash that can't be done in parallel
-        hash += *fromSequence*1103515245 + 12345;
-        *toPage++ = *prevPage + ((*fromSequence * *(prevPage + 1)) ^ *(fromSequence + 1)) + hash;
+        hash += *fromPage*1103515245 + 12345;
+        *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage + 1)) + hash;
         prevPage++;
-        fromSequence++;
+        fromPage++;
 
         // Now do the rest all in parallel
         uint32 j;
         for(j = 1; j < parallelism; j++) {
-            *toPage++ = *prevPage + ((*fromSequence * *(prevPage + 1)) ^ *(fromSequence + 1));
+            *toPage++ = *prevPage + ((*fromPage * *(prevPage + 1)) ^ *(fromPage + 1));
             prevPage++;
-            fromSequence++;
+            fromPage++;
         }
     }
 }
@@ -58,7 +54,7 @@ static inline void hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
 // The mask parameter is the largest sequence of 1's less than i, so any value AND-ed with
 // it will also be less than i.  The constants are from glibc's rand() function.
 static inline uint32 hashAddress(uint32 i, uint32 mask) {
-    return i - ((i*1103515245 + 12345) & mask) - 1;
+    return i - 1 - ((i*1103515245 + 12345) & mask);
 }
 
 // This is the function called by each thread.  It hashes a single continuous block of memory.
