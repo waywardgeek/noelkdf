@@ -13,5 +13,6 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
 //  return_memory   - when true, the hash data stored in memory is returned without being
 //                    freed in the memPtr variable
 int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, size_t saltlen,
-        unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned int parallelism,
-        unsigned int num_threads, unsigned int page_size, int clear_in, int return_memory, unsigned int **memPtr);
+        unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned int repeat_count,
+        unsigned int parallelism, unsigned int num_threads, unsigned int page_size, int clear_in,
+        int return_memory, unsigned int **mem_ptr);

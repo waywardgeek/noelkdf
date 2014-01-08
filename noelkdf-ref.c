@@ -96,8 +96,9 @@ static void *hashMem(void *contextPtr) {
 //  return_memory   - when true, the hash data stored in memory is returned without being
 //                    freed in the memPtr variable
 int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, size_t saltlen,
-        unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned int parallelism,
-        unsigned int num_threads, unsigned int page_size, int clear_in, int return_memory, uint32 **memPtr) {
+        unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned int repeat_count,
+        unsigned int parallelism, unsigned int num_threads, unsigned int page_size, int clear_in,
+        int return_memory, uint32 **memPtr) {
 
     // Allocate memory
     uint32 pageLength = (page_size << 10)/sizeof(uint32);
@@ -123,31 +124,34 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
     // future by increasing the t_cost parameter, without knowing the password.
     uint32 i;
     for(i = 0; i <= t_cost; i++) {
+        uint32 j;
+        for(j = 0; j < repeat_count; j++) {
 
-        // Initialize the thread keys from the intermediate key
-        PBKDF2_SHA256(out, outlen, salt, saltlen, 1, (uint8 *)(void *)threadKeys, num_threads*THREAD_KEY_SIZE);
+            // Initialize the thread keys from the intermediate key
+            PBKDF2_SHA256(out, outlen, salt, saltlen, 1, (uint8 *)(void *)threadKeys, num_threads*THREAD_KEY_SIZE);
 
-        // Launch threads.  Each hashes it's own separate block of memory, which improves performance.
-        uint32 t;
-        for(t = 0; t < num_threads; t++) {
-            c[t].mem = mem + (uint64)t*numPages*pageLength;
-            c[t].numPages = numPages;
-            c[t].salt = salt;
-            c[t].saltSize = saltlen;
-            c[t].threadKey = threadKeys + t*THREAD_KEY_LENGTH;
-            c[t].pageLength = pageLength;
-            c[t].parallelism = parallelism;
-            int rc = pthread_create(&threads[t], NULL, hashMem, (void *)(c + t));
-            if (rc){
-                fprintf(stderr, "Unable to start threads\n");
-                return 1;
+            // Launch threads.  Each hashes it's own separate block of memory, which improves performance.
+            uint32 t;
+            for(t = 0; t < num_threads; t++) {
+                c[t].mem = mem + (uint64)t*numPages*pageLength;
+                c[t].numPages = numPages;
+                c[t].salt = salt;
+                c[t].saltSize = saltlen;
+                c[t].threadKey = threadKeys + t*THREAD_KEY_LENGTH;
+                c[t].pageLength = pageLength;
+                c[t].parallelism = parallelism;
+                int rc = pthread_create(&threads[t], NULL, hashMem, (void *)(c + t));
+                if (rc){
+                    fprintf(stderr, "Unable to start threads\n");
+                    return 1;
+                }
             }
+            // Wait for threads to finish
+            for(t = 0; t < num_threads; t++) {
+                (void)pthread_join(threads[t], NULL);
+            }
+            PBKDF2_SHA256((uint8 *)(void *)threadKeys, num_threads*THREAD_KEY_SIZE, salt, saltlen, 1, out, outlen);
         }
-        // Wait for threads to finish
-        for(t = 0; t < num_threads; t++) {
-            (void)pthread_join(threads[t], NULL);
-        }
-        PBKDF2_SHA256((uint8 *)(void *)threadKeys, num_threads*THREAD_KEY_SIZE, salt, saltlen, 1, out, outlen);
 
         // Double memory usage for the next loop.
         numPages <<= 1;
@@ -169,5 +173,5 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.
 int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost) {
-    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 64, 16, 4096, 0, 0, NULL);
+    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 1, 16, 2, 4096, 0, 0, NULL);
 }
