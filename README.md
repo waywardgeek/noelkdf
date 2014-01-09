@@ -46,4 +46,5 @@ scrypt project, and which is available through the BSD license.
 TODO
 ----
 
-Dynamically adapt number of threads to maximize speed.
+Write automatic parameter picker
+Fix resulting hash dependence on big-endian vs little-endian

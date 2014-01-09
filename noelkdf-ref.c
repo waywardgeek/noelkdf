@@ -12,13 +12,12 @@ typedef unsigned short uint16;
 typedef unsigned int uint32;
 typedef unsigned long long uint64;
 
-#define THREAD_KEY_SIZE 64 // In bytes
-#define THREAD_KEY_LENGTH (THREAD_KEY_SIZE/sizeof(uint32)) // In bytes
 #define CHEAT_KILLER_LOCATIONS 1000 // Enough to put the hurt on him
 
 struct ContextStruct {
     uint32 *mem;
-    uint32 *threadKey;
+    uint8 *threadKey;
+    uint32 threadKeySize;
     const uint8 *salt;
     uint32 saltSize;
     uint32 pageLength;
@@ -57,8 +56,10 @@ static inline uint32 hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage
 static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
 
-    // Initialize first page from the thread key
-    PBKDF2_SHA256((uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE, c->salt, c->saltSize, 1,
+    // TODO: Replace this with a simply copying the thread key over and over to fill the
+    // first page, and deal with endian-ness then.  For now, I'm testing with this so that
+    // the dieharder tests don't get mad about the repeated key.
+    PBKDF2_SHA256(c->threadKey, c->threadKeySize, c->salt, c->saltSize, 1,
         (uint8 *)(void *)c->mem, c->pageLength*sizeof(uint32));
 
     // Create pages sequentially by hashing the previous page with a random page.
@@ -77,9 +78,10 @@ static void *hashMem(void *contextPtr) {
         toPage += c->pageLength;
     }
 
+    // TODO: Replace this with endian-aware XOR-ing of the last page of data.
     // Hash the last page over the thread key
     PBKDF2_SHA256((uint8 *)(void *)prevPage, c->pageLength*sizeof(uint32), c->salt, c->saltSize, 1,
-        (uint8 *)(void *)c->threadKey, THREAD_KEY_SIZE);
+        c->threadKey, c->threadKeySize);
     pthread_exit(NULL);
 }
 
@@ -98,6 +100,18 @@ static void cheatKillerPass(uint32 *out, uint32 outLength, uint32 *mem, uint32 m
         }
         address += out[j++];
         out[j] ^= mem[address % memLength];
+    }
+}
+
+// Just XOR the resulting threads key onto the output.
+static void xorThreadKeysOntoOut(uint8 *threadKeys, uint32 numThreads, uint8 *out, uint32 outSize) {
+    uint32 i;
+    for(i = 0; i < numThreads; i++) {
+        uint8 *key = threadKeys + i*outSize;
+        uint32 j;
+        for(j = 0; j < outSize; j++) {
+            out[j] ^= key[j];
+        }
     }
 }
 
@@ -121,7 +135,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
     uint32 memLength = (uint64)numPages*pageLength*num_threads << t_cost;
     uint32 *mem = (uint32 *)malloc(memLength*sizeof(uint32));
     pthread_t *threads = (pthread_t *)malloc(num_threads*sizeof(pthread_t));
-    uint32 *threadKeys = (uint32 *)malloc(num_threads*THREAD_KEY_SIZE);
+    uint8 *threadKeys = (uint8 *)malloc(num_threads*outlen);
     struct ContextStruct *c = (struct ContextStruct *)malloc(num_threads*sizeof(struct ContextStruct));
     if(mem == NULL || threads == NULL || threadKeys == NULL || c == NULL) {
         fprintf(stderr, "Unable to allocate memory\n");
@@ -144,7 +158,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
         for(j = 0; j < repeat_count; j++) {
 
             // Initialize the thread keys from the intermediate key
-            PBKDF2_SHA256(out, outlen, salt, saltlen, 1, (uint8 *)(void *)threadKeys, num_threads*THREAD_KEY_SIZE);
+            PBKDF2_SHA256(out, outlen, salt, saltlen, 1, threadKeys, num_threads*outlen);
 
             // Launch threads.  Each hashes it's own separate block of memory, which improves performance.
             uint32 t;
@@ -153,7 +167,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
                 c[t].numPages = numPages;
                 c[t].salt = salt;
                 c[t].saltSize = saltlen;
-                c[t].threadKey = threadKeys + t*THREAD_KEY_LENGTH;
+                c[t].threadKey = threadKeys + t*outlen;
                 c[t].pageLength = pageLength;
                 c[t].parallelism = parallelism;
                 int rc = pthread_create(&threads[t], NULL, hashMem, (void *)(c + t));
@@ -166,7 +180,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
             for(t = 0; t < num_threads; t++) {
                 (void)pthread_join(threads[t], NULL);
             }
-            PBKDF2_SHA256((uint8 *)(void *)threadKeys, num_threads*THREAD_KEY_SIZE, salt, saltlen, 1, out, outlen);
+            xorThreadKeysOntoOut(threadKeys, num_threads, out, outlen);
         }
 
         // Double memory usage for the next loop.
