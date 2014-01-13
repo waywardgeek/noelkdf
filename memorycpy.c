@@ -5,24 +5,39 @@
 #include <string.h>
 #include <pthread.h>
 
-#define MEM_SIZE (1LL << 31)
-#define MEM_LENGTH (MEM_SIZE/sizeof(unsigned long long))
-#define NUM_THREADS 1
+#define MEM_SIZE (1LLU << 31)
+#define MEM_LENGTH (MEM_SIZE/sizeof(unsigned int))
+#define NUM_THREADS 2
+#define PAGE_SIZE (1024*16)
+#define PAGE_LENGTH (PAGE_SIZE/sizeof(unsigned int))
+
+static inline unsigned int H(unsigned int v) {
+    return v*1103515245 + 12345;
+}
 
 static void *moveMem(void *memPtr) {
-    unsigned long long *mem = (unsigned long long *)memPtr;
-    //memmove(mem, mem + 8, (MEM_LENGTH-1)*sizeof(unsigned long long)/NUM_THREADS);
+    unsigned int *mem = (unsigned int *)memPtr;
+    //memmove(mem, mem + 8, (MEM_LENGTH-1)*sizeof(unsigned int)/NUM_THREADS);
+    mem[0] = 0xdeadbeef;
+    unsigned int hash = 0;
     unsigned int i;
-    mem[0] = 1;
-    for(i = 1; i < MEM_LENGTH-1; i++) {
-        mem[i] = mem[i-1]*i;
+    unsigned int prevAddr = 0;
+    for(i = 1; i < MEM_LENGTH/NUM_THREADS;) {
+        prevAddr = H(i) % i;
+        unsigned int j;
+        for(j = 0; j < PAGE_SIZE/1; j++) {
+            unsigned int prevVal = mem[prevAddr++];
+            hash = hash*(prevVal | 1) + 12345;
+            mem[i++] = hash;
+        }
     }
+    printf("%u\n", hash);
     pthread_exit(NULL);
 }
 
 int main() {
     pthread_t threads[NUM_THREADS];
-    unsigned long long *mem = (unsigned long long *)malloc(MEM_SIZE);
+    unsigned int *mem = (unsigned int *)malloc(MEM_SIZE);
     int rc;
     long t;
     for(t = 0; t < NUM_THREADS; t++) {
@@ -36,6 +51,6 @@ int main() {
     for(t = 0; t < NUM_THREADS; t++) {
         (void)pthread_join(threads[t], NULL);
     }
-    printf("%u\n", ((unsigned int *)mem)[rand() % MEM_LENGTH]);
+    //printf("%u\n", ((unsigned int *)mem)[rand() % MEM_LENGTH]);
     return 0;
 }
