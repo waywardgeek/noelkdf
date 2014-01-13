@@ -30,24 +30,16 @@ static inline uint32 H1(uint32 v) {
     return v*1103515245 + 12345;
 }
 
-// New 4-input simple hash function that apears to be good enough.
-static inline uint32 H4(uint32 v1, uint32 v2, uint32 v3, uint32 v4, uint32 v5) {
-    return (v1 + ((v2 * v3) ^ v4)) ^ v5;
-}
-
 // Hash the next page.
 static inline uint32 hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
         uint32 pageLength, uint32 parallelism, uint32 hash) {
-    uint32 numSequences = pageLength/parallelism;
+    uint32 prevPrevVal = 0;
     uint32 i;
-    for(i = 0; i < numSequences; i++) {
-        hash += (*prevPage ^ *fromPage) | 1;
-        uint32 j;
-        for(j = 0; j < parallelism; j++) {
-            *toPage++ = H4(*prevPage, *(prevPage+1), hash, *(fromPage+1), *fromPage);
-            prevPage++;
-            fromPage++;
-        }
+    for(i = 0; i < pageLength; i++) {
+        unsigned int prevVal = *prevPage++;
+        hash = hash*(prevVal | 1) + prevPrevVal;
+        *toPage++ = hash;
+        prevPrevVal = prevVal;
     }
     return hash;
 }

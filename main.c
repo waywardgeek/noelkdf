@@ -179,12 +179,13 @@ static void verifyParameters(uint32 garlic, uint64 memorySize, uint32
 // may not be very random yet.
 static void dumpMemory(uint32 *mem, uint32 memorySize) {
     uint64 memoryLength = (1LL << 20)*memorySize/sizeof(uint32);
-    uint32 numToSkip = memoryLength >> 7;
+    uint32 numToSkip = memoryLength >> 2;
+    uint32 hopSize = 8;
     printf("type: d\n"
         "count: %llu\n"
-        "numbit: 32\n", memoryLength - numToSkip);
+        "numbit: 32\n", (memoryLength - numToSkip)/hopSize);
     uint32 i;
-    for(i = numToSkip; i < memoryLength; i++) {
+    for(i = numToSkip; i < memoryLength; i += hopSize) {
         printf("%u\n", mem[i]);
     }
 }
