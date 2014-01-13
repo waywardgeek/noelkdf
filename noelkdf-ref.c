@@ -22,7 +22,6 @@ struct ContextStruct {
     uint32 saltSize;
     uint32 pageLength;
     uint32 numPages;
-    uint32 parallelism;
 };
 
 // Simple hash function of one parameter from the old glibc rand() function.
@@ -31,8 +30,7 @@ static inline uint32 H1(uint32 v) {
 }
 
 // Hash the next page.
-static inline uint32 hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage,
-        uint32 pageLength, uint32 parallelism, uint32 hash) {
+static inline uint32 hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage, uint32 pageLength, uint32 hash) {
     uint32 prevPrevVal = 0;
     uint32 i;
     for(i = 0; i < pageLength; i++) {
@@ -65,7 +63,7 @@ static void *hashMem(void *contextPtr) {
         }
         // Select a random-ish from page that depends only on i
         fromPage = c->mem + c->pageLength*(H1(i) & mask);
-        hash = hashPage(toPage, prevPage, fromPage, c->pageLength, c->parallelism, hash);
+        hash = hashPage(toPage, prevPage, fromPage, c->pageLength, hash);
         prevPage = toPage;
         toPage += c->pageLength;
     }
@@ -111,15 +109,12 @@ static void xorThreadKeysOntoOut(uint8 *threadKeys, uint32 numThreads, uint8 *ou
 //  num_threads     - the number of threads to run in parallel
 //  page_size     - length of memory blocks hashed at a time
 //  num_hash_rounds - number of SHA256 rounds to compute the intermediate key
-//  parallelism     - number of inner loops allowed to run in parallel - should match
-//                    user's machine for best protection
 //  clear_in        - when true, overwrite the in buffer with 0's early on
 //  return_memory   - when true, the hash data stored in memory is returned without being
 //                    freed in the memPtr variable
 int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned int repeat_count,
-        unsigned int parallelism, unsigned int num_threads, unsigned int page_size, int clear_in,
-        int return_memory, uint32 **memPtr) {
+        unsigned int num_threads, unsigned int page_size, int clear_in, int return_memory, uint32 **memPtr) {
 
     // Allocate memory
     uint32 pageLength = (page_size << 10)/sizeof(uint32);
@@ -161,7 +156,6 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
                 c[t].saltSize = saltlen;
                 c[t].threadKey = threadKeys + t*outlen;
                 c[t].pageLength = pageLength;
-                c[t].parallelism = parallelism;
                 int rc = pthread_create(&threads[t], NULL, hashMem, (void *)(c + t));
                 if (rc){
                     fprintf(stderr, "Unable to start threads\n");
@@ -197,5 +191,5 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.
 int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost) {
-    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 1, 16, 2, 4096, 0, 0, NULL);
+    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 1, 2, 4096, 0, 0, NULL);
 }

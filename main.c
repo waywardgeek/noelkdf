@@ -17,14 +17,13 @@ static void usage(char *format, ...) {
     vfprintf(stderr, (char *)format, ap);
     va_end(ap);
     fprintf(stderr, "\nUsage: noelkdf outlen password salt t_cost m_cost num_hash_rounds +\n"
-        "        repeat_count parallelism num_threads page_size free_memory dump\n"
+        "        repeat_count num_threads page_size free_memory dump\n"
         "    outlen is the output derived key in bytes\n"
         "    t_cost is \"garlic\" that multiplies memory and CPU work by 2^t_cost\n"
         "        it is used for client independent hash updates\n"
         "    m_cost is the ammount of memory to use in MB\n"
         "    num_hash_rounds is the number of SHA256 hashes used to derive the intermediate key\n"
         "    repeat_count is a multiplier on the total number of times we hash\n"
-        "    parallelism is the number of inner loops that can be run in parallel\n"
         "    num_threads is the number of threads used in hashing\n"
         "    page_size is the length of memory hashed in the inner loop, in KB\n"
         "    when free_memory is non-zero, we free hashed memory before exiting\n"
@@ -107,9 +106,9 @@ static void printHex(
 
 static void readArguments(int argc, char **argv, uint32 *derivedKeySize, char **password, uint32 *passwordSize,
         uint8 **salt, uint32 *saltSize, uint32 *garlic, uint32 *memorySize, uint32 *numHashRounds,
-        uint32 *repeatCount, uint32 *parallelism, uint32 *numThreads, uint32 *pageSize,
+        uint32 *repeatCount, uint32 *numThreads, uint32 *pageSize,
         bool *freeMemory, bool *dump) {
-    if(argc != 13) {
+    if(argc != 12) {
         usage("Incorrect number of arguments");
     }
     *derivedKeySize = readUint32(argv, 1);
@@ -120,17 +119,16 @@ static void readArguments(int argc, char **argv, uint32 *derivedKeySize, char **
     *memorySize = readUint32(argv, 5); // Number of MB
     *numHashRounds = readUint32(argv, 6);
     *repeatCount = readUint32(argv, 7);
-    *parallelism = readUint32(argv, 8);
-    *numThreads = readUint32(argv, 9);
-    *pageSize = readUint32(argv, 10);
-    *freeMemory = readUint32(argv, 11);
-    *dump = readUint32(argv, 12);
+    *numThreads = readUint32(argv, 8);
+    *pageSize = readUint32(argv, 9);
+    *freeMemory = readUint32(argv, 10);
+    *dump = readUint32(argv, 11);
 }
 
 // Verify the input parameters are reasonalble.
 static void verifyParameters(uint32 garlic, uint64 memorySize, uint32
         derivedKeySize, uint32 saltSize, uint32 passwordSize,
-        uint32 numHashRounds, uint32 repeatCount, uint32 parallelism, uint32 numThreads, uint32 pageSize) {
+        uint32 numHashRounds, uint32 repeatCount, uint32 numThreads, uint32 pageSize) {
     if(garlic > 16) {
         usage("Invalid hashing multipler");
     }
@@ -153,10 +151,7 @@ static void verifyParameters(uint32 garlic, uint64 memorySize, uint32
         usage("page_size must be >= 1");
     }
     if(repeatCount < 1) {
-        usage("parallelism must be >= 1");
-    }
-    if(parallelism < 1 || ((1024*pageSize)/parallelism)*parallelism != 1024*pageSize) {
-        usage("parallelism must be >= 1");
+        usage("repeatCount must be >= 1");
     }
     if(numThreads < 1) {
         usage("num_threads must be >= 1");
@@ -166,12 +161,6 @@ static void verifyParameters(uint32 garlic, uint64 memorySize, uint32
     }
     if(pageSize != 1) {
         usage("page_size must be a power of 2");
-    }
-    while((parallelism & 1) == 0) {
-        parallelism >>= 1;
-    }
-    if(parallelism != 1) {
-        usage("parallelism must be a power of 2");
     }
 }
 
@@ -193,22 +182,22 @@ static void dumpMemory(uint32 *mem, uint32 memorySize) {
 int main(int argc, char **argv) {
     uint32 memorySize;
     uint32 garlic, derivedKeySize, saltSize, passwordSize;
-    uint32 numHashRounds, repeatCount, parallelism, numThreads, pageSize;
+    uint32 numHashRounds, repeatCount, numThreads, pageSize;
     uint8 *salt;
     char *password;
     bool freeMemory, dump;
     readArguments(argc, argv, &derivedKeySize, &password, &passwordSize, &salt, &saltSize, &garlic, &memorySize,
-        &numHashRounds, &repeatCount, &parallelism, &numThreads, &pageSize, &freeMemory, &dump);
+        &numHashRounds, &repeatCount, &numThreads, &pageSize, &freeMemory, &dump);
     verifyParameters(garlic, memorySize, derivedKeySize, saltSize, passwordSize,
-        numHashRounds, repeatCount, parallelism, numThreads, pageSize);
+        numHashRounds, repeatCount, numThreads, pageSize);
     uint8 *derivedKey = (uint8 *)calloc(derivedKeySize, sizeof(uint8));
     uint32 *mem;
     if(!dump) {
-        printf("garlic:%u memorySize:%u numHashRounds:%u repeatCount:%u parallelism:%u numThreads:%u pageSize:%u\n", 
-            garlic, memorySize, numHashRounds, repeatCount, parallelism, numThreads, pageSize);
+        printf("garlic:%u memorySize:%u numHashRounds:%u repeatCount:%u numThreads:%u pageSize:%u\n", 
+            garlic, memorySize, numHashRounds, repeatCount, numThreads, pageSize);
     }
     if(NoelKDF(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize, garlic, memorySize,
-            numHashRounds, repeatCount, parallelism, numThreads, pageSize, true, dump || !freeMemory, &mem)) {
+            numHashRounds, repeatCount, numThreads, pageSize, true, dump || !freeMemory, &mem)) {
         fprintf(stderr, "Key stretching failed.\n");
         return 1;
     }
