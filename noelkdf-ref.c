@@ -12,8 +12,6 @@ typedef unsigned short uint16;
 typedef unsigned int uint32;
 typedef unsigned long long uint64;
 
-#define CHEAT_KILLER_LOCATIONS 1000 // Enough to put the hurt on him
-
 struct ContextStruct {
     uint32 *mem;
     uint8 *threadKey;
@@ -63,10 +61,10 @@ static void *hashMem(void *contextPtr) {
 // this pass should kill it.  We could obscure the resulting password-dependent cache miss
 // activity with "smoke", but at this point an attacker will have already done all the
 // work for a password guess.
-static void cheatKillerPass(uint32 *out, uint32 outLength, uint32 *mem, uint32 memLength) {
+static void cheatKillerPass(uint32 *out, uint32 outLength, uint32 *mem, uint32 memLength, uint32 killerFactor) {
     uint32 i, j = 0;
     uint32 address = 0;
-    for(i = 0; i < CHEAT_KILLER_LOCATIONS; i++) {
+    for(i = 0; i < memLength/killerFactor; i++) {
         if(j == outLength) {
             j = 0;
         }
@@ -77,14 +75,19 @@ static void cheatKillerPass(uint32 *out, uint32 outLength, uint32 *mem, uint32 m
 
 // This version allows for some more options than PHS.  They are:
 //  num_threads     - the number of threads to run in parallel
-//  block_size     - length of memory blocks hashed at a time
+//  block_size      - length of memory blocks hashed at a time
 //  num_hash_rounds - number of SHA256 rounds to compute the intermediate key
+//  killer_factor   - 1 means hash m_cost locations in the cheat killer round.  K means
+//                    hash m_cost/K locations.
+//  parallelism     - number of inner loops allowed to run in parallel - should match
+//                    user's machine for best protection
 //  clear_in        - when true, overwrite the in buffer with 0's early on
 //  return_memory   - when true, the hash data stored in memory is returned without being
 //                    freed in the memPtr variable
 int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, size_t saltlen,
-        unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned int repeat_count,
-        unsigned int num_threads, unsigned int block_size, int clear_in, int return_memory, uint32 **memPtr) {
+        unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned int killer_factor,
+        unsigned int repeat_count, unsigned int num_threads, unsigned int block_size, int clear_in,
+        int return_memory, unsigned int **mem_ptr) {
 
     // Allocate memory
     uint32 blockLength = block_size/sizeof(uint32);
@@ -136,7 +139,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
             for(t = 0; t < num_threads; t++) {
                 (void)pthread_join(threads[t], NULL);
             }
-            cheatKillerPass(out, outlen/sizeof(uint32), mem, numBlocks*blockLength);
+            cheatKillerPass(out, outlen/sizeof(uint32), mem, numBlocks*blockLength, killer_factor);
         }
 
         // Double memory usage for the next loop.
@@ -148,7 +151,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
     free(threadKeys);
     free(c);
     if(return_memory) {
-        *memPtr = mem;
+        *mem_ptr = mem;
     } else {
         free(mem);
     }
@@ -159,5 +162,5 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.
 int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost) {
-    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 1, 2, 4096, 0, 0, NULL);
+    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 100, 1, 2, 4096, 0, 0, NULL);
 }
