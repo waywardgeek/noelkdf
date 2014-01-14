@@ -45,7 +45,7 @@ static void *hashMem(void *contextPtr) {
     uint32 prevFromVal = 0;
     uint32 i;
     for(i = 1; i < c->numBlocks; i++) {
-        fromBlock = c->mem + (uint64)c->blockLength*(Rand(i) % i);
+        fromBlock = c->mem + (uint64)c->blockLength*((i + (Rand(i) % i)) >> 1);
         uint32 j;
         for(j = 0; j < c->blockLength; j++) {
             uint32 fromVal = *fromBlock++;
