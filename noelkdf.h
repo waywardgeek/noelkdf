@@ -5,7 +5,7 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
 
 // This version allows for some more options than PHS.  They are:
 //  num_threads     - the number of threads to run in parallel
-//  page_size     - length of memory blocks hashed at a time
+//  block_size     - length of memory blocks hashed at a time
 //  num_hash_rounds - number of SHA256 rounds to compute the intermediate key
 //  parallelism     - number of inner loops allowed to run in parallel - should match
 //                    user's machine for best protection
@@ -14,4 +14,4 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
 //                    freed in the memPtr variable
 int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned int repeat_count,
-        unsigned int num_threads, unsigned int page_size, int clear_in, int return_memory, unsigned int **mem_ptr);
+        unsigned int num_threads, unsigned int block_size, int clear_in, int return_memory, unsigned int **mem_ptr);
