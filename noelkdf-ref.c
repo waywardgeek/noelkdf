@@ -25,7 +25,7 @@ struct ContextStruct {
 };
 
 // Simple hash function of one parameter from the old glibc rand() function.
-static inline uint32 H1(uint32 v) {
+static inline uint32 Rand(uint32 v) {
     return v*1103515245 + 12345;
 }
 
@@ -45,7 +45,7 @@ static void *hashMem(void *contextPtr) {
     uint32 prevFromVal = 0;
     uint32 i;
     for(i = 1; i < c->numBlocks; i++) {
-        fromBlock = c->mem + (uint64)c->blockLength*(H1(i) % i);
+        fromBlock = c->mem + (uint64)c->blockLength*(Rand(i) % i);
         uint32 j;
         for(j = 0; j < c->blockLength; j++) {
             uint32 fromVal = *fromBlock++;
