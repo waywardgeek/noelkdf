@@ -198,8 +198,8 @@ int main(int argc, char **argv) {
     uint8 *derivedKey = (uint8 *)calloc(derivedKeySize, sizeof(uint8));
     uint32 *mem;
     if(!dump) {
-        printf("garlic:%u memorySize:%u numHashRounds:%u repeatCount:%u numThreads:%u blockSize:%u\n", 
-            garlic, memorySize, numHashRounds, repeatCount, numThreads, blockSize);
+        printf("garlic:%u memorySize:%u numHashRounds:%u killerFactor:%u repeatCount:%u numThreads:%u blockSize:%u\n", 
+            garlic, memorySize, numHashRounds, killerFactor, repeatCount, numThreads, blockSize);
     }
     if(NoelKDF(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize, garlic, memorySize,
             numHashRounds, killerFactor, repeatCount, numThreads, blockSize, true, dump || !freeMemory, &mem)) {

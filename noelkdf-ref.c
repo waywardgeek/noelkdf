@@ -61,15 +61,20 @@ static void *hashMem(void *contextPtr) {
 // this pass should kill it.  We could obscure the resulting password-dependent cache miss
 // activity with "smoke", but at this point an attacker will have already done all the
 // work for a password guess.
-static void cheatKillerPass(uint32 *out, uint32 outLength, uint32 *mem, uint32 memLength, uint32 killerFactor) {
+static void cheatKillerPass(uint8 *out, uint32 outSize, uint32 *mem, uint32 memLength, uint32 killerFactor) {
     uint32 i, j = 0;
     uint32 address = 0;
     for(i = 0; i < memLength/killerFactor; i++) {
-        if(j == outLength) {
-            j = 0;
+        uint32 value = mem[address];
+        address = Rand(address + value) % memLength;
+        uint32 k;
+        for(k = 0; k < sizeof(uint32); k++) {
+            if(j == outSize) {
+                j = 0;
+            }
+            out[j++] = (uint8)value;
+            value >>= 8;
         }
-        address += out[j++];
-        out[j] ^= mem[address % memLength];
     }
 }
 
@@ -139,7 +144,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
             for(t = 0; t < num_threads; t++) {
                 (void)pthread_join(threads[t], NULL);
             }
-            cheatKillerPass(out, outlen/sizeof(uint32), mem, numBlocks*blockLength, killer_factor);
+            cheatKillerPass(out, outlen, mem, numBlocks*blockLength, killer_factor);
         }
 
         // Double memory usage for the next loop.
