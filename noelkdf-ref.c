@@ -29,19 +29,6 @@ static inline uint32 H1(uint32 v) {
     return v*1103515245 + 12345;
 }
 
-// Hash the next page.
-static inline uint32 hashPage(uint32 *toPage, uint32 *prevPage, uint32 *fromPage, uint32 pageLength, uint32 hash) {
-    uint32 prevPrevVal = 0;
-    uint32 i;
-    for(i = 0; i < pageLength; i++) {
-        unsigned int prevVal = *prevPage++;
-        hash = hash*(prevVal | 1) + prevPrevVal;
-        *toPage++ = hash;
-        prevPrevVal = prevVal;
-    }
-    return hash;
-}
-
 // This is the function called by each thread.  It hashes a single continuous block of memory.
 static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
@@ -52,25 +39,25 @@ static void *hashMem(void *contextPtr) {
     PBKDF2_SHA256(c->threadKey, c->threadKeySize, c->salt, c->saltSize, 1,
         (uint8 *)(void *)c->mem, c->pageLength*sizeof(uint32));
 
-    // Create pages sequentially by hashing the previous page with a random page.
-    uint32 *toPage = c->mem + c->pageLength, *fromPage, *prevPage = c->mem;
-    uint32 hash = 0;
-    uint32 mask = 0;
+    uint32 *toPage = c->mem + c->pageLength;
+    uint32 *fromPage;
+    uint32 hash = 1;
+    uint32 prevFromVal = 0;
     uint32 i;
     for(i = 1; i < c->numPages; i++) {
-        if(mask + 1 < i) {
-            mask = (mask << 1) | 1;
+        fromPage = c->mem + (uint64)c->pageLength*(H1(i) % i);
+        uint32 j;
+        for(j = 0; j < c->pageLength; j++) {
+            uint32 fromVal = *fromPage++;
+            hash = hash*(fromVal | 1) + prevFromVal;
+            *toPage++ = hash;
+            prevFromVal = fromVal;
         }
-        // Select a random-ish from page that depends only on i
-        fromPage = c->mem + c->pageLength*(H1(i) & mask);
-        hash = hashPage(toPage, prevPage, fromPage, c->pageLength, hash);
-        prevPage = toPage;
-        toPage += c->pageLength;
     }
 
     // TODO: Replace this with endian-aware XOR-ing of the last page of data.
     // Hash the last page over the thread key
-    PBKDF2_SHA256((uint8 *)(void *)prevPage, c->pageLength*sizeof(uint32), c->salt, c->saltSize, 1,
+    PBKDF2_SHA256((uint8 *)(void *)(toPage - c->pageLength), c->pageLength*sizeof(uint32), c->salt, c->saltSize, 1,
         c->threadKey, c->threadKeySize);
     pthread_exit(NULL);
 }
@@ -117,7 +104,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
         unsigned int num_threads, unsigned int page_size, int clear_in, int return_memory, uint32 **memPtr) {
 
     // Allocate memory
-    uint32 pageLength = (page_size << 10)/sizeof(uint32);
+    uint32 pageLength = page_size/sizeof(uint32);
     uint32 numPages = m_cost*(1LL << 20)/(num_threads*pageLength*sizeof(uint32)) + 1;
     uint32 memLength = (uint64)numPages*pageLength*num_threads << t_cost;
     uint32 *mem = (uint32 *)malloc(memLength*sizeof(uint32));
