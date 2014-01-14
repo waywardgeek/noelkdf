@@ -54,11 +54,6 @@ static void *hashMem(void *contextPtr) {
             prevFromVal = fromVal;
         }
     }
-
-    // TODO: Replace this with endian-aware XOR-ing of the last block of data.
-    // Hash the last block over the thread key
-    PBKDF2_SHA256((uint8 *)(void *)(toBlock - c->blockLength), c->blockLength*sizeof(uint32), c->salt, c->saltSize, 1,
-        c->threadKey, c->threadKeySize);
     pthread_exit(NULL);
 }
 
@@ -77,18 +72,6 @@ static void cheatKillerPass(uint32 *out, uint32 outLength, uint32 *mem, uint32 m
         }
         address += out[j++];
         out[j] ^= mem[address % memLength];
-    }
-}
-
-// Just XOR the resulting threads key onto the output.
-static void xorThreadKeysOntoOut(uint8 *threadKeys, uint32 numThreads, uint8 *out, uint32 outSize) {
-    uint32 i;
-    for(i = 0; i < numThreads; i++) {
-        uint8 *key = threadKeys + i*outSize;
-        uint32 j;
-        for(j = 0; j < outSize; j++) {
-            out[j] ^= key[j];
-        }
     }
 }
 
@@ -153,14 +136,12 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
             for(t = 0; t < num_threads; t++) {
                 (void)pthread_join(threads[t], NULL);
             }
-            xorThreadKeysOntoOut(threadKeys, num_threads, out, outlen);
+            cheatKillerPass(out, outlen/sizeof(uint32), mem, numBlocks*blockLength);
         }
 
         // Double memory usage for the next loop.
         numBlocks <<= 1;
     }
-
-    cheatKillerPass(out, outlen/sizeof(uint32), mem, memLength);
 
     // Free memory.  The optimized version should try to insure that memory is cleared.
     free(threads);
