@@ -35,19 +35,17 @@ static void *hashMem(void *contextPtr) {
     memset(c->mem, '\0', c->blockLength*sizeof(uint32));
     be32dec_vect(c->mem, c->threadKey, c->threadKeySize);
 
+    uint32 *prevBlock = c->mem;
     uint32 *toBlock = c->mem + c->blockLength;
     uint32 *fromBlock;
     uint32 hash = 1;
-    uint32 prevFromVal = 0;
     uint32 i;
     for(i = 1; i < c->numBlocks; i++) {
         fromBlock = c->mem + (uint64)c->blockLength*((i + (Rand(i) % i)) >> 1);
         uint32 j;
         for(j = 0; j < c->blockLength; j++) {
-            uint32 fromVal = *fromBlock++;
-            hash = hash*(fromVal | 1) + prevFromVal;
+            hash = hash*(*fromBlock++ | 1) + *prevBlock++;
             *toBlock++ = hash;
-            prevFromVal = fromVal;
         }
     }
     pthread_exit(NULL);

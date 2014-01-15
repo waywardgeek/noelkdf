@@ -135,7 +135,7 @@ static void verifyParameters(uint32 garlic, uint64 memorySize, uint32
     if(garlic > 16) {
         usage("Invalid hashing multipler");
     }
-    if(memorySize > (1 << 20) || memorySize < 1) {
+    if(memorySize > (1 << 20) || memorySize == 0) {
         usage("Invalid memory size");
     }
     if(derivedKeySize == 0 || (derivedKeySize & 0x3) != 0 || derivedKeySize > blockSize) {
