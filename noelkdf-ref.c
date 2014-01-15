@@ -31,11 +31,9 @@ static inline uint32 Rand(uint32 v) {
 static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
 
-    // TODO: Replace this with a simply copying the thread key over and over to fill the
-    // first block, and deal with endian-ness then.  For now, I'm testing with this so that
-    // the dieharder tests don't get mad about the repeated key.
-    PBKDF2_SHA256(c->threadKey, c->threadKeySize, c->salt, c->saltSize, 1,
-        (uint8 *)(void *)c->mem, c->blockLength*sizeof(uint32));
+    // Copy the thread key to the first block
+    memset(c->mem, '\0', c->blockLength*sizeof(uint32));
+    be32dec_vect(c->mem, c->threadKey, c->threadKeySize);
 
     uint32 *toBlock = c->mem + c->blockLength;
     uint32 *fromBlock;
@@ -58,9 +56,7 @@ static void *hashMem(void *contextPtr) {
 // Use the resulting output hash, which does depend on the password, to hash a small
 // percentage of the total memory.  This forces all the threads' memory to be loaded at
 // once, and if there was an attack that worked based on pre-computation of addresses,
-// this pass should kill it.  We could obscure the resulting password-dependent cache miss
-// activity with "smoke", but at this point an attacker will have already done all the
-// work for a password guess.
+// this pass should kill it.
 static void cheatKillerPass(uint8 *out, uint32 outSize, uint32 *mem, uint32 numBlocks,
         uint32 blockLength, uint32 killerFactor) {
     uint32 outPos = 0;
@@ -77,8 +73,8 @@ static void cheatKillerPass(uint8 *out, uint32 outSize, uint32 *mem, uint32 numB
                 if(outPos == outSize) {
                     outPos = 0;
                 }
-                out[outPos++] = (uint8)value;
-                value >>= 8;
+                out[outPos++] ^= (uint8)(value >> 24);
+                value <<= 8;
             }
         }
     }

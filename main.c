@@ -138,35 +138,29 @@ static void verifyParameters(uint32 garlic, uint64 memorySize, uint32
     if(memorySize > (1 << 20) || memorySize < 1) {
         usage("Invalid memory size");
     }
-    if(derivedKeySize < 8 || derivedKeySize > (1 << 20)) {
+    if(derivedKeySize == 0 || (derivedKeySize & 0x3) != 0 || derivedKeySize > blockSize) {
         usage("Invalid derived key size");
     }
-    if(saltSize > (1 << 16) || saltSize < 4) {
+    if(saltSize > (1 << 16) || saltSize < 4 || (saltSize & 0x3) != 0) {
         usage("Invalid salt size");
     }
-    if(passwordSize == 0) {
+    if(passwordSize == 0 || passwordSize > (1 << 20)) {
         usage("Invalid password size");
     }
-    if(numHashRounds < 1) {
+    if(numHashRounds == 0) {
         usage("num_hash_rounds must be >= 1");
     }
-    if(killerFactor < 1 || killerFactor > memorySize) {
+    if(killerFactor == 0 || killerFactor > memorySize) {
         usage("killer_factor must be >= 1 and <= memory_size");
     }
-    if(blockSize < 1) {
-        usage("block_size must be >= 1");
+    if(blockSize == 0 || (blockSize & 0x3) != 0) {
+        usage("block_size must be >= 1 and multiple of 4");
     }
-    if(repeatCount < 1) {
+    if(repeatCount == 0) {
         usage("repeatCount must be >= 1");
     }
-    if(numThreads < 1) {
+    if(numThreads == 0) {
         usage("num_threads must be >= 1");
-    }
-    while((blockSize & 1) == 0) {
-        blockSize >>= 1;
-    }
-    if(blockSize != 1) {
-        usage("block_size must be a power of 2");
     }
 }
 
@@ -193,14 +187,14 @@ int main(int argc, char **argv) {
     bool freeMemory, dump;
     readArguments(argc, argv, &derivedKeySize, &password, &passwordSize, &salt, &saltSize, &garlic, &memorySize,
         &numHashRounds, &killerFactor, &repeatCount, &numThreads, &blockSize, &freeMemory, &dump);
-    verifyParameters(garlic, memorySize, derivedKeySize, saltSize, passwordSize,
-        numHashRounds, killerFactor, repeatCount, numThreads, blockSize);
-    uint8 *derivedKey = (uint8 *)calloc(derivedKeySize, sizeof(uint8));
-    uint32 *mem;
     if(!dump) {
         printf("garlic:%u memorySize:%u numHashRounds:%u killerFactor:%u repeatCount:%u numThreads:%u blockSize:%u\n", 
             garlic, memorySize, numHashRounds, killerFactor, repeatCount, numThreads, blockSize);
     }
+    verifyParameters(garlic, memorySize, derivedKeySize, saltSize, passwordSize,
+        numHashRounds, killerFactor, repeatCount, numThreads, blockSize);
+    uint8 *derivedKey = (uint8 *)calloc(derivedKeySize, sizeof(uint8));
+    uint32 *mem;
     if(NoelKDF(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize, garlic, memorySize,
             numHashRounds, killerFactor, repeatCount, numThreads, blockSize, true, dump || !freeMemory, &mem)) {
         fprintf(stderr, "Key stretching failed.\n");
