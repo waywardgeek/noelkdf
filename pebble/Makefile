@@ -1,5 +1,5 @@
 pebble: pedatabase.c pedatabase.h main.c
-	gcc -Wall -g -DDD_DEBUG pedatabase.c main.c -o pebble -lddutil-dbg
+	gcc -Wall -g -DDD_DEBUG pedatabase.c main.c -o pebble -lm -lddutil-dbg
 
 pedatabase.h: pedatabase.c
 

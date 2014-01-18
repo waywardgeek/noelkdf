@@ -1,7 +1,9 @@
 #include <stdlib.h>
+#include <math.h>
 #include "pedatabase.h"
 
-#define MEM_LENGTH 2000000LL
+//#define MEM_LENGTH 100000000LL
+#define MEM_LENGTH 100000LL
 #define NUM_PEBBLES (MEM_LENGTH/4)
 #define NUM_SAMPLES 100LL
 
@@ -32,7 +34,7 @@ static uint32 findPrevLogarithmicChainPos(uint32 pos) {
         t >>= 1;
         row++;
     }
-    uint32 dist = 2 << (row/8);
+    uint32 dist = 2 << (row/4);
     t = pos;
     do {
         t >>= 1;
@@ -81,7 +83,10 @@ static uint32 findPrevPos(uint32 pos) {
 static uint32 findDAGSize(uint32 pos) {
     peLocation location = peRootGetiLocation(peTheRoot, pos);
     pePebble pebble = peLocationGetPebble(location);
-    if(pebble != pePebbleNull || peLocationVisited(location)) {
+    if(pebble != pePebbleNull) {
+        return 0;
+    }
+    if(peLocationVisited(location)) {
         return 0;
     }
     uint32 numPebbles = 1;
