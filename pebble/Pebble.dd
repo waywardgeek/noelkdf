@@ -1,0 +1,12 @@
+module Pebble pe
+
+class Root create_only
+
+class Pebble create_only
+    uint32 position
+
+class Location create_only array
+    bool visited
+
+relationship Root Location array child_only
+relationship Location Pebble
