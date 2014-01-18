@@ -1,31 +1,39 @@
 #include <stdlib.h>
 #include "pedatabase.h"
 
-#define MEM_LENGTH 400000LL
-#define NUM_PEBBLES (MEM_LENGTH/8)
-#define NUM_SAMPLES 100
+#define MEM_LENGTH 2000000LL
+#define NUM_PEBBLES (MEM_LENGTH/4)
+#define NUM_SAMPLES 100LL
 
 peRoot peTheRoot;
 peLocationArray peVisitedLocations;
 
 // For now, just randomly distribute pebbles.
 static void randomlyDistributePebbles(void) {
+    uint32 total = 0;
     uint32 xPebble;
-
     for(xPebble = 0; xPebble < MEM_LENGTH; xPebble++) {
         if((rand() % (MEM_LENGTH/NUM_PEBBLES)) == 0) {
             pePebble pebble = pePebbleAlloc();
             peLocation location = peRootGetiLocation(peTheRoot, xPebble);
             peLocationInsertPebble(location, pebble);
+            total++;
         }
     }
+    printf("Total pebbles: %u\n", total);
 }
 
 // Find the previous position along the logarithmic chains.  Basically, let n = the number
 // of 1's from the LSB until we see the first 0, and return 2^(n+1).
 static uint32 findPrevLogarithmicChainPos(uint32 pos) {
-    uint32 dist = 2;
+    uint32 row = 0;
     uint32 t = pos;
+    while(t != 1) {
+        t >>= 1;
+        row++;
+    }
+    uint32 dist = 2 << (row/8);
+    t = pos;
     do {
         t >>= 1;
         dist <<= 1;
@@ -108,7 +116,7 @@ static void computeAveragePenalty(void) {
 // Dump the graph.
 static void dumpGraph(void) {
     uint32 pos;
-    printf("n0\n");
+    printf("  n0\n");
     for(pos = 1; pos < MEM_LENGTH; pos++) {
         char c = ' ';
         if(peLocationGetPebble(peRootGetiLocation(peTheRoot, pos)) != pePebbleNull) {
