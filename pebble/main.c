@@ -9,23 +9,6 @@
 peRoot peTheRoot;
 peLocationArray peVisitedLocations;
 
-// For now, just randomly distribute pebbles.
-static void randomlyDistributePebbles(void) {
-    uint32 total = 0;
-    uint32 xPebble;
-    for(xPebble = 0; xPebble < MEM_LENGTH; xPebble++) {
-        peLocation location = peRootGetiLocation(peTheRoot, xPebble);
-        //if((rand() % (MEM_LENGTH/NUM_PEBBLES)) == 0) {
-        if((xPebble % (MEM_LENGTH/NUM_PEBBLES)) == 0) {
-        //if(peLocationGetNumPointers(location) >= 3 || (xPebble % 8) == 0) {
-            pePebble pebble = pePebbleAlloc();
-            peLocationInsertPebble(location, pebble);
-            total++;
-        }
-    }
-    printf("Total pebbles: %u out of %llu (%.1f%%)\n", total, MEM_LENGTH, total*100.0/MEM_LENGTH);
-}
-
 /*
 // Find the previous position along the logarithmic chains.  Basically, let n = the number
 // of 1's from the LSB until we see the first 0, and return 2^(n+1).
@@ -151,6 +134,33 @@ static void computeCut(void) {
         }
     }
     printf("Mid-cut size: %u (%.1f%%)\n", cutSize, (cutSize*100.0)/MEM_LENGTH);
+}
+
+// For now, just randomly distribute pebbles.
+static void randomlyDistributePebbles(void) {
+    uint32 total = 0;
+    uint32 xPebble;
+    for(xPebble = 0; xPebble < MEM_LENGTH; xPebble++) {
+        //peLocation location = peRootGetiLocation(peTheRoot, xPebble);
+        //if((rand() % (MEM_LENGTH/NUM_PEBBLES)) == 0) {
+        //if((xPebble % (MEM_LENGTH/NUM_PEBBLES)) == 0) {
+        //if(peLocationGetNumPointers(location) >= 3 || (xPebble % 8) == 0) {
+        uint32 prevPos = findPrevPos(xPebble);
+        if(xPebble - prevPos < 20000) {
+            peLocation location = peRootGetiLocation(peTheRoot, prevPos);
+            if(peLocationGetPebble(location) == pePebbleNull) {
+                pePebble pebble = pePebbleAlloc();
+                peLocationInsertPebble(location, pebble);
+                total++;
+            }
+        }
+        if(xPebble % 8 == 0) {
+            peLocation location = peRootGetiLocation(peTheRoot, xPebble);
+            pePebble pebble = pePebbleAlloc();
+            peLocationInsertPebble(location, pebble);
+        }
+    }
+    printf("Total pebbles: %u out of %llu (%.1f%%)\n", total, MEM_LENGTH, total*100.0/MEM_LENGTH);
 }
 
 // Dump the graph.

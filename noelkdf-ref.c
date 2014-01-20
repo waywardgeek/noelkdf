@@ -47,8 +47,9 @@ static void *hashMem(void *contextPtr) {
         fromBlock = c->mem + (uint64)c->blockLength*(i - 1 - distCubed);
         uint32 j;
         for(j = 0; j < c->blockLength; j++) {
-            hash = hash*(*fromBlock++ | 1) + *prevBlock++;
+            hash = hash*(*prevBlock++ | 1) + *fromBlock++;
             *toBlock++ = hash;
+            //printf("hash:%u\n", hash);
         }
     }
     pthread_exit(NULL);
@@ -100,7 +101,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
     // Allocate memory
     uint32 blockLength = block_size/sizeof(uint32);
     uint32 numBlocks = m_cost*(1LL << 20)/(num_threads*blockLength*sizeof(uint32)) + 1;
-    uint32 memLength = (uint64)numBlocks*blockLength*num_threads << t_cost;
+    uint64 memLength = (uint64)numBlocks*blockLength*num_threads << t_cost;
     uint32 *mem = (uint32 *)malloc(memLength*sizeof(uint32));
     pthread_t *threads = (pthread_t *)malloc(num_threads*sizeof(pthread_t));
     uint8 *threadKeys = (uint8 *)malloc(num_threads*outlen);
@@ -110,6 +111,8 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
         return 0;
     }
 
+    //printf("memLength:%llu numThreads:%u t_cost:%u repeat_count:%u blockLength:%u numBlocks:%u\n",
+        //memLength, num_threads, t_cost, repeat_count, blockLength, numBlocks);
     // Compute intermediate key which is used to hash memory
     PBKDF2_SHA256(in, inlen, salt, saltlen, 2048, out, outlen);
     if(clear_in) {
@@ -136,6 +139,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
                 c[t].salt = salt;
                 c[t].saltSize = saltlen;
                 c[t].threadKey = threadKeys + t*outlen;
+                c[t].threadKeySize = outlen;
                 c[t].blockLength = blockLength;
                 int rc = pthread_create(&threads[t], NULL, hashMem, (void *)(c + t));
                 if (rc){
@@ -155,13 +159,13 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
     }
 
     // Free memory.  The optimized version should try to insure that memory is cleared.
-    free(threads);
-    free(threadKeys);
-    free(c);
+    //free(threads);
+    //free(threadKeys);
+    //free(c);
     if(return_memory) {
         *mem_ptr = mem;
     } else {
-        free(mem);
+       // free(mem);
     }
     return 0;
 }

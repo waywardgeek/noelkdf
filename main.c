@@ -150,7 +150,7 @@ static void verifyParameters(uint32 garlic, uint64 memorySize, uint32
     if(numHashRounds == 0) {
         usage("num_hash_rounds must be >= 1");
     }
-    if(killerFactor == 0 || killerFactor > memorySize) {
+    if(killerFactor == 0) {
         usage("killer_factor must be >= 1 and <= memory_size");
     }
     if(blockSize == 0 || (blockSize & 0x3) != 0) {
@@ -168,11 +168,11 @@ static void verifyParameters(uint32 garlic, uint64 memorySize, uint32
 // may not be very random yet.
 static void dumpMemory(uint32 *mem, uint32 memorySize) {
     uint64 memoryLength = (1LL << 20)*memorySize/sizeof(uint32);
-    uint32 numToSkip = memoryLength >> 3;
+    uint64 numToSkip = memoryLength >> 3;
     printf("type: d\n"
         "count: %llu\n"
         "numbit: 32\n", (memoryLength - numToSkip));
-    uint32 i;
+    uint64 i;
     for(i = numToSkip; i < memoryLength; i++) {
         printf("%u\n", mem[i]);
     }
