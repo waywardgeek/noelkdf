@@ -41,10 +41,11 @@ static void *hashMem(void *contextPtr) {
     uint32 hash = 1;
     uint32 i;
     for(i = 1; i < c->numBlocks; i++) {
-        uint64 dist = Rand(i) % i;
+        uint64 dist = Rand(i);
         uint64 distSquared = (dist*dist)/UINT32_MAX;
         uint64 distCubed = (distSquared*dist)/UINT32_MAX;
-        fromBlock = c->mem + (uint64)c->blockLength*(i - 1 - distCubed);
+        dist = (i-1)*distCubed/UINT32_MAX;
+        fromBlock = c->mem + (uint64)c->blockLength*(i - 1 - dist);
         uint32 j;
         for(j = 0; j < c->blockLength; j++) {
             hash = hash*(*prevBlock++ | 1) + *fromBlock++;
