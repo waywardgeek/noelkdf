@@ -3,7 +3,6 @@
 #include "pedatabase.h"
 
 #define MEM_LENGTH 10000000LL
-#define NUM_PEBBLES (MEM_LENGTH/4)
 #define NUM_SAMPLES 100LL
 
 peRoot peTheRoot;
@@ -64,6 +63,16 @@ static uint32 findPrevPos(uint32 pos) {
     dist = dist*dist*dist;
     return pos - 1 - (uint32)((pos-1)*dist);
     /*
+    // This is a sliding window which is the largest power of 2 < i.
+    uint32 mask = 1;
+    while(mask < pos) {
+        mask <<= 1;
+    }
+    mask = (mask >> 1) - 1;
+    return pos - (rand() & mask);
+    */
+
+    /*
     if(pos & 1) {
         // logarithmic chains
         return findPrevLogarithmicChainPos(pos);
@@ -112,6 +121,7 @@ static void computeAveragePenalty(void) {
         peLocationArraySetUsedLocation(peVisitedLocations, 0);
     }
     printf("Average recalculation is %.4f%%\n", total*100.0/(MEM_LENGTH*NUM_SAMPLES));
+    printf("Recalculation penalty for 1%% coverage is %.1fX\n", total/(100.0*NUM_SAMPLES));
 }
 
 // Set the number of pointers to each memory location.
@@ -142,9 +152,11 @@ static void randomlyDistributePebbles(void) {
     uint32 xPebble;
     for(xPebble = 0; xPebble < MEM_LENGTH; xPebble++) {
         //peLocation location = peRootGetiLocation(peTheRoot, xPebble);
-        //if((rand() % (MEM_LENGTH/NUM_PEBBLES)) == 0) {
-        //if((xPebble % (MEM_LENGTH/NUM_PEBBLES)) == 0) {
+        //if((rand() % (MEM_LENGTH/4)) == 0) {
+        //if((xPebble % (MEM_LENGTH/4)) == 0) {
         //if(peLocationGetNumPointers(location) >= 3 || (xPebble % 8) == 0) {
+        /*
+        // Distribution covering nodes pointed to by short edges
         uint32 prevPos = findPrevPos(xPebble);
         if(xPebble - prevPos < 20000) {
             peLocation location = peRootGetiLocation(peTheRoot, prevPos);
@@ -154,10 +166,13 @@ static void randomlyDistributePebbles(void) {
                 total++;
             }
         }
+        */
+        // Simple uniform distribution
         if(xPebble % 8 == 0) {
             peLocation location = peRootGetiLocation(peTheRoot, xPebble);
             pePebble pebble = pePebbleAlloc();
             peLocationInsertPebble(location, pebble);
+            total++;
         }
     }
     printf("Total pebbles: %u out of %llu (%.1f%%)\n", total, MEM_LENGTH, total*100.0/MEM_LENGTH);

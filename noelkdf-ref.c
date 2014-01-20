@@ -38,17 +38,19 @@ static inline uint32 Rand(struct RngState *s) {
 // This is the function called by each thread.  It hashes a single continuous block of memory.
 static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
+    struct RngState s = {1, 1};
 
     // Copy the thread key to the first block
-    memset(c->mem, '\0', c->blockLength*sizeof(uint32));
     be32dec_vect(c->mem, c->threadKey, c->threadKeySize);
+    uint32 i;
+    for(i = c->threadKeySize; i < c->blockLength; i++) {
+        c->mem[i] = Rand(&s);
+    }
 
     uint32 *prevBlock = c->mem;
     uint32 *toBlock = c->mem + c->blockLength;
     uint32 *fromBlock;
     uint32 hash = 1;
-    struct RngState s = {1, 1};
-    uint32 i;
     for(i = 1; i < c->numBlocks; i++) {
         uint64 dist = Rand(&s);
         uint64 distSquared = (dist*dist) >> 32;
@@ -58,7 +60,7 @@ static void *hashMem(void *contextPtr) {
         fromBlock = c->mem + (uint64)c->blockLength*(i - 1 - (dist%i));
         uint32 j;
         for(j = 0; j < c->blockLength; j++) {
-            hash = hash*(*prevBlock++ | 1) + *fromBlock++;
+            hash = hash*(*prevBlock++ | 3) + *fromBlock++;
             *toBlock++ = hash;
             //printf("hash:%u\n", hash);
         }
