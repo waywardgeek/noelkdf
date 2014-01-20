@@ -6,6 +6,7 @@ class Pebble create_only
     uint32 position
 
 class Location create_only array
+    uint32 numPointers
     bool visited
 
 relationship Root Location array child_only

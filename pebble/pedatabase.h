@@ -259,6 +259,7 @@ utInlineC pePebble pePebbleAlloc(void) {
   Fields for class Location.
 ----------------------------------------------------------------------------------------*/
 struct peLocationFields {
+    uint32 *NumPointers;
     uint8 *Visited;
     pePebble *Pebble;
 };
@@ -266,6 +267,8 @@ extern struct peLocationFields peLocations;
 
 void peLocationAllocMore(void);
 void peLocationCopyProps(peLocation peOldLocation, peLocation peNewLocation);
+utInlineC uint32 peLocationGetNumPointers(peLocation Location) {return peLocations.NumPointers[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetNumPointers(peLocation Location, uint32 value) {peLocations.NumPointers[peLocation2ValidIndex(Location)] = value;}
 utInlineC uint8 peLocationVisited(peLocation Location) {return peLocations.Visited[peLocation2ValidIndex(Location)];}
 utInlineC void peLocationSetVisited(peLocation Location, uint8 value) {peLocations.Visited[peLocation2ValidIndex(Location)] = value;}
 utInlineC pePebble peLocationGetPebble(peLocation Location) {return peLocations.Pebble[peLocation2ValidIndex(Location)];}
@@ -292,6 +295,7 @@ utInlineC peLocation peLocationAllocRaw(void) {
     return Location;}
 utInlineC peLocation peLocationAlloc(void) {
     peLocation Location = peLocationAllocRaw();
+    peLocationSetNumPointers(Location, 0);
     peLocationSetVisited(Location, 0);
     peLocationSetPebble(Location, pePebbleNull);
     if(peLocationConstructorCallback != NULL) {

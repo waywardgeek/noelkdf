@@ -2,8 +2,7 @@
 #include <math.h>
 #include "pedatabase.h"
 
-//#define MEM_LENGTH 100000000LL
-#define MEM_LENGTH 100000LL
+#define MEM_LENGTH 10000000LL
 #define NUM_PEBBLES (MEM_LENGTH/4)
 #define NUM_SAMPLES 100LL
 
@@ -15,16 +14,19 @@ static void randomlyDistributePebbles(void) {
     uint32 total = 0;
     uint32 xPebble;
     for(xPebble = 0; xPebble < MEM_LENGTH; xPebble++) {
-        if((rand() % (MEM_LENGTH/NUM_PEBBLES)) == 0) {
+        peLocation location = peRootGetiLocation(peTheRoot, xPebble);
+        //if((rand() % (MEM_LENGTH/NUM_PEBBLES)) == 0) {
+        if((xPebble % (MEM_LENGTH/NUM_PEBBLES)) == 0) {
+        //if(peLocationGetNumPointers(location) >= 3 || (xPebble % 8) == 0) {
             pePebble pebble = pePebbleAlloc();
-            peLocation location = peRootGetiLocation(peTheRoot, xPebble);
             peLocationInsertPebble(location, pebble);
             total++;
         }
     }
-    printf("Total pebbles: %u\n", total);
+    printf("Total pebbles: %u out of %llu (%.1f%%)\n", total, MEM_LENGTH, total*100.0/MEM_LENGTH);
 }
 
+/*
 // Find the previous position along the logarithmic chains.  Basically, let n = the number
 // of 1's from the LSB until we see the first 0, and return 2^(n+1).
 static uint32 findPrevLogarithmicChainPos(uint32 pos) {
@@ -68,15 +70,25 @@ static uint32 findPrevSafeDatingPos(uint32 pos) {
     }
     return (prevPos - 1)*2;
 }
+*/
 
 // Find the previous position to point to.
 static uint32 findPrevPos(uint32 pos) {
+    if(pos <= 2) {
+        return 0;
+    }
+    double dist = (rand()/(double)RAND_MAX);
+    dist = dist*dist*dist;
+    return pos - 1 - (uint32)((pos-1)*dist);
+    /*
     if(pos & 1) {
         // logarithmic chains
         return findPrevLogarithmicChainPos(pos);
     }
+    return pos - (rand() % pos)/2 - 1;
     // Safe dating tree
     return findPrevSafeDatingPos(pos);
+    */
 }
 
 // Find the size of the uncovered DAG starting at pos.
@@ -96,6 +108,7 @@ static uint32 findDAGSize(uint32 pos) {
         // Previous guy pointer
         numPebbles += findDAGSize(pos - 1);
         uint32 prevPos = findPrevPos(pos);
+        // printf("%u\n", prevPos);
         numPebbles += findDAGSize(prevPos);
     }
     return numPebbles;
@@ -115,23 +128,45 @@ static void computeAveragePenalty(void) {
         } peEndLocationArrayLocation;
         peLocationArraySetUsedLocation(peVisitedLocations, 0);
     }
-    printf("Average recalculation is %.2f%%\n", total*100.0/(MEM_LENGTH*NUM_SAMPLES));
+    printf("Average recalculation is %.4f%%\n", total*100.0/(MEM_LENGTH*NUM_SAMPLES));
+}
+
+// Set the number of pointers to each memory location.
+static void setNumPointers(void) {
+    uint32 i;
+    for(i = 0; i < MEM_LENGTH; i++) {
+        uint32 prevPos = findPrevPos(i);
+        peLocation location = peRootGetiLocation(peTheRoot, prevPos);
+        peLocationSetNumPointers(location, peLocationGetNumPointers(location) + 1);
+    }
+}
+
+// Compute the cut size at the middle.
+static void computeCut(void) {
+    uint32 cutSize = 0;
+    uint32 i;
+    for(i = MEM_LENGTH/2; i < MEM_LENGTH-1; i++) {
+        if(findPrevPos(i) < MEM_LENGTH/2) {
+            cutSize++;
+        }
+    }
+    printf("Mid-cut size: %u (%.1f%%)\n", cutSize, (cutSize*100.0)/MEM_LENGTH);
 }
 
 // Dump the graph.
 static void dumpGraph(void) {
     uint32 pos;
-    printf("  n0\n");
-    for(pos = 1; pos < MEM_LENGTH; pos++) {
+    for(pos = 0; pos < MEM_LENGTH; pos++) {
+        peLocation location = peRootGetiLocation(peTheRoot, pos);
         char c = ' ';
-        if(peLocationGetPebble(peRootGetiLocation(peTheRoot, pos)) != pePebbleNull) {
+        if(peLocationGetPebble(location) != pePebbleNull) {
             c = '*';
         }
-        printf("%c n%u -> n%u\n", c, pos, findPrevPos(pos));
+        printf("%c n%u -> n%u\t%u pointers\n", c, pos, findPrevPos(pos), peLocationGetNumPointers(location));
     }
 }
 
-int main() {
+int main(int argc, char **argv) {
     utStart();
     peDatabaseStart();
     peTheRoot = peRootAlloc();
@@ -142,9 +177,13 @@ int main() {
         peLocation location = peLocationAlloc();
         peRootSetiLocation(peTheRoot, i, location);
     }
+    setNumPointers();
     randomlyDistributePebbles();
-    //dumpGraph();
+    if(argc == 2 && !strcmp(argv[1], "-d")) {
+        dumpGraph();
+    }
     computeAveragePenalty();
+    computeCut();
     peDatabaseStop();
     utStop(true);
     return 0;

@@ -402,6 +402,7 @@ static void allocLocations(void)
 {
     peSetAllocatedLocation(2);
     peSetUsedLocation(1);
+    peLocations.NumPointers = utNewAInitFirst(uint32, (peAllocatedLocation()));
     peLocations.Visited = utNewAInitFirst(uint8, (peAllocatedLocation()));
     peLocations.Pebble = utNewAInitFirst(pePebble, (peAllocatedLocation()));
 }
@@ -412,6 +413,7 @@ static void allocLocations(void)
 static void reallocLocations(
     uint32 newSize)
 {
+    utResizeArray(peLocations.NumPointers, (newSize));
     utResizeArray(peLocations.Visited, (newSize));
     utResizeArray(peLocations.Pebble, (newSize));
     peSetAllocatedLocation(newSize);
@@ -432,6 +434,7 @@ void peLocationCopyProps(
     peLocation oldLocation,
     peLocation newLocation)
 {
+    peLocationSetNumPointers(newLocation, peLocationGetNumPointers(oldLocation));
     peLocationSetVisited(newLocation, peLocationVisited(oldLocation));
 }
 
@@ -785,6 +788,7 @@ void peDatabaseStop(void)
     utFree(peRoots.UsedLocation);
     utFree(pePebbles.Position);
     utFree(pePebbles.Location);
+    utFree(peLocations.NumPointers);
     utFree(peLocations.Visited);
     utFree(peLocations.Pebble);
     utFree(peLocationArrays.LocationIndex_);
@@ -803,8 +807,8 @@ void peDatabaseStart(void)
     if(!utInitialized()) {
         utStart();
     }
-    peRootData.hash = 0x371ba985;
-    peModuleID = utRegisterModule("pe", false, peHash(), 4, 13, 0, sizeof(struct peRootType_),
+    peRootData.hash = 0x5f908153;
+    peModuleID = utRegisterModule("pe", false, peHash(), 4, 14, 0, sizeof(struct peRootType_),
         &peRootData, peDatabaseStart, peDatabaseStop);
     utRegisterClass("Root", 4, &peRootData.usedRoot, &peRootData.allocatedRoot,
         NULL, 65535, 4, allocRoot, NULL);
@@ -820,12 +824,13 @@ void peDatabaseStart(void)
         NULL, 65535, 4, allocPebble, NULL);
     utRegisterField("Position", &pePebbles.Position, sizeof(uint32), UT_UINT, NULL);
     utRegisterField("Location", &pePebbles.Location, sizeof(peLocation), UT_POINTER, "Location");
-    utRegisterClass("Location", 2, &peRootData.usedLocation, &peRootData.allocatedLocation,
+    utRegisterClass("Location", 3, &peRootData.usedLocation, &peRootData.allocatedLocation,
         NULL, 65535, 4, allocLocation, NULL);
+    utRegisterField("NumPointers", &peLocations.NumPointers, sizeof(uint32), UT_UINT, NULL);
     utRegisterField("Visited", &peLocations.Visited, sizeof(uint8), UT_BOOL, NULL);
     utRegisterField("Pebble", &peLocations.Pebble, sizeof(pePebble), UT_POINTER, "Pebble");
     utRegisterClass("LocationArray", 5, &peRootData.usedLocationArray, &peRootData.allocatedLocationArray,
-        &peRootData.firstFreeLocationArray, 12, 4, allocLocationArray, destroyLocationArray);
+        &peRootData.firstFreeLocationArray, 13, 4, allocLocationArray, destroyLocationArray);
     utRegisterField("LocationIndex_", &peLocationArrays.LocationIndex_, sizeof(uint32), UT_UINT, NULL);
     utSetFieldHidden();
     utRegisterField("NumLocation", &peLocationArrays.NumLocation, sizeof(uint32), UT_UINT, NULL);
