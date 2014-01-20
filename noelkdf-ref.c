@@ -22,9 +22,17 @@ struct ContextStruct {
     uint32 numBlocks;
 };
 
-// Simple hash function of one parameter from the old glibc rand() function.
-static inline uint32 Rand(uint32 v) {
-    return v*1103515245 + 12345;
+struct RngState {
+    uint32 z;
+    uint32 w;
+};
+
+// Simple rand() function.
+//     from: http://www.codeproject.com/Articles/25172/Simple-Random-Number-Generation
+static inline uint32 Rand(struct RngState *s) {
+    s->z = 36969 * (s->z & 65535) + (s->z >> 16);
+    s->w = 18000 * (s->w & 65535) + (s->w >> 16);
+    return (s->z << 16) + s->w;
 }
 
 // This is the function called by each thread.  It hashes a single continuous block of memory.
@@ -39,13 +47,15 @@ static void *hashMem(void *contextPtr) {
     uint32 *toBlock = c->mem + c->blockLength;
     uint32 *fromBlock;
     uint32 hash = 1;
+    struct RngState s = {1, 1};
     uint32 i;
     for(i = 1; i < c->numBlocks; i++) {
-        uint64 dist = Rand(i);
-        uint64 distSquared = (dist*dist)/UINT32_MAX;
-        uint64 distCubed = (distSquared*dist)/UINT32_MAX;
-        dist = (i-1)*distCubed/UINT32_MAX;
-        fromBlock = c->mem + (uint64)c->blockLength*(i - 1 - dist);
+        uint64 dist = Rand(&s);
+        uint64 distSquared = (dist*dist) >> 32;
+        uint64 distCubed = (distSquared*dist) >> 32;
+        dist = ((i-1)*distCubed) >> 32;
+        //printf("dist:%llu\n", dist);
+        fromBlock = c->mem + (uint64)c->blockLength*(i - 1 - (dist%i));
         uint32 j;
         for(j = 0; j < c->blockLength; j++) {
             hash = hash*(*prevBlock++ | 1) + *fromBlock++;
@@ -63,10 +73,10 @@ static void *hashMem(void *contextPtr) {
 static void cheatKillerPass(uint8 *out, uint32 outSize, uint32 *mem, uint32 numBlocks,
         uint32 blockLength, uint32 killerFactor) {
     uint32 outPos = 0;
-    uint32 hash = 0;
+    uint32 hash = UINT32_MAX;
     uint32 i;
     for(i = 0; i < numBlocks/killerFactor; i++) {
-        uint32 address = blockLength*(Rand(hash) % numBlocks);
+        uint32 address = blockLength*(hash % numBlocks);
         uint32 j;
         for(j = 0; j < blockLength; j++) {
             uint32 value = mem[address++];
