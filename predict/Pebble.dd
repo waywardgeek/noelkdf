@@ -1,0 +1,18 @@
+module Pebble pe
+
+class Root create_only
+
+class Pebble
+    bool inUse
+
+class Location create_only array
+    uint32 numPointers
+    uint32 depth
+
+class Group
+    uint32 availablePebbles
+
+relationship Root Location array
+relationship Location Pebble
+relationship Location Location linked_list
+relationship Group Pebble doubly_linked
