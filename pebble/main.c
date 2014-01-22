@@ -2,67 +2,19 @@
 #include <math.h>
 #include "pedatabase.h"
 
-#define MEM_LENGTH 10000000LL
+#define MEM_LENGTH 1000000LL
 #define NUM_SAMPLES 100LL
 
 peRoot peTheRoot;
 peLocationArray peVisitedLocations;
 
-/*
-// Find the previous position along the logarithmic chains.  Basically, let n = the number
-// of 1's from the LSB until we see the first 0, and return 2^(n+1).
-static uint32 findPrevLogarithmicChainPos(uint32 pos) {
-    uint32 row = 0;
-    uint32 t = pos;
-    while(t != 1) {
-        t >>= 1;
-        row++;
-    }
-    uint32 dist = 2 << (row/4);
-    t = pos;
-    do {
-        t >>= 1;
-        dist <<= 1;
-    } while(t & 1);
-    if(dist < pos) {
-        return pos - dist;
-    }
-    return 0;
-}
+typedef enum {
+    SLIDING_WINDOW,
+    RAND_CUBED
+} peGraphType;
 
-// Find the previous position in the safe-dating tree.  If the root is labeled 1, and then
-// left edge of the tree is 2^r. For row r starting with 0, for a node at position x,
-// we have row = floor(log2(x)).  Let r = 2^row.  If x < 3*r/2, then prevPos = r/2 + x-r = x - r/2.
-// Otherwise, prevPos = r/2 + x - 3*r/2 = x - r.  However, we actually use addr = 0 for
-// the root node, and the left edge is 0, 2, 6, 14..., where x == addr/2 + 1.
-static uint32 findPrevSafeDatingPos(uint32 pos) {
-    uint32 x = pos/2 + 1;
-    uint32 row = 0;
-    uint32 t = x;
-    while(t != 1) {
-        t >>= 1;
-        row++;
-    }
-    uint32 r = 1 << row;
-    uint32 prevPos;
-    if(x < 3*r/2) {
-        prevPos = x - r/2;
-    } else {
-        prevPos = x - r;
-    }
-    return (prevPos - 1)*2;
-}
-*/
-
-// Find the previous position to point to.
-static uint32 findPrevPos(uint32 pos) {
-    if(pos <= 2) {
-        return 0;
-    }
-    double dist = (rand()/(double)RAND_MAX);
-    dist = dist*dist*dist;
-    return pos - 1 - (uint32)((pos-1)*dist);
-    /*
+// Find the previous position using Alexander's sliding power-of-two window.
+static uint32 findSlidingWindowPos(uint32 pos) {
     // This is a sliding window which is the largest power of 2 < i.
     uint32 mask = 1;
     while(mask < pos) {
@@ -70,17 +22,40 @@ static uint32 findPrevPos(uint32 pos) {
     }
     mask = (mask >> 1) - 1;
     return pos - (rand() & mask);
-    */
+}
 
-    /*
-    if(pos & 1) {
-        // logarithmic chains
-        return findPrevLogarithmicChainPos(pos);
+// Find the previous position using a uniform random value between 0..1, cube it, and go
+// that * position back.
+static uint32 findRandCubedPos(uint32 pos) {
+    double dist = (rand()/(double)RAND_MAX);
+    dist = dist*dist*dist;
+    return pos - 1 - (uint32)((pos-1)*dist);
+}
+
+// Find the previous position to point to.
+static void setPrevLocation(uint32 pos, peGraphType type) {
+    peLocation location = peRootGetiLocation(peTheRoot, pos);
+    if(pos <= 1) {
+        return;
     }
-    return pos - (rand() % pos)/2 - 1;
-    // Safe dating tree
-    return findPrevSafeDatingPos(pos);
-    */
+    uint32 prevPos;
+    switch(type) {
+    case SLIDING_WINDOW: prevPos = findSlidingWindowPos(pos); break;
+    case RAND_CUBED: prevPos = findRandCubedPos(pos); break;
+    default:
+        printf("Unknown graph type\n");
+        exit(1);
+    }
+    peLocation prevLocation = peRootGetiLocation(peTheRoot, prevPos);
+    peLocationInsertLocation(prevLocation, location);
+}
+
+// Find the previous position to point to.
+static uint32 findPrevPos(uint32 pos) {
+    if(pos <= 1) {
+        return 0;
+    }
+    return peLocationGetRootIndex(peLocationGetLocation(peRootGetiLocation(peTheRoot, pos)));
 }
 
 // Find the size of the uncovered DAG starting at pos.
@@ -127,7 +102,7 @@ static void computeAveragePenalty(void) {
 // Set the number of pointers to each memory location.
 static void setNumPointers(void) {
     uint32 i;
-    for(i = 0; i < MEM_LENGTH; i++) {
+    for(i = 1; i < MEM_LENGTH; i++) {
         uint32 prevPos = findPrevPos(i);
         peLocation location = peRootGetiLocation(peTheRoot, prevPos);
         peLocationSetNumPointers(location, peLocationGetNumPointers(location) + 1);
@@ -151,14 +126,15 @@ static void randomlyDistributePebbles(void) {
     uint32 total = 0;
     uint32 xPebble;
     for(xPebble = 0; xPebble < MEM_LENGTH; xPebble++) {
-        //peLocation location = peRootGetiLocation(peTheRoot, xPebble);
-        //if((rand() % (MEM_LENGTH/4)) == 0) {
-        //if((xPebble % (MEM_LENGTH/4)) == 0) {
-        //if(peLocationGetNumPointers(location) >= 3 || (xPebble % 8) == 0) {
-        /*
+        peLocation location = peRootGetiLocation(peTheRoot, xPebble);
+        if(peLocationGetNumPointers(location) >= 3 || (xPebble % 12) == 0) {
+            pePebble pebble = pePebbleAlloc();
+            peLocationInsertPebble(location, pebble);
+            total++;
+        }
         // Distribution covering nodes pointed to by short edges
         uint32 prevPos = findPrevPos(xPebble);
-        if(xPebble - prevPos < 20000) {
+        if(xPebble - prevPos < 700) {
             peLocation location = peRootGetiLocation(peTheRoot, prevPos);
             if(peLocationGetPebble(location) == pePebbleNull) {
                 pePebble pebble = pePebbleAlloc();
@@ -166,7 +142,7 @@ static void randomlyDistributePebbles(void) {
                 total++;
             }
         }
-        */
+        /*
         // Simple uniform distribution
         if(xPebble % 8 == 0) {
             peLocation location = peRootGetiLocation(peTheRoot, xPebble);
@@ -174,6 +150,7 @@ static void randomlyDistributePebbles(void) {
             peLocationInsertPebble(location, pebble);
             total++;
         }
+        */
     }
     printf("Total pebbles: %u out of %llu (%.1f%%)\n", total, MEM_LENGTH, total*100.0/MEM_LENGTH);
 }
@@ -191,20 +168,38 @@ static void dumpGraph(void) {
     }
 }
 
+// Parse the type of graph we want to test.
+static peGraphType parseType(char *name) {
+    if(!strcmp(name, "rand_cubed")) {
+        return RAND_CUBED;
+    }
+    if(!strcmp(name, "sliding_window")) {
+        return SLIDING_WINDOW;
+    }
+    printf("usage: pebble [-d] [graph-type]\n"
+        "    graph type can be: rand_cubed, sliding_window\n");
+    exit(1);
+}
+
 int main(int argc, char **argv) {
     utStart();
     peDatabaseStart();
     peTheRoot = peRootAlloc();
     peVisitedLocations = peLocationArrayAlloc();
     peRootAllocLocations(peTheRoot, MEM_LENGTH);
+    peGraphType type = RAND_CUBED;
+    if(argc > 1 && *(argv[argc-1]) != '-') {
+        type = parseType(argv[argc-1]);
+    }
     uint32 i;
     for(i = 0; i < MEM_LENGTH; i++) {
         peLocation location = peLocationAlloc();
-        peRootSetiLocation(peTheRoot, i, location);
+        peRootInsertLocation(peTheRoot, i, location);
+        setPrevLocation(i, type);
     }
     setNumPointers();
     randomlyDistributePebbles();
-    if(argc == 2 && !strcmp(argv[1], "-d")) {
+    if(argc >= 2 && !strcmp(argv[1], "-d")) {
         dumpGraph();
     }
     computeAveragePenalty();

@@ -215,15 +215,12 @@ utInlineC peRoot peRootAlloc(void) {
   Fields for class Pebble.
 ----------------------------------------------------------------------------------------*/
 struct pePebbleFields {
-    uint32 *Position;
     peLocation *Location;
 };
 extern struct pePebbleFields pePebbles;
 
 void pePebbleAllocMore(void);
 void pePebbleCopyProps(pePebble peOldPebble, pePebble peNewPebble);
-utInlineC uint32 pePebbleGetPosition(pePebble Pebble) {return pePebbles.Position[pePebble2ValidIndex(Pebble)];}
-utInlineC void pePebbleSetPosition(pePebble Pebble, uint32 value) {pePebbles.Position[pePebble2ValidIndex(Pebble)] = value;}
 utInlineC peLocation pePebbleGetLocation(pePebble Pebble) {return pePebbles.Location[pePebble2ValidIndex(Pebble)];}
 utInlineC void pePebbleSetLocation(pePebble Pebble, peLocation value) {pePebbles.Location[pePebble2ValidIndex(Pebble)] = value;}
 utInlineC void pePebbleSetConstructorCallback(void(*func)(pePebble)) {pePebbleConstructorCallback = func;}
@@ -248,7 +245,6 @@ utInlineC pePebble pePebbleAllocRaw(void) {
     return Pebble;}
 utInlineC pePebble pePebbleAlloc(void) {
     pePebble Pebble = pePebbleAllocRaw();
-    pePebbleSetPosition(Pebble, 0);
     pePebbleSetLocation(Pebble, peLocationNull);
     if(pePebbleConstructorCallback != NULL) {
         pePebbleConstructorCallback(Pebble);
@@ -261,7 +257,12 @@ utInlineC pePebble pePebbleAlloc(void) {
 struct peLocationFields {
     uint32 *NumPointers;
     uint8 *Visited;
+    peRoot *Root;
+    uint32 *RootIndex;
     pePebble *Pebble;
+    peLocation *Location;
+    peLocation *FirstLocation;
+    peLocation *NextLocationLocation;
 };
 extern struct peLocationFields peLocations;
 
@@ -271,8 +272,18 @@ utInlineC uint32 peLocationGetNumPointers(peLocation Location) {return peLocatio
 utInlineC void peLocationSetNumPointers(peLocation Location, uint32 value) {peLocations.NumPointers[peLocation2ValidIndex(Location)] = value;}
 utInlineC uint8 peLocationVisited(peLocation Location) {return peLocations.Visited[peLocation2ValidIndex(Location)];}
 utInlineC void peLocationSetVisited(peLocation Location, uint8 value) {peLocations.Visited[peLocation2ValidIndex(Location)] = value;}
+utInlineC peRoot peLocationGetRoot(peLocation Location) {return peLocations.Root[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetRoot(peLocation Location, peRoot value) {peLocations.Root[peLocation2ValidIndex(Location)] = value;}
+utInlineC uint32 peLocationGetRootIndex(peLocation Location) {return peLocations.RootIndex[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetRootIndex(peLocation Location, uint32 value) {peLocations.RootIndex[peLocation2ValidIndex(Location)] = value;}
 utInlineC pePebble peLocationGetPebble(peLocation Location) {return peLocations.Pebble[peLocation2ValidIndex(Location)];}
 utInlineC void peLocationSetPebble(peLocation Location, pePebble value) {peLocations.Pebble[peLocation2ValidIndex(Location)] = value;}
+utInlineC peLocation peLocationGetLocation(peLocation Location) {return peLocations.Location[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetLocation(peLocation Location, peLocation value) {peLocations.Location[peLocation2ValidIndex(Location)] = value;}
+utInlineC peLocation peLocationGetFirstLocation(peLocation Location) {return peLocations.FirstLocation[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetFirstLocation(peLocation Location, peLocation value) {peLocations.FirstLocation[peLocation2ValidIndex(Location)] = value;}
+utInlineC peLocation peLocationGetNextLocationLocation(peLocation Location) {return peLocations.NextLocationLocation[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetNextLocationLocation(peLocation Location, peLocation value) {peLocations.NextLocationLocation[peLocation2ValidIndex(Location)] = value;}
 utInlineC void peLocationSetConstructorCallback(void(*func)(peLocation)) {peLocationConstructorCallback = func;}
 utInlineC peLocationCallbackType peLocationGetConstructorCallback(void) {return peLocationConstructorCallback;}
 utInlineC peLocation peFirstLocation(void) {return peRootData.usedLocation == 1? peLocationNull : peIndex2Location(1);}
@@ -297,7 +308,12 @@ utInlineC peLocation peLocationAlloc(void) {
     peLocation Location = peLocationAllocRaw();
     peLocationSetNumPointers(Location, 0);
     peLocationSetVisited(Location, 0);
+    peLocationSetRoot(Location, peRootNull);
+    peLocationSetRootIndex(Location, UINT32_MAX);
     peLocationSetPebble(Location, pePebbleNull);
+    peLocationSetLocation(Location, peLocationNull);
+    peLocationSetFirstLocation(Location, peLocationNull);
+    peLocationSetNextLocationLocation(Location, peLocationNull);
     if(peLocationConstructorCallback != NULL) {
         peLocationConstructorCallback(Location);
     }
@@ -391,8 +407,21 @@ utInlineC peLocationArray peLocationArrayAlloc(void) {
 #define peEndRootLocation }}}
 void peRootInsertLocation(peRoot Root, uint32 x, peLocation _Location);
 void peRootAppendLocation(peRoot Root, peLocation _Location);
+void peRootRemoveLocation(peRoot Root, peLocation _Location);
+#define peForeachLocationLocation(pVar, cVar) \
+    for(cVar = peLocationGetFirstLocation(pVar); cVar != peLocationNull; \
+        cVar = peLocationGetNextLocationLocation(cVar))
+#define peEndLocationLocation
+#define peSafeForeachLocationLocation(pVar, cVar) { \
+    peLocation _nextLocation; \
+    for(cVar = peLocationGetFirstLocation(pVar); cVar != peLocationNull; cVar = _nextLocation) { \
+        _nextLocation = peLocationGetNextLocationLocation(cVar);
+#define peEndSafeLocationLocation }}
 utInlineC void peLocationInsertPebble(peLocation Location, pePebble _Pebble) {peLocationSetPebble(Location, _Pebble); pePebbleSetLocation(_Pebble, Location);}
 utInlineC void peLocationRemovePebble(peLocation Location, pePebble _Pebble) {peLocationSetPebble(Location, pePebbleNull); pePebbleSetLocation(_Pebble, peLocationNull);}
+void peLocationInsertLocation(peLocation Location, peLocation _Location);
+void peLocationRemoveLocation(peLocation Location, peLocation _Location);
+void peLocationInsertAfterLocation(peLocation Location, peLocation prevLocation, peLocation _Location);
 #define peForeachLocationArrayLocation(pVar, cVar) { \
     uint32 _xLocation; \
     for(_xLocation = 0; _xLocation < peLocationArrayGetUsedLocation(pVar); _xLocation++) { \

@@ -3,11 +3,11 @@ module Pebble pe
 class Root create_only
 
 class Pebble create_only
-    uint32 position
 
 class Location create_only array
     uint32 numPointers
     bool visited
 
-relationship Root Location array child_only
+relationship Root Location array
 relationship Location Pebble
+relationship Location Location linked_list
