@@ -9,3 +9,11 @@ group's available pebble counter reaches 0, we remove all the pebbles remaining 
 group and build a new group from all the pebbles currently placed.
 
 This will always pebble 2N nodes without recalculation.
+
+Example usage:
+
+predict> ./pebble -m 1024 -p 128 -s 12 catena3
+========= Testing catena3
+Total pebbles: 128 out of 1024 (12.5%)
+Recalculation penalty is 179.6943X
+Mid-cut size: 256 (25.0%)

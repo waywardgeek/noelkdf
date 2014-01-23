@@ -2,10 +2,10 @@
 #include <math.h>
 #include "pedatabase.h"
 
-#define MEM_LENGTH 2048
-#define NUM_PEBBLES (MEM_LENGTH/4)
-#define SPACING 12
-#define SPACING_START 11
+uint32 peMemLength = 512;
+uint32 peNumPebbles = 127;
+uint32 peSpacingStart = UINT32_MAX;
+uint32 peSpacing = 12;
 
 peRoot peTheRoot;
 peLocationArray peVisitedLocations;
@@ -104,7 +104,7 @@ static uint32 reverse(uint32 value, uint32 rowLength) {
 // Find the previous position using a uniform random value between 0..1, cube it, and go
 // that * position back.
 static uint32 findCatena3Pos(uint32 pos) {
-    uint32 rowLength = MEM_LENGTH/4; // Note: MEM_LENGTH must be power of 2
+    uint32 rowLength = peMemLength/4; // Note: peMemLength must be power of 2
     uint32 row = pos/rowLength;
     if(row == 0) {
         return UINT32_MAX;
@@ -148,7 +148,7 @@ static inline uint32 findPrevPos(uint32 pos) {
 // Dump the graph.
 static void dumpGraph(void) {
     uint32 pos;
-    for(pos = 0; pos < MEM_LENGTH; pos++) {
+    for(pos = 0; pos < peMemLength; pos++) {
         peLocation location = peRootGetiLocation(peTheRoot, pos);
         pePebble pebble = peLocationGetPebble(location);
         char c = ' ';
@@ -234,11 +234,6 @@ static void rebuildGroup(void) {
         pePebbleDestroy(pebble);
     } peEndSafeGroupPebble;
     addPebblesToGroup();
-    if(peGroupGetAvailablePebbles(peTheGroup) == 0) {
-        pebble = findLeastBadPebble();
-        peGroupAppendPebble(peTheGroup, pebble);
-        peGroupSetAvailablePebbles(peTheGroup, 1);
-    }
 }
 
 // Pull a pebble from the group.  Just decrement the available counter, and return a new pebble.
@@ -250,7 +245,7 @@ static pePebble pullPebbleFromGroup(void) {
             if(peVerbose) {
                 dumpGraph();
             }
-            utExit("Failed to pebble with %u pebbles.\n", NUM_PEBBLES);
+            utExit("Failed to pebble with %u pebbles.\n", peNumPebbles);
         }
     } else {
         peGroupSetAvailablePebbles(peTheGroup, numAvailable-1);
@@ -271,8 +266,36 @@ static void removePebbleFromGroup(pePebble pebble) {
 }
 
 // Find a pebble that will be used as far as possible in the future, and pick it up.
-static inline pePebble pickUpPebble(void) {
-    pePebble pebble = pullPebbleFromGroup();
+static inline pePebble pickUpPebble(uint32 pos) {
+    pePebble pebble = pePebbleNull;
+    if(peGroupGetAvailablePebbles(peTheGroup) == 0) {
+        // Allow the previous pebble to be used, but only if not locked down in another calculation.
+        peLocation location = peRootGetiLocation(peTheRoot, pos);
+        peLocation prevLocation = peLocationGetLocation(location);
+        if(prevLocation != peLocationNull) {
+            pePebble prevPebble = peLocationGetPebble(prevLocation);
+            if(prevPebble != pePebbleNull && pePebbleGetUseCount(prevPebble) == 1 && !pePebbleFixed(prevPebble)) {
+                pebble = prevPebble;
+                peLocationRemovePebble(prevLocation, pebble);
+            }
+        }
+        if(pebble == pePebbleNull && pos > 0) {
+            prevLocation = peRootGetiLocation(peTheRoot, pos-1);
+            pePebble prevPebble = peLocationGetPebble(prevLocation);
+            if(prevPebble != pePebbleNull && pePebbleGetUseCount(prevPebble) == 1 && !pePebbleFixed(prevPebble)) {
+                pebble = prevPebble;
+                peLocationRemovePebble(prevLocation, pebble);
+            }
+        }
+    }
+    if(pebble == pePebbleNull) {
+        if(peGroupGetAvailablePebbles(peTheGroup) == 0) {
+            pebble = findLeastBadPebble();
+            peGroupAppendPebble(peTheGroup, pebble);
+            peGroupSetAvailablePebbles(peTheGroup, 1);
+        }
+        pebble = pullPebbleFromGroup();
+    }
     if(peVerbose) {
         printf("Picking up pebble, %u remain available\n", peGroupGetAvailablePebbles(peTheGroup));
     }
@@ -347,16 +370,16 @@ static uint32 pebbleLocation(uint32 pos) {
             markInUse(prev2);
         }
     }
-    pebble = pickUpPebble();
+    pebble = pickUpPebble(pos);
     placePebble(pebble, pos);
     if(peVerbose) {
         dumpGraph();
     }
     pePebbleSetUseCount(pebble, 1);
-    if(prev1 != pePebbleNull) {
+    if(prev1 != pePebbleNull && prev1 != pebble) {
         unmarkInUse(prev1);
     }
-    if(prev2 != pePebbleNull) {
+    if(prev2 != pePebbleNull && prev2 != pebble) {
         unmarkInUse(prev2);
     }
     if(peGroupGetAvailablePebbles(peTheGroup) == 0) {
@@ -370,27 +393,26 @@ static uint32 pebbleLocation(uint32 pos) {
 static void pebbleGraph(void) {
     peTheGroup = peGroupAlloc();
     peRootAppendGroup(peTheRoot, peTheGroup);
-    peCurrentPos = NUM_PEBBLES;
-    rebuildGroup();
-    uint64 total = NUM_PEBBLES;
-    for(; peCurrentPos < MEM_LENGTH; peCurrentPos++) {
+    peCurrentPos = peNumPebbles;
+    uint64 total = peNumPebbles;
+    for(; peCurrentPos < peMemLength; peCurrentPos++) {
         total += pebbleLocation(peCurrentPos);
         pePebble pebble = peLocationGetPebble(peRootGetiLocation(peTheRoot, peCurrentPos));
         unmarkInUse(pebble);
-        if(peCurrentPos >= SPACING_START && peCurrentPos % SPACING == SPACING_START) {
+        if(peCurrentPos >= peSpacingStart && peCurrentPos % peSpacing == peSpacingStart) {
             // Fix the position of pebbles every so often to see if it helps.
             pePebbleSetFixed(pebble, true);
             pePebbleSetUseCount(pebble, 1);
         }
     }
-    printf("Recalculation penalty is %.4fX\n", total/(double)MEM_LENGTH - 1.0);
+    printf("Recalculation penalty is %.4fX\n", total/(double)peMemLength - 1.0);
 }
 
 // Set the number of pointers to each memory location.
 static void setNumPointers(peGraphType type) {
     peMaxDegree = 0;
     uint32 i;
-    for(i = 1; i < MEM_LENGTH; i++) {
+    for(i = 1; i < peMemLength; i++) {
         setPrevLocation(i, type);
         peLocation prevLocation = peLocationGetLocation(peRootGetiLocation(peTheRoot, i));
         if(prevLocation != peLocationNull) {
@@ -407,34 +429,34 @@ static void setNumPointers(peGraphType type) {
 static void computeCut(void) {
     uint32 cutSize = 0;
     uint32 i;
-    for(i = MEM_LENGTH/2; i < MEM_LENGTH-1; i++) {
-        if(findPrevPos(i) < MEM_LENGTH/2) {
+    for(i = peMemLength/2; i < peMemLength-1; i++) {
+        if(findPrevPos(i) < peMemLength/2) {
             cutSize++;
         }
     }
-    printf("Mid-cut size: %u (%.1f%%)\n", cutSize, (cutSize*100.0)/MEM_LENGTH);
+    printf("Mid-cut size: %u (%.1f%%)\n", cutSize, (cutSize*100.0)/peMemLength);
 }
 
 // Distribute pebbles in the first memory locations.
 static void distributePebbles(void) {
     uint32 total = 0;
     uint32 xPebble;
-    for(xPebble = 0; xPebble < NUM_PEBBLES; xPebble++) {
+    for(xPebble = 0; xPebble < peNumPebbles; xPebble++) {
         peLocation location = peRootGetiLocation(peTheRoot, xPebble);
         pePebble pebble = pePebbleAlloc();
         peLocationInsertPebble(location, pebble);
         total++;
     }
-    printf("Total pebbles: %u out of %u (%.1f%%)\n", total, MEM_LENGTH, total*100.0/MEM_LENGTH);
+    printf("Total pebbles: %u out of %u (%.1f%%)\n", total, peMemLength, total*100.0/peMemLength);
 }
 
 // Test the type of graph.
 static void runTest(peGraphType type, bool dumpGraphs) {
     peTheRoot = peRootAlloc();
     peVisitedLocations = peLocationArrayAlloc();
-    peRootAllocLocations(peTheRoot, MEM_LENGTH);
+    peRootAllocLocations(peTheRoot, peMemLength);
     uint32 i;
-    for(i = 0; i < MEM_LENGTH; i++) {
+    for(i = 0; i < peMemLength; i++) {
         peLocation location = peLocationAlloc();
         peLocationSetDepth(location, UINT32_MAX);
         peRootInsertLocation(peTheRoot, i, location);
@@ -461,6 +483,21 @@ int main(int argc, char **argv) {
         } else if(argc >= 2 && !strcmp(argv[1], "-v")) {
             dumpGraphs = true;
             peVerbose = true;
+        } else if(argc >= 3 && !strcmp(argv[1], "-m")) {
+            peMemLength = atoi(argv[2]);
+            argc--;
+            argv++;
+        } else if(argc >= 3 && !strcmp(argv[1], "-p")) {
+            peNumPebbles = atoi(argv[2]);
+            argc--;
+            argv++;
+        } else if(argc >= 3 && !strcmp(argv[1], "-s")) {
+            peSpacing = atoi(argv[2]);
+            if(peSpacingStart == UINT32_MAX) {
+                peSpacingStart = peSpacing - 1;
+            }
+            argc--;
+            argv++;
         }
         argc--;
         argv++;
