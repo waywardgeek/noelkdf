@@ -42,11 +42,13 @@ typedef uint32 peLocationArray;
 /* Constructor/Destructor hooks. */
 typedef void (*peRootCallbackType)(peRoot);
 extern peRootCallbackType peRootConstructorCallback;
+extern peRootCallbackType peRootDestructorCallback;
 typedef void (*pePebbleCallbackType)(pePebble);
 extern pePebbleCallbackType pePebbleConstructorCallback;
 extern pePebbleCallbackType pePebbleDestructorCallback;
 typedef void (*peLocationCallbackType)(peLocation);
 extern peLocationCallbackType peLocationConstructorCallback;
+extern peLocationCallbackType peLocationDestructorCallback;
 typedef void (*peGroupCallbackType)(peGroup);
 extern peGroupCallbackType peGroupConstructorCallback;
 extern peGroupCallbackType peGroupDestructorCallback;
@@ -59,10 +61,12 @@ extern peLocationArrayCallbackType peLocationArrayDestructorCallback;
 ----------------------------------------------------------------------------------------*/
 struct peRootType_ {
     uint32 hash; /* This depends only on the structure of the database */
+    peRoot firstFreeRoot;
     uint32 usedRoot, allocatedRoot;
     uint32 usedRootLocation, allocatedRootLocation, freeRootLocation;
     pePebble firstFreePebble;
     uint32 usedPebble, allocatedPebble;
+    peLocation firstFreeLocation;
     uint32 usedLocation, allocatedLocation;
     peGroup firstFreeGroup;
     uint32 usedGroup, allocatedGroup;
@@ -73,6 +77,8 @@ struct peRootType_ {
 extern struct peRootType_ peRootData;
 
 utInlineC uint32 peHash(void) {return peRootData.hash;}
+utInlineC peRoot peFirstFreeRoot(void) {return peRootData.firstFreeRoot;}
+utInlineC void peSetFirstFreeRoot(peRoot value) {peRootData.firstFreeRoot = (value);}
 utInlineC uint32 peUsedRoot(void) {return peRootData.usedRoot;}
 utInlineC uint32 peAllocatedRoot(void) {return peRootData.allocatedRoot;}
 utInlineC void peSetUsedRoot(uint32 value) {peRootData.usedRoot = value;}
@@ -89,6 +95,8 @@ utInlineC uint32 peUsedPebble(void) {return peRootData.usedPebble;}
 utInlineC uint32 peAllocatedPebble(void) {return peRootData.allocatedPebble;}
 utInlineC void peSetUsedPebble(uint32 value) {peRootData.usedPebble = value;}
 utInlineC void peSetAllocatedPebble(uint32 value) {peRootData.allocatedPebble = value;}
+utInlineC peLocation peFirstFreeLocation(void) {return peRootData.firstFreeLocation;}
+utInlineC void peSetFirstFreeLocation(peLocation value) {peRootData.firstFreeLocation = (value);}
 utInlineC uint32 peUsedLocation(void) {return peRootData.usedLocation;}
 utInlineC uint32 peAllocatedLocation(void) {return peRootData.allocatedLocation;}
 utInlineC void peSetUsedLocation(uint32 value) {peRootData.usedLocation = value;}
@@ -180,6 +188,8 @@ struct peRootFields {
     uint32 *NumLocation;
     peLocation *Location;
     uint32 *UsedLocation;
+    peGroup *FirstGroup;
+    peGroup *LastGroup;
 };
 extern struct peRootFields peRoots;
 
@@ -209,25 +219,34 @@ utInlineC void peRootSetiLocation(peRoot Root, uint32 x, peLocation value) {
     peRoots.Location[peRootGetLocationIndex_(Root) + peRootCheckLocationIndex(Root, (x))] = value;}
 utInlineC uint32 peRootGetUsedLocation(peRoot Root) {return peRoots.UsedLocation[peRoot2ValidIndex(Root)];}
 utInlineC void peRootSetUsedLocation(peRoot Root, uint32 value) {peRoots.UsedLocation[peRoot2ValidIndex(Root)] = value;}
+utInlineC peGroup peRootGetFirstGroup(peRoot Root) {return peRoots.FirstGroup[peRoot2ValidIndex(Root)];}
+utInlineC void peRootSetFirstGroup(peRoot Root, peGroup value) {peRoots.FirstGroup[peRoot2ValidIndex(Root)] = value;}
+utInlineC peGroup peRootGetLastGroup(peRoot Root) {return peRoots.LastGroup[peRoot2ValidIndex(Root)];}
+utInlineC void peRootSetLastGroup(peRoot Root, peGroup value) {peRoots.LastGroup[peRoot2ValidIndex(Root)] = value;}
 utInlineC void peRootSetConstructorCallback(void(*func)(peRoot)) {peRootConstructorCallback = func;}
 utInlineC peRootCallbackType peRootGetConstructorCallback(void) {return peRootConstructorCallback;}
-utInlineC peRoot peFirstRoot(void) {return peRootData.usedRoot == 1? peRootNull : peIndex2Root(1);}
-utInlineC peRoot peLastRoot(void) {return peRootData.usedRoot == 1? peRootNull :
-    peIndex2Root(peRootData.usedRoot - 1);}
-utInlineC peRoot peNextRoot(peRoot Root) {return peRoot2ValidIndex(Root) + 1 == peRootData.usedRoot? peRootNull :
-    Root + 1;}
-utInlineC peRoot pePrevRoot(peRoot Root) {return peRoot2ValidIndex(Root) == 1? peRootNull : Root - 1;}
-#define peForeachRoot(var) \
-    for(var = peIndex2Root(1); peRoot2Index(var) != peRootData.usedRoot; var++)
-#define peEndRoot
-utInlineC void peRootFreeAll(void) {peSetUsedRoot(1); peSetUsedRootLocation(0);}
+utInlineC void peRootSetDestructorCallback(void(*func)(peRoot)) {peRootDestructorCallback = func;}
+utInlineC peRootCallbackType peRootGetDestructorCallback(void) {return peRootDestructorCallback;}
+utInlineC peRoot peRootNextFree(peRoot Root) {return ((peRoot *)(void *)(peRoots.FirstGroup))[peRoot2ValidIndex(Root)];}
+utInlineC void peRootSetNextFree(peRoot Root, peRoot value) {
+    ((peRoot *)(void *)(peRoots.FirstGroup))[peRoot2ValidIndex(Root)] = value;}
+utInlineC void peRootFree(peRoot Root) {
+    peRootFreeLocations(Root);
+    peRootSetNextFree(Root, peRootData.firstFreeRoot);
+    peSetFirstFreeRoot(Root);}
+void peRootDestroy(peRoot Root);
 utInlineC peRoot peRootAllocRaw(void) {
     peRoot Root;
-    if(peRootData.usedRoot == peRootData.allocatedRoot) {
-        peRootAllocMore();
+    if(peRootData.firstFreeRoot != peRootNull) {
+        Root = peRootData.firstFreeRoot;
+        peSetFirstFreeRoot(peRootNextFree(Root));
+    } else {
+        if(peRootData.usedRoot == peRootData.allocatedRoot) {
+            peRootAllocMore();
+        }
+        Root = peIndex2Root(peRootData.usedRoot);
+        peSetUsedRoot(peUsedRoot() + 1);
     }
-    Root = peIndex2Root(peRootData.usedRoot);
-    peSetUsedRoot(peUsedRoot() + 1);
     return Root;}
 utInlineC peRoot peRootAlloc(void) {
     peRoot Root = peRootAllocRaw();
@@ -235,6 +254,8 @@ utInlineC peRoot peRootAlloc(void) {
     peRootSetNumLocation(Root, 0);
     peRootSetNumLocation(Root, 0);
     peRootSetUsedLocation(Root, 0);
+    peRootSetFirstGroup(Root, peGroupNull);
+    peRootSetLastGroup(Root, peGroupNull);
     if(peRootConstructorCallback != NULL) {
         peRootConstructorCallback(Root);
     }
@@ -245,6 +266,7 @@ utInlineC peRoot peRootAlloc(void) {
 ----------------------------------------------------------------------------------------*/
 struct pePebbleFields {
     uint8 *InUse;
+    uint8 *Fixed;
     peLocation *Location;
     peGroup *Group;
     pePebble *NextGroupPebble;
@@ -256,6 +278,8 @@ void pePebbleAllocMore(void);
 void pePebbleCopyProps(pePebble peOldPebble, pePebble peNewPebble);
 utInlineC uint8 pePebbleInUse(pePebble Pebble) {return pePebbles.InUse[pePebble2ValidIndex(Pebble)];}
 utInlineC void pePebbleSetInUse(pePebble Pebble, uint8 value) {pePebbles.InUse[pePebble2ValidIndex(Pebble)] = value;}
+utInlineC uint8 pePebbleFixed(pePebble Pebble) {return pePebbles.Fixed[pePebble2ValidIndex(Pebble)];}
+utInlineC void pePebbleSetFixed(pePebble Pebble, uint8 value) {pePebbles.Fixed[pePebble2ValidIndex(Pebble)] = value;}
 utInlineC peLocation pePebbleGetLocation(pePebble Pebble) {return pePebbles.Location[pePebble2ValidIndex(Pebble)];}
 utInlineC void pePebbleSetLocation(pePebble Pebble, peLocation value) {pePebbles.Location[pePebble2ValidIndex(Pebble)] = value;}
 utInlineC peGroup pePebbleGetGroup(pePebble Pebble) {return pePebbles.Group[pePebble2ValidIndex(Pebble)];}
@@ -291,6 +315,7 @@ utInlineC pePebble pePebbleAllocRaw(void) {
 utInlineC pePebble pePebbleAlloc(void) {
     pePebble Pebble = pePebbleAllocRaw();
     pePebbleSetInUse(Pebble, 0);
+    pePebbleSetFixed(Pebble, 0);
     pePebbleSetLocation(Pebble, peLocationNull);
     pePebbleSetGroup(Pebble, peGroupNull);
     pePebbleSetNextGroupPebble(Pebble, pePebbleNull);
@@ -335,23 +360,27 @@ utInlineC peLocation peLocationGetNextLocationLocation(peLocation Location) {ret
 utInlineC void peLocationSetNextLocationLocation(peLocation Location, peLocation value) {peLocations.NextLocationLocation[peLocation2ValidIndex(Location)] = value;}
 utInlineC void peLocationSetConstructorCallback(void(*func)(peLocation)) {peLocationConstructorCallback = func;}
 utInlineC peLocationCallbackType peLocationGetConstructorCallback(void) {return peLocationConstructorCallback;}
-utInlineC peLocation peFirstLocation(void) {return peRootData.usedLocation == 1? peLocationNull : peIndex2Location(1);}
-utInlineC peLocation peLastLocation(void) {return peRootData.usedLocation == 1? peLocationNull :
-    peIndex2Location(peRootData.usedLocation - 1);}
-utInlineC peLocation peNextLocation(peLocation Location) {return peLocation2ValidIndex(Location) + 1 == peRootData.usedLocation? peLocationNull :
-    Location + 1;}
-utInlineC peLocation pePrevLocation(peLocation Location) {return peLocation2ValidIndex(Location) == 1? peLocationNull : Location - 1;}
-#define peForeachLocation(var) \
-    for(var = peIndex2Location(1); peLocation2Index(var) != peRootData.usedLocation; var++)
-#define peEndLocation
-utInlineC void peLocationFreeAll(void) {peSetUsedLocation(1);}
+utInlineC void peLocationSetDestructorCallback(void(*func)(peLocation)) {peLocationDestructorCallback = func;}
+utInlineC peLocationCallbackType peLocationGetDestructorCallback(void) {return peLocationDestructorCallback;}
+utInlineC peLocation peLocationNextFree(peLocation Location) {return ((peLocation *)(void *)(peLocations.Root))[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetNextFree(peLocation Location, peLocation value) {
+    ((peLocation *)(void *)(peLocations.Root))[peLocation2ValidIndex(Location)] = value;}
+utInlineC void peLocationFree(peLocation Location) {
+    peLocationSetNextFree(Location, peRootData.firstFreeLocation);
+    peSetFirstFreeLocation(Location);}
+void peLocationDestroy(peLocation Location);
 utInlineC peLocation peLocationAllocRaw(void) {
     peLocation Location;
-    if(peRootData.usedLocation == peRootData.allocatedLocation) {
-        peLocationAllocMore();
+    if(peRootData.firstFreeLocation != peLocationNull) {
+        Location = peRootData.firstFreeLocation;
+        peSetFirstFreeLocation(peLocationNextFree(Location));
+    } else {
+        if(peRootData.usedLocation == peRootData.allocatedLocation) {
+            peLocationAllocMore();
+        }
+        Location = peIndex2Location(peRootData.usedLocation);
+        peSetUsedLocation(peUsedLocation() + 1);
     }
-    Location = peIndex2Location(peRootData.usedLocation);
-    peSetUsedLocation(peUsedLocation() + 1);
     return Location;}
 utInlineC peLocation peLocationAlloc(void) {
     peLocation Location = peLocationAllocRaw();
@@ -373,6 +402,9 @@ utInlineC peLocation peLocationAlloc(void) {
 ----------------------------------------------------------------------------------------*/
 struct peGroupFields {
     uint32 *AvailablePebbles;
+    peRoot *Root;
+    peGroup *NextRootGroup;
+    peGroup *PrevRootGroup;
     pePebble *FirstPebble;
     pePebble *LastPebble;
 };
@@ -382,6 +414,12 @@ void peGroupAllocMore(void);
 void peGroupCopyProps(peGroup peOldGroup, peGroup peNewGroup);
 utInlineC uint32 peGroupGetAvailablePebbles(peGroup Group) {return peGroups.AvailablePebbles[peGroup2ValidIndex(Group)];}
 utInlineC void peGroupSetAvailablePebbles(peGroup Group, uint32 value) {peGroups.AvailablePebbles[peGroup2ValidIndex(Group)] = value;}
+utInlineC peRoot peGroupGetRoot(peGroup Group) {return peGroups.Root[peGroup2ValidIndex(Group)];}
+utInlineC void peGroupSetRoot(peGroup Group, peRoot value) {peGroups.Root[peGroup2ValidIndex(Group)] = value;}
+utInlineC peGroup peGroupGetNextRootGroup(peGroup Group) {return peGroups.NextRootGroup[peGroup2ValidIndex(Group)];}
+utInlineC void peGroupSetNextRootGroup(peGroup Group, peGroup value) {peGroups.NextRootGroup[peGroup2ValidIndex(Group)] = value;}
+utInlineC peGroup peGroupGetPrevRootGroup(peGroup Group) {return peGroups.PrevRootGroup[peGroup2ValidIndex(Group)];}
+utInlineC void peGroupSetPrevRootGroup(peGroup Group, peGroup value) {peGroups.PrevRootGroup[peGroup2ValidIndex(Group)] = value;}
 utInlineC pePebble peGroupGetFirstPebble(peGroup Group) {return peGroups.FirstPebble[peGroup2ValidIndex(Group)];}
 utInlineC void peGroupSetFirstPebble(peGroup Group, pePebble value) {peGroups.FirstPebble[peGroup2ValidIndex(Group)] = value;}
 utInlineC pePebble peGroupGetLastPebble(peGroup Group) {return peGroups.LastPebble[peGroup2ValidIndex(Group)];}
@@ -390,9 +428,9 @@ utInlineC void peGroupSetConstructorCallback(void(*func)(peGroup)) {peGroupConst
 utInlineC peGroupCallbackType peGroupGetConstructorCallback(void) {return peGroupConstructorCallback;}
 utInlineC void peGroupSetDestructorCallback(void(*func)(peGroup)) {peGroupDestructorCallback = func;}
 utInlineC peGroupCallbackType peGroupGetDestructorCallback(void) {return peGroupDestructorCallback;}
-utInlineC peGroup peGroupNextFree(peGroup Group) {return ((peGroup *)(void *)(peGroups.FirstPebble))[peGroup2ValidIndex(Group)];}
+utInlineC peGroup peGroupNextFree(peGroup Group) {return ((peGroup *)(void *)(peGroups.Root))[peGroup2ValidIndex(Group)];}
 utInlineC void peGroupSetNextFree(peGroup Group, peGroup value) {
-    ((peGroup *)(void *)(peGroups.FirstPebble))[peGroup2ValidIndex(Group)] = value;}
+    ((peGroup *)(void *)(peGroups.Root))[peGroup2ValidIndex(Group)] = value;}
 utInlineC void peGroupFree(peGroup Group) {
     peGroupSetNextFree(Group, peRootData.firstFreeGroup);
     peSetFirstFreeGroup(Group);}
@@ -413,6 +451,9 @@ utInlineC peGroup peGroupAllocRaw(void) {
 utInlineC peGroup peGroupAlloc(void) {
     peGroup Group = peGroupAllocRaw();
     peGroupSetAvailablePebbles(Group, 0);
+    peGroupSetRoot(Group, peRootNull);
+    peGroupSetNextRootGroup(Group, peGroupNull);
+    peGroupSetPrevRootGroup(Group, peGroupNull);
     peGroupSetFirstPebble(Group, pePebbleNull);
     peGroupSetLastPebble(Group, pePebbleNull);
     if(peGroupConstructorCallback != NULL) {
@@ -506,9 +547,22 @@ utInlineC peLocationArray peLocationArrayAlloc(void) {
         cVar = peRootGetiLocation(pVar, _xLocation); \
         if(cVar != peLocationNull) {
 #define peEndRootLocation }}}
+#define peForeachRootGroup(pVar, cVar) \
+    for(cVar = peRootGetFirstGroup(pVar); cVar != peGroupNull; \
+        cVar = peGroupGetNextRootGroup(cVar))
+#define peEndRootGroup
+#define peSafeForeachRootGroup(pVar, cVar) { \
+    peGroup _nextGroup; \
+    for(cVar = peRootGetFirstGroup(pVar); cVar != peGroupNull; cVar = _nextGroup) { \
+        _nextGroup = peGroupGetNextRootGroup(cVar);
+#define peEndSafeRootGroup }}
 void peRootInsertLocation(peRoot Root, uint32 x, peLocation _Location);
 void peRootAppendLocation(peRoot Root, peLocation _Location);
 void peRootRemoveLocation(peRoot Root, peLocation _Location);
+void peRootInsertGroup(peRoot Root, peGroup _Group);
+void peRootRemoveGroup(peRoot Root, peGroup _Group);
+void peRootInsertAfterGroup(peRoot Root, peGroup prevGroup, peGroup _Group);
+void peRootAppendGroup(peRoot Root, peGroup _Group);
 #define peForeachLocationLocation(pVar, cVar) \
     for(cVar = peLocationGetFirstLocation(pVar); cVar != peLocationNull; \
         cVar = peLocationGetNextLocationLocation(cVar))

@@ -16,13 +16,40 @@ struct peLocationArrayFields peLocationArrays;
   Constructor/Destructor hooks.
 ----------------------------------------------------------------------------------------*/
 peRootCallbackType peRootConstructorCallback;
+peRootCallbackType peRootDestructorCallback;
 pePebbleCallbackType pePebbleConstructorCallback;
 pePebbleCallbackType pePebbleDestructorCallback;
 peLocationCallbackType peLocationConstructorCallback;
+peLocationCallbackType peLocationDestructorCallback;
 peGroupCallbackType peGroupConstructorCallback;
 peGroupCallbackType peGroupDestructorCallback;
 peLocationArrayCallbackType peLocationArrayConstructorCallback;
 peLocationArrayCallbackType peLocationArrayDestructorCallback;
+
+/*----------------------------------------------------------------------------------------
+  Destroy Root including everything in it. Remove from parents.
+----------------------------------------------------------------------------------------*/
+void peRootDestroy(
+    peRoot Root)
+{
+    peLocation Location_;
+    uint32 xLocation;
+    peGroup Group_;
+
+    if(peRootDestructorCallback != NULL) {
+        peRootDestructorCallback(Root);
+    }
+    for(xLocation = 0; xLocation < peRootGetUsedLocation(Root); xLocation++) {
+        Location_ = peRootGetiLocation(Root, xLocation);
+        if(Location_ != peLocationNull) {
+            peLocationDestroy(Location_);
+        }
+    }
+    peSafeForeachRootGroup(Root, Group_) {
+        peGroupDestroy(Group_);
+    } peEndSafeRootGroup;
+    peRootFree(Root);
+}
 
 /*----------------------------------------------------------------------------------------
   Default constructor wrapper for the database manager.
@@ -35,12 +62,22 @@ static uint64 allocRoot(void)
 }
 
 /*----------------------------------------------------------------------------------------
+  Destructor wrapper for the database manager.
+----------------------------------------------------------------------------------------*/
+static void destroyRoot(
+    uint64 objectIndex)
+{
+    peRootDestroy(peIndex2Root((uint32)objectIndex));
+}
+
+/*----------------------------------------------------------------------------------------
   Allocate the field arrays of Root.
 ----------------------------------------------------------------------------------------*/
 static void allocRoots(void)
 {
     peSetAllocatedRoot(2);
     peSetUsedRoot(1);
+    peSetFirstFreeRoot(peRootNull);
     peRoots.LocationIndex_ = utNewAInitFirst(uint32, (peAllocatedRoot()));
     peRoots.NumLocation = utNewAInitFirst(uint32, (peAllocatedRoot()));
     peSetUsedRootLocation(0);
@@ -48,6 +85,8 @@ static void allocRoots(void)
     peSetFreeRootLocation(0);
     peRoots.Location = utNewAInitFirst(peLocation, peAllocatedRootLocation());
     peRoots.UsedLocation = utNewAInitFirst(uint32, (peAllocatedRoot()));
+    peRoots.FirstGroup = utNewAInitFirst(peGroup, (peAllocatedRoot()));
+    peRoots.LastGroup = utNewAInitFirst(peGroup, (peAllocatedRoot()));
 }
 
 /*----------------------------------------------------------------------------------------
@@ -59,6 +98,8 @@ static void reallocRoots(
     utResizeArray(peRoots.LocationIndex_, (newSize));
     utResizeArray(peRoots.NumLocation, (newSize));
     utResizeArray(peRoots.UsedLocation, (newSize));
+    utResizeArray(peRoots.FirstGroup, (newSize));
+    utResizeArray(peRoots.LastGroup, (newSize));
     peSetAllocatedRoot(newSize);
 }
 
@@ -344,6 +385,133 @@ void peRootRemoveLocation(
     peLocationSetRoot(_Location, peRootNull);
 }
 
+/*----------------------------------------------------------------------------------------
+  Add the Group to the head of the list on the Root.
+----------------------------------------------------------------------------------------*/
+void peRootInsertGroup(
+    peRoot Root,
+    peGroup _Group)
+{
+#if defined(DD_DEBUG)
+    if(Root == peRootNull) {
+        utExit("Non-existent Root");
+    }
+    if(_Group == peGroupNull) {
+        utExit("Non-existent Group");
+    }
+    if(peGroupGetRoot(_Group) != peRootNull) {
+        utExit("Attempting to add Group to Root twice");
+    }
+#endif
+    peGroupSetNextRootGroup(_Group, peRootGetFirstGroup(Root));
+    if(peRootGetFirstGroup(Root) != peGroupNull) {
+        peGroupSetPrevRootGroup(peRootGetFirstGroup(Root), _Group);
+    }
+    peRootSetFirstGroup(Root, _Group);
+    peGroupSetPrevRootGroup(_Group, peGroupNull);
+    if(peRootGetLastGroup(Root) == peGroupNull) {
+        peRootSetLastGroup(Root, _Group);
+    }
+    peGroupSetRoot(_Group, Root);
+}
+
+/*----------------------------------------------------------------------------------------
+  Add the Group to the end of the list on the Root.
+----------------------------------------------------------------------------------------*/
+void peRootAppendGroup(
+    peRoot Root,
+    peGroup _Group)
+{
+#if defined(DD_DEBUG)
+    if(Root == peRootNull) {
+        utExit("Non-existent Root");
+    }
+    if(_Group == peGroupNull) {
+        utExit("Non-existent Group");
+    }
+    if(peGroupGetRoot(_Group) != peRootNull) {
+        utExit("Attempting to add Group to Root twice");
+    }
+#endif
+    peGroupSetPrevRootGroup(_Group, peRootGetLastGroup(Root));
+    if(peRootGetLastGroup(Root) != peGroupNull) {
+        peGroupSetNextRootGroup(peRootGetLastGroup(Root), _Group);
+    }
+    peRootSetLastGroup(Root, _Group);
+    peGroupSetNextRootGroup(_Group, peGroupNull);
+    if(peRootGetFirstGroup(Root) == peGroupNull) {
+        peRootSetFirstGroup(Root, _Group);
+    }
+    peGroupSetRoot(_Group, Root);
+}
+
+/*----------------------------------------------------------------------------------------
+  Insert the Group to the Root after the previous Group.
+----------------------------------------------------------------------------------------*/
+void peRootInsertAfterGroup(
+    peRoot Root,
+    peGroup prevGroup,
+    peGroup _Group)
+{
+    peGroup nextGroup = peGroupGetNextRootGroup(prevGroup);
+
+#if defined(DD_DEBUG)
+    if(Root == peRootNull) {
+        utExit("Non-existent Root");
+    }
+    if(_Group == peGroupNull) {
+        utExit("Non-existent Group");
+    }
+    if(peGroupGetRoot(_Group) != peRootNull) {
+        utExit("Attempting to add Group to Root twice");
+    }
+#endif
+    peGroupSetNextRootGroup(_Group, nextGroup);
+    peGroupSetNextRootGroup(prevGroup, _Group);
+    peGroupSetPrevRootGroup(_Group, prevGroup);
+    if(nextGroup != peGroupNull) {
+        peGroupSetPrevRootGroup(nextGroup, _Group);
+    }
+    if(peRootGetLastGroup(Root) == prevGroup) {
+        peRootSetLastGroup(Root, _Group);
+    }
+    peGroupSetRoot(_Group, Root);
+}
+
+/*----------------------------------------------------------------------------------------
+ Remove the Group from the Root.
+----------------------------------------------------------------------------------------*/
+void peRootRemoveGroup(
+    peRoot Root,
+    peGroup _Group)
+{
+    peGroup pGroup, nGroup;
+
+#if defined(DD_DEBUG)
+    if(_Group == peGroupNull) {
+        utExit("Non-existent Group");
+    }
+    if(peGroupGetRoot(_Group) != peRootNull && peGroupGetRoot(_Group) != Root) {
+        utExit("Delete Group from non-owning Root");
+    }
+#endif
+    nGroup = peGroupGetNextRootGroup(_Group);
+    pGroup = peGroupGetPrevRootGroup(_Group);
+    if(pGroup != peGroupNull) {
+        peGroupSetNextRootGroup(pGroup, nGroup);
+    } else if(peRootGetFirstGroup(Root) == _Group) {
+        peRootSetFirstGroup(Root, nGroup);
+    }
+    if(nGroup != peGroupNull) {
+        peGroupSetPrevRootGroup(nGroup, pGroup);
+    } else if(peRootGetLastGroup(Root) == _Group) {
+        peRootSetLastGroup(Root, pGroup);
+    }
+    peGroupSetNextRootGroup(_Group, peGroupNull);
+    peGroupSetPrevRootGroup(_Group, peGroupNull);
+    peGroupSetRoot(_Group, peRootNull);
+}
+
 #if defined(DD_DEBUG)
 /*----------------------------------------------------------------------------------------
   Write out all the fields of an object.
@@ -369,6 +537,10 @@ void pePebbleDestroy(
     }
     if(owningLocation != peLocationNull) {
         peLocationSetPebble(owningLocation, pePebbleNull);
+#if defined(DD_DEBUG)
+    } else {
+        utExit("Pebble without owning Location");
+#endif
     }
     if(owningGroup != peGroupNull) {
         peGroupRemovePebble(owningGroup, Pebble);
@@ -404,6 +576,7 @@ static void allocPebbles(void)
     peSetUsedPebble(1);
     peSetFirstFreePebble(pePebbleNull);
     pePebbles.InUse = utNewAInitFirst(uint8, (peAllocatedPebble()));
+    pePebbles.Fixed = utNewAInitFirst(uint8, (peAllocatedPebble()));
     pePebbles.Location = utNewAInitFirst(peLocation, (peAllocatedPebble()));
     pePebbles.Group = utNewAInitFirst(peGroup, (peAllocatedPebble()));
     pePebbles.NextGroupPebble = utNewAInitFirst(pePebble, (peAllocatedPebble()));
@@ -417,6 +590,7 @@ static void reallocPebbles(
     uint32 newSize)
 {
     utResizeArray(pePebbles.InUse, (newSize));
+    utResizeArray(pePebbles.Fixed, (newSize));
     utResizeArray(pePebbles.Location, (newSize));
     utResizeArray(pePebbles.Group, (newSize));
     utResizeArray(pePebbles.NextGroupPebble, (newSize));
@@ -440,6 +614,7 @@ void pePebbleCopyProps(
     pePebble newPebble)
 {
     pePebbleSetInUse(newPebble, pePebbleInUse(oldPebble));
+    pePebbleSetFixed(newPebble, pePebbleFixed(oldPebble));
 }
 
 #if defined(DD_DEBUG)
@@ -454,6 +629,40 @@ void peShowPebble(
 #endif
 
 /*----------------------------------------------------------------------------------------
+  Destroy Location including everything in it. Remove from parents.
+----------------------------------------------------------------------------------------*/
+void peLocationDestroy(
+    peLocation Location)
+{
+    pePebble Pebble_;
+    peLocation Location_;
+    peRoot owningRoot = peLocationGetRoot(Location);
+    peLocation owningLocation = peLocationGetLocation(Location);
+
+    if(peLocationDestructorCallback != NULL) {
+        peLocationDestructorCallback(Location);
+    }
+    Pebble_ = peLocationGetPebble(Location);
+    if(Pebble_ != pePebbleNull) {
+        pePebbleDestroy(Pebble_);
+    }
+    peSafeForeachLocationLocation(Location, Location_) {
+        peLocationSetLocation(Location_, peLocationNull);
+    } peEndSafeLocationLocation;
+    if(owningRoot != peRootNull) {
+        peRootRemoveLocation(owningRoot, Location);
+#if defined(DD_DEBUG)
+    } else {
+        utExit("Location without owning Root");
+#endif
+    }
+    if(owningLocation != peLocationNull) {
+        peLocationRemoveLocation(owningLocation, Location);
+    }
+    peLocationFree(Location);
+}
+
+/*----------------------------------------------------------------------------------------
   Default constructor wrapper for the database manager.
 ----------------------------------------------------------------------------------------*/
 static uint64 allocLocation(void)
@@ -464,12 +673,22 @@ static uint64 allocLocation(void)
 }
 
 /*----------------------------------------------------------------------------------------
+  Destructor wrapper for the database manager.
+----------------------------------------------------------------------------------------*/
+static void destroyLocation(
+    uint64 objectIndex)
+{
+    peLocationDestroy(peIndex2Location((uint32)objectIndex));
+}
+
+/*----------------------------------------------------------------------------------------
   Allocate the field arrays of Location.
 ----------------------------------------------------------------------------------------*/
 static void allocLocations(void)
 {
     peSetAllocatedLocation(2);
     peSetUsedLocation(1);
+    peSetFirstFreeLocation(peLocationNull);
     peLocations.NumPointers = utNewAInitFirst(uint32, (peAllocatedLocation()));
     peLocations.Depth = utNewAInitFirst(uint32, (peAllocatedLocation()));
     peLocations.Root = utNewAInitFirst(peRoot, (peAllocatedLocation()));
@@ -614,6 +833,7 @@ void peGroupDestroy(
     peGroup Group)
 {
     pePebble Pebble_;
+    peRoot owningRoot = peGroupGetRoot(Group);
 
     if(peGroupDestructorCallback != NULL) {
         peGroupDestructorCallback(Group);
@@ -621,6 +841,13 @@ void peGroupDestroy(
     peSafeForeachGroupPebble(Group, Pebble_) {
         pePebbleSetGroup(Pebble_, peGroupNull);
     } peEndSafeGroupPebble;
+    if(owningRoot != peRootNull) {
+        peRootRemoveGroup(owningRoot, Group);
+#if defined(DD_DEBUG)
+    } else {
+        utExit("Group without owning Root");
+#endif
+    }
     peGroupFree(Group);
 }
 
@@ -652,6 +879,9 @@ static void allocGroups(void)
     peSetUsedGroup(1);
     peSetFirstFreeGroup(peGroupNull);
     peGroups.AvailablePebbles = utNewAInitFirst(uint32, (peAllocatedGroup()));
+    peGroups.Root = utNewAInitFirst(peRoot, (peAllocatedGroup()));
+    peGroups.NextRootGroup = utNewAInitFirst(peGroup, (peAllocatedGroup()));
+    peGroups.PrevRootGroup = utNewAInitFirst(peGroup, (peAllocatedGroup()));
     peGroups.FirstPebble = utNewAInitFirst(pePebble, (peAllocatedGroup()));
     peGroups.LastPebble = utNewAInitFirst(pePebble, (peAllocatedGroup()));
 }
@@ -663,6 +893,9 @@ static void reallocGroups(
     uint32 newSize)
 {
     utResizeArray(peGroups.AvailablePebbles, (newSize));
+    utResizeArray(peGroups.Root, (newSize));
+    utResizeArray(peGroups.NextRootGroup, (newSize));
+    utResizeArray(peGroups.PrevRootGroup, (newSize));
     utResizeArray(peGroups.FirstPebble, (newSize));
     utResizeArray(peGroups.LastPebble, (newSize));
     peSetAllocatedGroup(newSize);
@@ -1161,7 +1394,10 @@ void peDatabaseStop(void)
     utFree(peRoots.NumLocation);
     utFree(peRoots.Location);
     utFree(peRoots.UsedLocation);
+    utFree(peRoots.FirstGroup);
+    utFree(peRoots.LastGroup);
     utFree(pePebbles.InUse);
+    utFree(pePebbles.Fixed);
     utFree(pePebbles.Location);
     utFree(pePebbles.Group);
     utFree(pePebbles.NextGroupPebble);
@@ -1175,6 +1411,9 @@ void peDatabaseStop(void)
     utFree(peLocations.FirstLocation);
     utFree(peLocations.NextLocationLocation);
     utFree(peGroups.AvailablePebbles);
+    utFree(peGroups.Root);
+    utFree(peGroups.NextRootGroup);
+    utFree(peGroups.PrevRootGroup);
     utFree(peGroups.FirstPebble);
     utFree(peGroups.LastPebble);
     utFree(peLocationArrays.LocationIndex_);
@@ -1193,11 +1432,11 @@ void peDatabaseStart(void)
     if(!utInitialized()) {
         utStart();
     }
-    peRootData.hash = 0x15008c64;
-    peModuleID = utRegisterModule("pe", false, peHash(), 5, 25, 0, sizeof(struct peRootType_),
+    peRootData.hash = 0x37144f89;
+    peModuleID = utRegisterModule("pe", false, peHash(), 5, 31, 0, sizeof(struct peRootType_),
         &peRootData, peDatabaseStart, peDatabaseStop);
-    utRegisterClass("Root", 4, &peRootData.usedRoot, &peRootData.allocatedRoot,
-        NULL, 65535, 4, allocRoot, NULL);
+    utRegisterClass("Root", 6, &peRootData.usedRoot, &peRootData.allocatedRoot,
+        &peRootData.firstFreeRoot, 4, 4, allocRoot, destroyRoot);
     utRegisterField("LocationIndex_", &peRoots.LocationIndex_, sizeof(uint32), UT_UINT, NULL);
     utSetFieldHidden();
     utRegisterField("NumLocation", &peRoots.NumLocation, sizeof(uint32), UT_UINT, NULL);
@@ -1206,15 +1445,18 @@ void peDatabaseStart(void)
     utRegisterArray(&peRootData.usedRootLocation, &peRootData.allocatedRootLocation,
         getRootLocations, allocRootLocations, peCompactRootLocations);
     utRegisterField("UsedLocation", &peRoots.UsedLocation, sizeof(uint32), UT_UINT, NULL);
-    utRegisterClass("Pebble", 5, &peRootData.usedPebble, &peRootData.allocatedPebble,
-        &peRootData.firstFreePebble, 5, 4, allocPebble, destroyPebble);
+    utRegisterField("FirstGroup", &peRoots.FirstGroup, sizeof(peGroup), UT_POINTER, "Group");
+    utRegisterField("LastGroup", &peRoots.LastGroup, sizeof(peGroup), UT_POINTER, "Group");
+    utRegisterClass("Pebble", 6, &peRootData.usedPebble, &peRootData.allocatedPebble,
+        &peRootData.firstFreePebble, 8, 4, allocPebble, destroyPebble);
     utRegisterField("InUse", &pePebbles.InUse, sizeof(uint8), UT_BOOL, NULL);
+    utRegisterField("Fixed", &pePebbles.Fixed, sizeof(uint8), UT_BOOL, NULL);
     utRegisterField("Location", &pePebbles.Location, sizeof(peLocation), UT_POINTER, "Location");
     utRegisterField("Group", &pePebbles.Group, sizeof(peGroup), UT_POINTER, "Group");
     utRegisterField("NextGroupPebble", &pePebbles.NextGroupPebble, sizeof(pePebble), UT_POINTER, "Pebble");
     utRegisterField("PrevGroupPebble", &pePebbles.PrevGroupPebble, sizeof(pePebble), UT_POINTER, "Pebble");
     utRegisterClass("Location", 8, &peRootData.usedLocation, &peRootData.allocatedLocation,
-        NULL, 65535, 4, allocLocation, NULL);
+        &peRootData.firstFreeLocation, 14, 4, allocLocation, destroyLocation);
     utRegisterField("NumPointers", &peLocations.NumPointers, sizeof(uint32), UT_UINT, NULL);
     utRegisterField("Depth", &peLocations.Depth, sizeof(uint32), UT_UINT, NULL);
     utRegisterField("Root", &peLocations.Root, sizeof(peRoot), UT_POINTER, "Root");
@@ -1223,13 +1465,16 @@ void peDatabaseStart(void)
     utRegisterField("Location", &peLocations.Location, sizeof(peLocation), UT_POINTER, "Location");
     utRegisterField("FirstLocation", &peLocations.FirstLocation, sizeof(peLocation), UT_POINTER, "Location");
     utRegisterField("NextLocationLocation", &peLocations.NextLocationLocation, sizeof(peLocation), UT_POINTER, "Location");
-    utRegisterClass("Group", 3, &peRootData.usedGroup, &peRootData.allocatedGroup,
-        &peRootData.firstFreeGroup, 18, 4, allocGroup, destroyGroup);
+    utRegisterClass("Group", 6, &peRootData.usedGroup, &peRootData.allocatedGroup,
+        &peRootData.firstFreeGroup, 21, 4, allocGroup, destroyGroup);
     utRegisterField("AvailablePebbles", &peGroups.AvailablePebbles, sizeof(uint32), UT_UINT, NULL);
+    utRegisterField("Root", &peGroups.Root, sizeof(peRoot), UT_POINTER, "Root");
+    utRegisterField("NextRootGroup", &peGroups.NextRootGroup, sizeof(peGroup), UT_POINTER, "Group");
+    utRegisterField("PrevRootGroup", &peGroups.PrevRootGroup, sizeof(peGroup), UT_POINTER, "Group");
     utRegisterField("FirstPebble", &peGroups.FirstPebble, sizeof(pePebble), UT_POINTER, "Pebble");
     utRegisterField("LastPebble", &peGroups.LastPebble, sizeof(pePebble), UT_POINTER, "Pebble");
     utRegisterClass("LocationArray", 5, &peRootData.usedLocationArray, &peRootData.allocatedLocationArray,
-        &peRootData.firstFreeLocationArray, 24, 4, allocLocationArray, destroyLocationArray);
+        &peRootData.firstFreeLocationArray, 30, 4, allocLocationArray, destroyLocationArray);
     utRegisterField("LocationIndex_", &peLocationArrays.LocationIndex_, sizeof(uint32), UT_UINT, NULL);
     utSetFieldHidden();
     utRegisterField("NumLocation", &peLocationArrays.NumLocation, sizeof(uint32), UT_UINT, NULL);

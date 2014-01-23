@@ -1,18 +1,20 @@
 module Pebble pe
 
-class Root create_only
+class Root
 
 class Pebble
     bool inUse
+    bool fixed
 
-class Location create_only array
+class Location array
     uint32 numPointers
     uint32 depth
 
 class Group
     uint32 availablePebbles
 
-relationship Root Location array
-relationship Location Pebble
+relationship Root Location array mandatory
+relationship Root Group doubly_linked mandatory
+relationship Location Pebble mandatory
 relationship Location Location linked_list
 relationship Group Pebble doubly_linked
