@@ -3,7 +3,7 @@ module Pebble pe
 class Root
 
 class Pebble
-    bool inUse
+    uint8 useCount
     bool fixed
 
 class Location array

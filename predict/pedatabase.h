@@ -265,7 +265,7 @@ utInlineC peRoot peRootAlloc(void) {
   Fields for class Pebble.
 ----------------------------------------------------------------------------------------*/
 struct pePebbleFields {
-    uint8 *InUse;
+    uint8 *UseCount;
     uint8 *Fixed;
     peLocation *Location;
     peGroup *Group;
@@ -276,8 +276,8 @@ extern struct pePebbleFields pePebbles;
 
 void pePebbleAllocMore(void);
 void pePebbleCopyProps(pePebble peOldPebble, pePebble peNewPebble);
-utInlineC uint8 pePebbleInUse(pePebble Pebble) {return pePebbles.InUse[pePebble2ValidIndex(Pebble)];}
-utInlineC void pePebbleSetInUse(pePebble Pebble, uint8 value) {pePebbles.InUse[pePebble2ValidIndex(Pebble)] = value;}
+utInlineC uint8 pePebbleGetUseCount(pePebble Pebble) {return pePebbles.UseCount[pePebble2ValidIndex(Pebble)];}
+utInlineC void pePebbleSetUseCount(pePebble Pebble, uint8 value) {pePebbles.UseCount[pePebble2ValidIndex(Pebble)] = value;}
 utInlineC uint8 pePebbleFixed(pePebble Pebble) {return pePebbles.Fixed[pePebble2ValidIndex(Pebble)];}
 utInlineC void pePebbleSetFixed(pePebble Pebble, uint8 value) {pePebbles.Fixed[pePebble2ValidIndex(Pebble)] = value;}
 utInlineC peLocation pePebbleGetLocation(pePebble Pebble) {return pePebbles.Location[pePebble2ValidIndex(Pebble)];}
@@ -314,7 +314,7 @@ utInlineC pePebble pePebbleAllocRaw(void) {
     return Pebble;}
 utInlineC pePebble pePebbleAlloc(void) {
     pePebble Pebble = pePebbleAllocRaw();
-    pePebbleSetInUse(Pebble, 0);
+    pePebbleSetUseCount(Pebble, 0);
     pePebbleSetFixed(Pebble, 0);
     pePebbleSetLocation(Pebble, peLocationNull);
     pePebbleSetGroup(Pebble, peGroupNull);

@@ -3,8 +3,8 @@
 #include "pedatabase.h"
 
 #define MEM_LENGTH 2048
-#define NUM_PEBBLES (MEM_LENGTH/5)
-#define SPACING 16
+#define NUM_PEBBLES (MEM_LENGTH/4)
+#define SPACING 12
 #define SPACING_START 11
 
 peRoot peTheRoot;
@@ -57,15 +57,15 @@ static peGraphType parseType(char *name) {
 // Find the previous position using Alexander's sliding power-of-two window.
 static uint32 findSlidingWindowPos(uint32 pos) {
     // This is a sliding window which is the largest power of 2 < i.
-    if(pos < 2) {
+    if(pos < 3) {
         return UINT32_MAX; // No edge
     }
     uint32 mask = 1;
-    while(mask < pos) {
+    while(mask < pos - 1) {
         mask <<= 1;
     }
     mask = (mask >> 1) - 1;
-    return pos - 1 - (rand() & mask);
+    return pos - 2 - (rand() & mask);
 }
 
 // Find the previous position using a uniform random value between 0..1, cube it, and go
@@ -119,7 +119,7 @@ static void setPrevLocation(uint32 pos, peGraphType type) {
         return;
     }
     peLocation location = peRootGetiLocation(peTheRoot, pos);
-    uint32 prevPos;
+    uint32 prevPos = 0;
     switch(type) {
     case SLIDING_WINDOW: prevPos = findSlidingWindowPos(pos); break;
     case RAND_CUBED: prevPos = findRandCubedPos(pos); break;
@@ -132,6 +132,7 @@ static void setPrevLocation(uint32 pos, peGraphType type) {
         return; // No edge
     }
     peLocation prevLocation = peRootGetiLocation(peTheRoot, prevPos);
+    utAssert(prevPos + 1 < pos);
     peLocationInsertLocation(prevLocation, location);
 }
 
@@ -155,8 +156,10 @@ static void dumpGraph(void) {
             c = '*';
             if(pePebbleGetGroup(pebble) != peGroupNull) {
                 c = '-';
-            } else if(pePebbleInUse(pebble)) {
+            } else if(pePebbleFixed(pebble)) {
                 c = '!';
+            } else if(pePebbleGetUseCount(pebble) != 0) {
+                c = '0' + pePebbleGetUseCount(pebble);
             }
         }
         if(peLocationGetLocation(location) == peLocationNull) {
@@ -193,7 +196,7 @@ static void addPebblesToGroup(void) {
     peForeachRootLocation(peTheRoot, location) {
         if(findFuturePointers(location) == 0) {
             pePebble pebble = peLocationGetPebble(location);
-            if(pebble != pePebbleNull && !pePebbleInUse(pebble)) {
+            if(pebble != pePebbleNull && pePebbleGetUseCount(pebble) == 0) {
                 peGroupAppendPebble(peTheGroup, pebble);
                 numPebbles++;
             }
@@ -214,7 +217,7 @@ static pePebble findLeastBadPebble(void) {
     peLocation location;
     peForeachRootLocation(peTheRoot, location) {
         pePebble pebble = peLocationGetPebble(location);
-        if(pebble != pePebbleNull && !pePebbleInUse(pebble)) {
+        if(pebble != pePebbleNull && pePebbleGetUseCount(pebble) == 0) {
             return pebble;
         }
     } peEndRootLocation;
@@ -258,7 +261,7 @@ static pePebble pullPebbleFromGroup(void) {
 // Remove the pebble from the group, since it's needed in it's current location.
 static void removePebbleFromGroup(pePebble pebble) {
     uint32 numAvailable = peGroupGetAvailablePebbles(peTheGroup);
-    utAssert(numAvailable > 0 && pePebbleInUse(pebble));
+    utAssert(numAvailable > 0 && pePebbleGetUseCount(pebble) == 1);
     peGroupRemovePebble(peTheGroup, pebble);
     if(numAvailable == 1) {
         rebuildGroup();
@@ -279,7 +282,9 @@ static inline pePebble pickUpPebble(void) {
 // Place a pebble.  This causes any pebble on the fanin that had this pebble location as
 // it's needed position to have to recompute it's needed position.
 static void placePebble(pePebble pebble, uint32 pos) {
+    utAssert(pePebbleGetGroup(pebble) == peGroupNull);
     peLocation location = peRootGetiLocation(peTheRoot, pos);
+    utAssert(peLocationGetPebble(location) == pePebbleNull);
     peLocationInsertPebble(location, pebble);
     if(peVerbose) {
         printf("Placing %u\n", pos);
@@ -288,9 +293,20 @@ static void placePebble(pePebble pebble, uint32 pos) {
 
 // Mark the pebble in use.
 static inline void markInUse(pePebble pebble) {
-    pePebbleSetInUse(pebble, true); // Must come before call to remove from group
-    if(pePebbleGetGroup(pebble) != peGroupNull) {
-        removePebbleFromGroup(pebble);
+    if(!pePebbleFixed(pebble)) {
+        pePebbleSetUseCount(pebble, pePebbleGetUseCount(pebble) + 1); // Must come before call to remove from group
+        if(pePebbleGetGroup(pebble) != peGroupNull) {
+            removePebbleFromGroup(pebble);
+        }
+    }
+}
+
+// Unmark a pabble as in use.
+static inline void unmarkInUse(pePebble pebble) {
+    if(!pePebbleFixed(pebble)) {
+        uint32 useCount = pePebbleGetUseCount(pebble);
+        utAssert(useCount != 0);
+        pePebbleSetUseCount(pebble, useCount - 1); // Must come before call to remove from group
     }
 }
 
@@ -298,52 +314,51 @@ static inline void markInUse(pePebble pebble) {
 static uint32 pebbleLocation(uint32 pos) {
     peLocation location = peRootGetiLocation(peTheRoot, pos);
     pePebble pebble = peLocationGetPebble(location);
-    if(pebble != pePebbleNull) {
-        markInUse(pebble);
-        return 0;
-    }
     if(peVerbose) {
         printf("Trying to cover %u\n", pos);
     }
     peLocation prevLocation = peLocationGetLocation(location);
-    pePebble prevPebble;
+    pePebble prev1 = pePebbleNull;
+    pePebble prev2 = pePebbleNull;
     uint32 total = 0;
     if(pos > 0) {
-        pePebble prevPebble = peLocationGetPebble(peRootGetiLocation(peTheRoot, pos-1));
-        if(prevPebble != pePebbleNull) {
-            markInUse(prevPebble);
+        prev1 = peLocationGetPebble(peRootGetiLocation(peTheRoot, pos-1));
+        if(prev1 != pePebbleNull) {
+            markInUse(prev1);
         }
     }
     if(prevLocation != peLocationNull) {
-        prevPebble = peLocationGetPebble(prevLocation);
-        if(prevPebble != pePebbleNull) {
-            markInUse(prevPebble);
+        prev2 = peLocationGetPebble(prevLocation);
+        if(prev2 != pePebbleNull) {
+            markInUse(prev2);
         }
     }
-    if(pos > 0) {
+    if(pos > 0 && prev1 == pePebbleNull) {
         total += pebbleLocation(pos-1);
+        prev1 = peLocationGetPebble(peRootGetiLocation(peTheRoot, pos-1));
     }
-    if(prevLocation != peLocationNull) {
-        total += pebbleLocation(peLocationGetRootIndex(prevLocation));
+    if(prevLocation != peLocationNull && prev2 == pePebbleNull) {
+        prev2 = peLocationGetPebble(prevLocation);
+        if(prev2 == pePebbleNull) {
+            total += pebbleLocation(peLocationGetRootIndex(prevLocation));
+            prev2 = peLocationGetPebble(prevLocation);
+        } else {
+            // There is an odd case where pebbling prev1 creates a pebble in prev2's spot
+            markInUse(prev2);
+        }
     }
     pebble = pickUpPebble();
     placePebble(pebble, pos);
     if(peVerbose) {
         dumpGraph();
     }
-    if(pos > 0) {
-        pePebble prevPebble = peLocationGetPebble(peRootGetiLocation(peTheRoot, pos-1));
-        if(!pePebbleFixed(prevPebble)) {
-            pePebbleSetInUse(prevPebble, false);
-        }
+    pePebbleSetUseCount(pebble, 1);
+    if(prev1 != pePebbleNull) {
+        unmarkInUse(prev1);
     }
-    if(prevLocation != peLocationNull) {
-        prevPebble = peLocationGetPebble(peRootGetiLocation(peTheRoot, peLocationGetRootIndex(prevLocation)));
-        if(!pePebbleFixed(prevPebble)) {
-            pePebbleSetInUse(prevPebble, false);
-        }
+    if(prev2 != pePebbleNull) {
+        unmarkInUse(prev2);
     }
-    pePebbleSetInUse(pebble, true);
     if(peGroupGetAvailablePebbles(peTheGroup) == 0) {
         rebuildGroup();
     }
@@ -360,9 +375,12 @@ static void pebbleGraph(void) {
     uint64 total = NUM_PEBBLES;
     for(; peCurrentPos < MEM_LENGTH; peCurrentPos++) {
         total += pebbleLocation(peCurrentPos);
+        pePebble pebble = peLocationGetPebble(peRootGetiLocation(peTheRoot, peCurrentPos));
+        unmarkInUse(pebble);
         if(peCurrentPos >= SPACING_START && peCurrentPos % SPACING == SPACING_START) {
             // Fix the position of pebbles every so often to see if it helps.
-            pePebbleSetFixed(peLocationGetPebble(peRootGetiLocation(peTheRoot, peCurrentPos)), true);
+            pePebbleSetFixed(pebble, true);
+            pePebbleSetUseCount(pebble, 1);
         }
     }
     printf("Recalculation penalty is %.4fX\n", total/(double)MEM_LENGTH - 1.0);
