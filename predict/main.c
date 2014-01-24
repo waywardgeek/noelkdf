@@ -133,7 +133,7 @@ static void setPrevLocation(uint32 pos, peGraphType type) {
     }
     peLocation prevLocation = peRootGetiLocation(peTheRoot, prevPos);
     utAssert(prevPos + 1 < pos);
-    peLocationInsertLocation(prevLocation, location);
+    peLocationAppendLocation(prevLocation, location);
 }
 
 // Find the previous position to point to.
@@ -209,20 +209,36 @@ static void addPebblesToGroup(void) {
     }
 }
 
+// Determine if the first pebble is better than the second.
+static inline bool pebbleBetterThanPebble(pePebble pebble1, pePebble pebble2) {
+    peLocation location1 = pePebbleGetLocation(pebble1);
+    peLocation location2 = pePebbleGetLocation(pebble2);
+    // The first location is always the earliest in memory.
+    return peLocationGetRootIndex(peLocationGetFirstLocation(location1)) <
+        peLocationGetRootIndex(peLocationGetFirstLocation(location2));
+}
+
 // We are in the position of having to pick up a pebble we know we will need in the
 // future.  Try to find a low-pain choice, and add it to the group.  This that make a
 // choice low pain are low initial computation cost and being needed further in the
 // future.
 static pePebble findLeastBadPebble(void) {
-    peLocation location;
-    peForeachRootLocation(peTheRoot, location) {
+    pePebble bestPebble = pePebbleNull;
+    uint32 i;
+    for(i = 0; i < peCurrentPos; i++) {
+        peLocation location = peRootGetiLocation(peTheRoot, i);
         pePebble pebble = peLocationGetPebble(location);
         if(pebble != pePebbleNull && pePebbleGetUseCount(pebble) == 0) {
-            return pebble;
+            // return pebble;
+            if(bestPebble == pePebbleNull || pebbleBetterThanPebble(pebble, bestPebble)) {
+                bestPebble = pebble;
+            }
         }
-    } peEndRootLocation;
-    utExit("Where did all the pebbles go?");
-    return pePebbleNull;
+    }
+    if(bestPebble == pePebbleNull) {
+        utExit("Where did all the pebbles go?");
+    }
+    return bestPebble;
 }
 
 // The group is empty, so delete all the pebbles since they have been used.  Then create a

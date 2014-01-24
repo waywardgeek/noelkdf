@@ -16,5 +16,5 @@ class Group
 relationship Root Location array mandatory
 relationship Root Group doubly_linked mandatory
 relationship Location Pebble mandatory
-relationship Location Location linked_list
+relationship Location Location doubly_linked
 relationship Group Pebble doubly_linked

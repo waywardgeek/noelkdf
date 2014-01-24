@@ -337,6 +337,8 @@ struct peLocationFields {
     peLocation *Location;
     peLocation *FirstLocation;
     peLocation *NextLocationLocation;
+    peLocation *LastLocation;
+    peLocation *PrevLocationLocation;
 };
 extern struct peLocationFields peLocations;
 
@@ -358,6 +360,10 @@ utInlineC peLocation peLocationGetFirstLocation(peLocation Location) {return peL
 utInlineC void peLocationSetFirstLocation(peLocation Location, peLocation value) {peLocations.FirstLocation[peLocation2ValidIndex(Location)] = value;}
 utInlineC peLocation peLocationGetNextLocationLocation(peLocation Location) {return peLocations.NextLocationLocation[peLocation2ValidIndex(Location)];}
 utInlineC void peLocationSetNextLocationLocation(peLocation Location, peLocation value) {peLocations.NextLocationLocation[peLocation2ValidIndex(Location)] = value;}
+utInlineC peLocation peLocationGetLastLocation(peLocation Location) {return peLocations.LastLocation[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetLastLocation(peLocation Location, peLocation value) {peLocations.LastLocation[peLocation2ValidIndex(Location)] = value;}
+utInlineC peLocation peLocationGetPrevLocationLocation(peLocation Location) {return peLocations.PrevLocationLocation[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetPrevLocationLocation(peLocation Location, peLocation value) {peLocations.PrevLocationLocation[peLocation2ValidIndex(Location)] = value;}
 utInlineC void peLocationSetConstructorCallback(void(*func)(peLocation)) {peLocationConstructorCallback = func;}
 utInlineC peLocationCallbackType peLocationGetConstructorCallback(void) {return peLocationConstructorCallback;}
 utInlineC void peLocationSetDestructorCallback(void(*func)(peLocation)) {peLocationDestructorCallback = func;}
@@ -392,6 +398,8 @@ utInlineC peLocation peLocationAlloc(void) {
     peLocationSetLocation(Location, peLocationNull);
     peLocationSetFirstLocation(Location, peLocationNull);
     peLocationSetNextLocationLocation(Location, peLocationNull);
+    peLocationSetLastLocation(Location, peLocationNull);
+    peLocationSetPrevLocationLocation(Location, peLocationNull);
     if(peLocationConstructorCallback != NULL) {
         peLocationConstructorCallback(Location);
     }
@@ -577,6 +585,7 @@ utInlineC void peLocationRemovePebble(peLocation Location, pePebble _Pebble) {pe
 void peLocationInsertLocation(peLocation Location, peLocation _Location);
 void peLocationRemoveLocation(peLocation Location, peLocation _Location);
 void peLocationInsertAfterLocation(peLocation Location, peLocation prevLocation, peLocation _Location);
+void peLocationAppendLocation(peLocation Location, peLocation _Location);
 #define peForeachGroupPebble(pVar, cVar) \
     for(cVar = peGroupGetFirstPebble(pVar); cVar != pePebbleNull; \
         cVar = pePebbleGetNextGroupPebble(cVar))

@@ -12,8 +12,14 @@ This will always pebble 2N nodes without recalculation.
 
 Example usage:
 
+Test Catena3 with 1024 nodes (G=256), and 128 pebbles:
+
 predict> ./pebble -m 1024 -p 128 -s 12 catena3
 ========= Testing catena3
 Total pebbles: 128 out of 1024 (12.5%)
 Recalculation penalty is 179.6943X
 Mid-cut size: 256 (25.0%)
+
+Test Catena3 in verbose mode to see how the pebbling works:
+pebble -m 32 -p 7 -v catena3 | less
+

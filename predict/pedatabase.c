@@ -697,6 +697,8 @@ static void allocLocations(void)
     peLocations.Location = utNewAInitFirst(peLocation, (peAllocatedLocation()));
     peLocations.FirstLocation = utNewAInitFirst(peLocation, (peAllocatedLocation()));
     peLocations.NextLocationLocation = utNewAInitFirst(peLocation, (peAllocatedLocation()));
+    peLocations.LastLocation = utNewAInitFirst(peLocation, (peAllocatedLocation()));
+    peLocations.PrevLocationLocation = utNewAInitFirst(peLocation, (peAllocatedLocation()));
 }
 
 /*----------------------------------------------------------------------------------------
@@ -713,6 +715,8 @@ static void reallocLocations(
     utResizeArray(peLocations.Location, (newSize));
     utResizeArray(peLocations.FirstLocation, (newSize));
     utResizeArray(peLocations.NextLocationLocation, (newSize));
+    utResizeArray(peLocations.LastLocation, (newSize));
+    utResizeArray(peLocations.PrevLocationLocation, (newSize));
     peSetAllocatedLocation(newSize);
 }
 
@@ -754,7 +758,44 @@ void peLocationInsertLocation(
     }
 #endif
     peLocationSetNextLocationLocation(_Location, peLocationGetFirstLocation(Location));
+    if(peLocationGetFirstLocation(Location) != peLocationNull) {
+        peLocationSetPrevLocationLocation(peLocationGetFirstLocation(Location), _Location);
+    }
     peLocationSetFirstLocation(Location, _Location);
+    peLocationSetPrevLocationLocation(_Location, peLocationNull);
+    if(peLocationGetLastLocation(Location) == peLocationNull) {
+        peLocationSetLastLocation(Location, _Location);
+    }
+    peLocationSetLocation(_Location, Location);
+}
+
+/*----------------------------------------------------------------------------------------
+  Add the Location to the end of the list on the Location.
+----------------------------------------------------------------------------------------*/
+void peLocationAppendLocation(
+    peLocation Location,
+    peLocation _Location)
+{
+#if defined(DD_DEBUG)
+    if(Location == peLocationNull) {
+        utExit("Non-existent Location");
+    }
+    if(_Location == peLocationNull) {
+        utExit("Non-existent Location");
+    }
+    if(peLocationGetLocation(_Location) != peLocationNull) {
+        utExit("Attempting to add Location to Location twice");
+    }
+#endif
+    peLocationSetPrevLocationLocation(_Location, peLocationGetLastLocation(Location));
+    if(peLocationGetLastLocation(Location) != peLocationNull) {
+        peLocationSetNextLocationLocation(peLocationGetLastLocation(Location), _Location);
+    }
+    peLocationSetLastLocation(Location, _Location);
+    peLocationSetNextLocationLocation(_Location, peLocationNull);
+    if(peLocationGetFirstLocation(Location) == peLocationNull) {
+        peLocationSetFirstLocation(Location, _Location);
+    }
     peLocationSetLocation(_Location, Location);
 }
 
@@ -781,6 +822,13 @@ void peLocationInsertAfterLocation(
 #endif
     peLocationSetNextLocationLocation(_Location, nextLocation);
     peLocationSetNextLocationLocation(prevLocation, _Location);
+    peLocationSetPrevLocationLocation(_Location, prevLocation);
+    if(nextLocation != peLocationNull) {
+        peLocationSetPrevLocationLocation(nextLocation, _Location);
+    }
+    if(peLocationGetLastLocation(Location) == prevLocation) {
+        peLocationSetLastLocation(Location, _Location);
+    }
     peLocationSetLocation(_Location, Location);
 }
 
@@ -801,17 +849,20 @@ void peLocationRemoveLocation(
         utExit("Delete Location from non-owning Location");
     }
 #endif
-    pLocation = peLocationNull;
-    for(nLocation = peLocationGetFirstLocation(Location); nLocation != peLocationNull && nLocation != _Location;
-            nLocation = peLocationGetNextLocationLocation(nLocation)) {
-        pLocation = nLocation;
-    }
+    nLocation = peLocationGetNextLocationLocation(_Location);
+    pLocation = peLocationGetPrevLocationLocation(_Location);
     if(pLocation != peLocationNull) {
-        peLocationSetNextLocationLocation(pLocation, peLocationGetNextLocationLocation(_Location));
-    } else {
-        peLocationSetFirstLocation(Location, peLocationGetNextLocationLocation(_Location));
+        peLocationSetNextLocationLocation(pLocation, nLocation);
+    } else if(peLocationGetFirstLocation(Location) == _Location) {
+        peLocationSetFirstLocation(Location, nLocation);
+    }
+    if(nLocation != peLocationNull) {
+        peLocationSetPrevLocationLocation(nLocation, pLocation);
+    } else if(peLocationGetLastLocation(Location) == _Location) {
+        peLocationSetLastLocation(Location, pLocation);
     }
     peLocationSetNextLocationLocation(_Location, peLocationNull);
+    peLocationSetPrevLocationLocation(_Location, peLocationNull);
     peLocationSetLocation(_Location, peLocationNull);
 }
 
@@ -1410,6 +1461,8 @@ void peDatabaseStop(void)
     utFree(peLocations.Location);
     utFree(peLocations.FirstLocation);
     utFree(peLocations.NextLocationLocation);
+    utFree(peLocations.LastLocation);
+    utFree(peLocations.PrevLocationLocation);
     utFree(peGroups.AvailablePebbles);
     utFree(peGroups.Root);
     utFree(peGroups.NextRootGroup);
@@ -1432,8 +1485,8 @@ void peDatabaseStart(void)
     if(!utInitialized()) {
         utStart();
     }
-    peRootData.hash = 0x782455fb;
-    peModuleID = utRegisterModule("pe", false, peHash(), 5, 31, 0, sizeof(struct peRootType_),
+    peRootData.hash = 0x84c94f52;
+    peModuleID = utRegisterModule("pe", false, peHash(), 5, 33, 0, sizeof(struct peRootType_),
         &peRootData, peDatabaseStart, peDatabaseStop);
     utRegisterClass("Root", 6, &peRootData.usedRoot, &peRootData.allocatedRoot,
         &peRootData.firstFreeRoot, 4, 4, allocRoot, destroyRoot);
@@ -1455,7 +1508,7 @@ void peDatabaseStart(void)
     utRegisterField("Group", &pePebbles.Group, sizeof(peGroup), UT_POINTER, "Group");
     utRegisterField("NextGroupPebble", &pePebbles.NextGroupPebble, sizeof(pePebble), UT_POINTER, "Pebble");
     utRegisterField("PrevGroupPebble", &pePebbles.PrevGroupPebble, sizeof(pePebble), UT_POINTER, "Pebble");
-    utRegisterClass("Location", 8, &peRootData.usedLocation, &peRootData.allocatedLocation,
+    utRegisterClass("Location", 10, &peRootData.usedLocation, &peRootData.allocatedLocation,
         &peRootData.firstFreeLocation, 14, 4, allocLocation, destroyLocation);
     utRegisterField("NumPointers", &peLocations.NumPointers, sizeof(uint32), UT_UINT, NULL);
     utRegisterField("Depth", &peLocations.Depth, sizeof(uint32), UT_UINT, NULL);
@@ -1465,8 +1518,10 @@ void peDatabaseStart(void)
     utRegisterField("Location", &peLocations.Location, sizeof(peLocation), UT_POINTER, "Location");
     utRegisterField("FirstLocation", &peLocations.FirstLocation, sizeof(peLocation), UT_POINTER, "Location");
     utRegisterField("NextLocationLocation", &peLocations.NextLocationLocation, sizeof(peLocation), UT_POINTER, "Location");
+    utRegisterField("LastLocation", &peLocations.LastLocation, sizeof(peLocation), UT_POINTER, "Location");
+    utRegisterField("PrevLocationLocation", &peLocations.PrevLocationLocation, sizeof(peLocation), UT_POINTER, "Location");
     utRegisterClass("Group", 6, &peRootData.usedGroup, &peRootData.allocatedGroup,
-        &peRootData.firstFreeGroup, 21, 4, allocGroup, destroyGroup);
+        &peRootData.firstFreeGroup, 23, 4, allocGroup, destroyGroup);
     utRegisterField("AvailablePebbles", &peGroups.AvailablePebbles, sizeof(uint32), UT_UINT, NULL);
     utRegisterField("Root", &peGroups.Root, sizeof(peRoot), UT_POINTER, "Root");
     utRegisterField("NextRootGroup", &peGroups.NextRootGroup, sizeof(peGroup), UT_POINTER, "Group");
@@ -1474,7 +1529,7 @@ void peDatabaseStart(void)
     utRegisterField("FirstPebble", &peGroups.FirstPebble, sizeof(pePebble), UT_POINTER, "Pebble");
     utRegisterField("LastPebble", &peGroups.LastPebble, sizeof(pePebble), UT_POINTER, "Pebble");
     utRegisterClass("LocationArray", 5, &peRootData.usedLocationArray, &peRootData.allocatedLocationArray,
-        &peRootData.firstFreeLocationArray, 30, 4, allocLocationArray, destroyLocationArray);
+        &peRootData.firstFreeLocationArray, 32, 4, allocLocationArray, destroyLocationArray);
     utRegisterField("LocationIndex_", &peLocationArrays.LocationIndex_, sizeof(uint32), UT_UINT, NULL);
     utSetFieldHidden();
     utRegisterField("NumLocation", &peLocationArrays.NumLocation, sizeof(uint32), UT_UINT, NULL);
