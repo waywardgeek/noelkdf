@@ -127,7 +127,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
     //printf("memLength:%llu numThreads:%u t_cost:%u repeat_count:%u blockLength:%u numBlocks:%u\n",
         //memLength, num_threads, t_cost, repeat_count, blockLength, numBlocks);
     // Compute intermediate key which is used to hash memory
-    PBKDF2_SHA256(in, inlen, salt, saltlen, 2048, out, outlen);
+    PBKDF2_SHA256(in, inlen, salt, saltlen, num_hash_rounds, out, outlen);
     if(clear_in) {
         // Note that an optimizer may drop this, and that data may leak through registers
         // or elsewhere.  The hand optimized version should try to deal with these issues
