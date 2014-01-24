@@ -38,7 +38,7 @@ static inline uint32 Rand(struct RngState *s) {
 // This is the function called by each thread.  It hashes a single continuous block of memory.
 static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
-    struct RngState s = {1, 1};
+    struct RngState s = {c->mem[0], c->mem[1]};
 
     // Copy the thread key to the first block
     be32dec_vect(c->mem, c->threadKey, c->threadKeySize);
@@ -52,7 +52,7 @@ static void *hashMem(void *contextPtr) {
     uint32 *fromBlock;
     uint32 hash = 1;
     for(i = 1; i < c->numBlocks; i++) {
-        uint64 dist = Rand(&s);
+        uint64 dist = *prevBlock;
         uint64 distSquared = (dist*dist) >> 32;
         uint64 distCubed = (distSquared*dist) >> 32;
         dist = ((i-1)*distCubed) >> 32;
@@ -164,7 +164,9 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
             for(t = 0; t < num_threads; t++) {
                 (void)pthread_join(threads[t], NULL);
             }
-            cheatKillerPass(out, outlen, mem, numBlocks, blockLength, killer_factor);
+            if(num_threads > 1) {
+                cheatKillerPass(out, outlen, mem, numBlocks, blockLength, killer_factor);
+            }
         }
 
         // Double memory usage for the next loop.
