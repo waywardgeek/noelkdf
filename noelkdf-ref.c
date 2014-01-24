@@ -107,9 +107,9 @@ static void cheatKillerPass(uint8 *out, uint32 outSize, uint32 *mem, uint32 numB
 //  return_memory   - when true, the hash data stored in memory is returned without being
 //                    freed in the memPtr variable
 int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, size_t saltlen,
-        unsigned int t_cost, unsigned int m_cost, unsigned int num_hash_rounds, unsigned int killer_factor,
-        unsigned int repeat_count, unsigned int num_threads, unsigned int block_size, int clear_in,
-        int return_memory, unsigned int **mem_ptr) {
+        void *data, size_t datalen, unsigned int t_cost, unsigned int m_cost, unsigned int
+        num_hash_rounds, unsigned int killer_factor, unsigned int repeat_count, unsigned
+        int num_threads, unsigned int block_size, int clear_in, int return_memory, unsigned int **mem_ptr) {
 
     // Allocate memory
     uint32 blockLength = block_size/sizeof(uint32);
@@ -128,6 +128,11 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
         //memLength, num_threads, t_cost, repeat_count, blockLength, numBlocks);
     // Compute intermediate key which is used to hash memory
     PBKDF2_SHA256(in, inlen, salt, saltlen, num_hash_rounds, out, outlen);
+    if(data != NULL) {
+        uint8 tmp[outlen];
+        PBKDF2_SHA256(out, outlen, data, datalen, 1, tmp, outlen);
+        memcpy(out, tmp, outlen);
+    }
     if(clear_in) {
         // Note that an optimizer may drop this, and that data may leak through registers
         // or elsewhere.  The hand optimized version should try to deal with these issues
@@ -189,5 +194,5 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.
 int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost) {
-    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, t_cost, m_cost, 2048, 1000, 1, 2, 4096, 0, 0, NULL);
+    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, NULL, 0, t_cost, m_cost, 2048, 1000, 1, 2, 4096, 0, 0, NULL);
 }

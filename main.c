@@ -195,7 +195,7 @@ int main(int argc, char **argv) {
         numHashRounds, killerFactor, repeatCount, numThreads, blockSize);
     uint8 *derivedKey = (uint8 *)calloc(derivedKeySize, sizeof(uint8));
     uint32 *mem;
-    if(NoelKDF(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize, garlic, memorySize,
+    if(NoelKDF(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize, NULL, 0, garlic, memorySize,
             numHashRounds, killerFactor, repeatCount, numThreads, blockSize, true, dump || !freeMemory, &mem)) {
         fprintf(stderr, "Key stretching failed.\n");
         return 1;
