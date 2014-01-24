@@ -1,4 +1,4 @@
 #!/bin/bash
 
 #Usage: noelkdf outlen password salt t_cost m_cost num_hash_rounds killer_factor repeat_count num_threads page_size freeMemory dump
-time ./noelkdf 32 "Don't tell" deadbeef 0 1024 1 100 1 1 4096 0 0
+time ./noelkdf 32 "Don't tell" deadbeef 0 2048 1 100 1 2 4096 0 0
