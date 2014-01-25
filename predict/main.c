@@ -501,6 +501,9 @@ int main(int argc, char **argv) {
             peVerbose = true;
         } else if(argc >= 3 && !strcmp(argv[1], "-m")) {
             peMemLength = atoi(argv[2]);
+            if(peNumPebbles > peMemLength) {
+                peNumPebbles = peMemLength >> 1;
+            }
             argc--;
             argv++;
         } else if(argc >= 3 && !strcmp(argv[1], "-p")) {
