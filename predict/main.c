@@ -14,6 +14,7 @@ bool peVerbose;
 uint32 peMaxDegree;
 uint32 peCurrentPos;
 uint32 peCatenaLambda;
+bool peCatena3InFirstRow;
 
 typedef enum {
     SLIDING_WINDOW,
@@ -116,7 +117,18 @@ static uint32 findCatenaPos(uint32 pos) {
     uint32 rowLength = peMemLength/(peCatenaLambda + 1); // Note: peMemLength/lambda must be power of 2
     uint32 row = pos/rowLength;
     if(row == 0) {
-        return UINT32_MAX;
+        if(!peCatena3InFirstRow) {
+            return UINT32_MAX;
+        }
+        if(rowLength > 8) {
+            rowLength /= 8; // Build a Catena-7 graph in the first row
+        }
+        row = pos/rowLength;
+        if(row == 0) {
+            return UINT32_MAX;
+        }
+        uint32 rowPos = pos - row*rowLength;
+        return (row-1)*rowLength + bitReverse(rowPos, rowLength);
     }
     uint32 rowPos = pos - row*rowLength;
     return (row-1)*rowLength + bitReverse(rowPos, rowLength);
@@ -494,6 +506,7 @@ int main(int argc, char **argv) {
     bool dumpGraphs = false;
     peVerbose = false;
     peCatenaLambda = 3;
+    peCatena3InFirstRow = false;
     while(argc >= 2 && *argv[1] == '-') {
         if(!strcmp(argv[1], "-d")) {
             dumpGraphs = true;
@@ -522,6 +535,8 @@ int main(int argc, char **argv) {
             peCatenaLambda = atoi(argv[2]);
             argc--;
             argv++;
+        } else if(argc >= 3 && !strcmp(argv[1], "-r")) {
+            peCatena3InFirstRow = true;
         }
         argc--;
         argv++;
