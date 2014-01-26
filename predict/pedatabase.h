@@ -265,8 +265,6 @@ utInlineC peRoot peRootAlloc(void) {
   Fields for class Pebble.
 ----------------------------------------------------------------------------------------*/
 struct pePebbleFields {
-    uint8 *UseCount;
-    uint8 *Fixed;
     peLocation *Location;
     peGroup *Group;
     pePebble *NextGroupPebble;
@@ -276,10 +274,6 @@ extern struct pePebbleFields pePebbles;
 
 void pePebbleAllocMore(void);
 void pePebbleCopyProps(pePebble peOldPebble, pePebble peNewPebble);
-utInlineC uint8 pePebbleGetUseCount(pePebble Pebble) {return pePebbles.UseCount[pePebble2ValidIndex(Pebble)];}
-utInlineC void pePebbleSetUseCount(pePebble Pebble, uint8 value) {pePebbles.UseCount[pePebble2ValidIndex(Pebble)] = value;}
-utInlineC uint8 pePebbleFixed(pePebble Pebble) {return pePebbles.Fixed[pePebble2ValidIndex(Pebble)];}
-utInlineC void pePebbleSetFixed(pePebble Pebble, uint8 value) {pePebbles.Fixed[pePebble2ValidIndex(Pebble)] = value;}
 utInlineC peLocation pePebbleGetLocation(pePebble Pebble) {return pePebbles.Location[pePebble2ValidIndex(Pebble)];}
 utInlineC void pePebbleSetLocation(pePebble Pebble, peLocation value) {pePebbles.Location[pePebble2ValidIndex(Pebble)] = value;}
 utInlineC peGroup pePebbleGetGroup(pePebble Pebble) {return pePebbles.Group[pePebble2ValidIndex(Pebble)];}
@@ -314,8 +308,6 @@ utInlineC pePebble pePebbleAllocRaw(void) {
     return Pebble;}
 utInlineC pePebble pePebbleAlloc(void) {
     pePebble Pebble = pePebbleAllocRaw();
-    pePebbleSetUseCount(Pebble, 0);
-    pePebbleSetFixed(Pebble, 0);
     pePebbleSetLocation(Pebble, peLocationNull);
     pePebbleSetGroup(Pebble, peGroupNull);
     pePebbleSetNextGroupPebble(Pebble, pePebbleNull);
@@ -330,7 +322,8 @@ utInlineC pePebble pePebbleAlloc(void) {
 ----------------------------------------------------------------------------------------*/
 struct peLocationFields {
     uint32 *NumPointers;
-    uint32 *Depth;
+    uint8 *UseCount;
+    uint8 *Fixed;
     peRoot *Root;
     uint32 *RootIndex;
     pePebble *Pebble;
@@ -346,8 +339,10 @@ void peLocationAllocMore(void);
 void peLocationCopyProps(peLocation peOldLocation, peLocation peNewLocation);
 utInlineC uint32 peLocationGetNumPointers(peLocation Location) {return peLocations.NumPointers[peLocation2ValidIndex(Location)];}
 utInlineC void peLocationSetNumPointers(peLocation Location, uint32 value) {peLocations.NumPointers[peLocation2ValidIndex(Location)] = value;}
-utInlineC uint32 peLocationGetDepth(peLocation Location) {return peLocations.Depth[peLocation2ValidIndex(Location)];}
-utInlineC void peLocationSetDepth(peLocation Location, uint32 value) {peLocations.Depth[peLocation2ValidIndex(Location)] = value;}
+utInlineC uint8 peLocationGetUseCount(peLocation Location) {return peLocations.UseCount[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetUseCount(peLocation Location, uint8 value) {peLocations.UseCount[peLocation2ValidIndex(Location)] = value;}
+utInlineC uint8 peLocationFixed(peLocation Location) {return peLocations.Fixed[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetFixed(peLocation Location, uint8 value) {peLocations.Fixed[peLocation2ValidIndex(Location)] = value;}
 utInlineC peRoot peLocationGetRoot(peLocation Location) {return peLocations.Root[peLocation2ValidIndex(Location)];}
 utInlineC void peLocationSetRoot(peLocation Location, peRoot value) {peLocations.Root[peLocation2ValidIndex(Location)] = value;}
 utInlineC uint32 peLocationGetRootIndex(peLocation Location) {return peLocations.RootIndex[peLocation2ValidIndex(Location)];}
@@ -391,7 +386,8 @@ utInlineC peLocation peLocationAllocRaw(void) {
 utInlineC peLocation peLocationAlloc(void) {
     peLocation Location = peLocationAllocRaw();
     peLocationSetNumPointers(Location, 0);
-    peLocationSetDepth(Location, 0);
+    peLocationSetUseCount(Location, 0);
+    peLocationSetFixed(Location, 0);
     peLocationSetRoot(Location, peRootNull);
     peLocationSetRootIndex(Location, UINT32_MAX);
     peLocationSetPebble(Location, pePebbleNull);

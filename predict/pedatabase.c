@@ -575,8 +575,6 @@ static void allocPebbles(void)
     peSetAllocatedPebble(2);
     peSetUsedPebble(1);
     peSetFirstFreePebble(pePebbleNull);
-    pePebbles.UseCount = utNewAInitFirst(uint8, (peAllocatedPebble()));
-    pePebbles.Fixed = utNewAInitFirst(uint8, (peAllocatedPebble()));
     pePebbles.Location = utNewAInitFirst(peLocation, (peAllocatedPebble()));
     pePebbles.Group = utNewAInitFirst(peGroup, (peAllocatedPebble()));
     pePebbles.NextGroupPebble = utNewAInitFirst(pePebble, (peAllocatedPebble()));
@@ -589,8 +587,6 @@ static void allocPebbles(void)
 static void reallocPebbles(
     uint32 newSize)
 {
-    utResizeArray(pePebbles.UseCount, (newSize));
-    utResizeArray(pePebbles.Fixed, (newSize));
     utResizeArray(pePebbles.Location, (newSize));
     utResizeArray(pePebbles.Group, (newSize));
     utResizeArray(pePebbles.NextGroupPebble, (newSize));
@@ -613,8 +609,6 @@ void pePebbleCopyProps(
     pePebble oldPebble,
     pePebble newPebble)
 {
-    pePebbleSetUseCount(newPebble, pePebbleGetUseCount(oldPebble));
-    pePebbleSetFixed(newPebble, pePebbleFixed(oldPebble));
 }
 
 #if defined(DD_DEBUG)
@@ -690,7 +684,8 @@ static void allocLocations(void)
     peSetUsedLocation(1);
     peSetFirstFreeLocation(peLocationNull);
     peLocations.NumPointers = utNewAInitFirst(uint32, (peAllocatedLocation()));
-    peLocations.Depth = utNewAInitFirst(uint32, (peAllocatedLocation()));
+    peLocations.UseCount = utNewAInitFirst(uint8, (peAllocatedLocation()));
+    peLocations.Fixed = utNewAInitFirst(uint8, (peAllocatedLocation()));
     peLocations.Root = utNewAInitFirst(peRoot, (peAllocatedLocation()));
     peLocations.RootIndex = utNewAInitFirst(uint32, (peAllocatedLocation()));
     peLocations.Pebble = utNewAInitFirst(pePebble, (peAllocatedLocation()));
@@ -708,7 +703,8 @@ static void reallocLocations(
     uint32 newSize)
 {
     utResizeArray(peLocations.NumPointers, (newSize));
-    utResizeArray(peLocations.Depth, (newSize));
+    utResizeArray(peLocations.UseCount, (newSize));
+    utResizeArray(peLocations.Fixed, (newSize));
     utResizeArray(peLocations.Root, (newSize));
     utResizeArray(peLocations.RootIndex, (newSize));
     utResizeArray(peLocations.Pebble, (newSize));
@@ -736,7 +732,8 @@ void peLocationCopyProps(
     peLocation newLocation)
 {
     peLocationSetNumPointers(newLocation, peLocationGetNumPointers(oldLocation));
-    peLocationSetDepth(newLocation, peLocationGetDepth(oldLocation));
+    peLocationSetUseCount(newLocation, peLocationGetUseCount(oldLocation));
+    peLocationSetFixed(newLocation, peLocationFixed(oldLocation));
 }
 
 /*----------------------------------------------------------------------------------------
@@ -1447,14 +1444,13 @@ void peDatabaseStop(void)
     utFree(peRoots.UsedLocation);
     utFree(peRoots.FirstGroup);
     utFree(peRoots.LastGroup);
-    utFree(pePebbles.UseCount);
-    utFree(pePebbles.Fixed);
     utFree(pePebbles.Location);
     utFree(pePebbles.Group);
     utFree(pePebbles.NextGroupPebble);
     utFree(pePebbles.PrevGroupPebble);
     utFree(peLocations.NumPointers);
-    utFree(peLocations.Depth);
+    utFree(peLocations.UseCount);
+    utFree(peLocations.Fixed);
     utFree(peLocations.Root);
     utFree(peLocations.RootIndex);
     utFree(peLocations.Pebble);
@@ -1485,8 +1481,8 @@ void peDatabaseStart(void)
     if(!utInitialized()) {
         utStart();
     }
-    peRootData.hash = 0x84c94f52;
-    peModuleID = utRegisterModule("pe", false, peHash(), 5, 33, 0, sizeof(struct peRootType_),
+    peRootData.hash = 0xdd207a3d;
+    peModuleID = utRegisterModule("pe", false, peHash(), 5, 32, 0, sizeof(struct peRootType_),
         &peRootData, peDatabaseStart, peDatabaseStop);
     utRegisterClass("Root", 6, &peRootData.usedRoot, &peRootData.allocatedRoot,
         &peRootData.firstFreeRoot, 4, 4, allocRoot, destroyRoot);
@@ -1500,18 +1496,17 @@ void peDatabaseStart(void)
     utRegisterField("UsedLocation", &peRoots.UsedLocation, sizeof(uint32), UT_UINT, NULL);
     utRegisterField("FirstGroup", &peRoots.FirstGroup, sizeof(peGroup), UT_POINTER, "Group");
     utRegisterField("LastGroup", &peRoots.LastGroup, sizeof(peGroup), UT_POINTER, "Group");
-    utRegisterClass("Pebble", 6, &peRootData.usedPebble, &peRootData.allocatedPebble,
-        &peRootData.firstFreePebble, 8, 4, allocPebble, destroyPebble);
-    utRegisterField("UseCount", &pePebbles.UseCount, sizeof(uint8), UT_UINT, NULL);
-    utRegisterField("Fixed", &pePebbles.Fixed, sizeof(uint8), UT_BOOL, NULL);
+    utRegisterClass("Pebble", 4, &peRootData.usedPebble, &peRootData.allocatedPebble,
+        &peRootData.firstFreePebble, 6, 4, allocPebble, destroyPebble);
     utRegisterField("Location", &pePebbles.Location, sizeof(peLocation), UT_POINTER, "Location");
     utRegisterField("Group", &pePebbles.Group, sizeof(peGroup), UT_POINTER, "Group");
     utRegisterField("NextGroupPebble", &pePebbles.NextGroupPebble, sizeof(pePebble), UT_POINTER, "Pebble");
     utRegisterField("PrevGroupPebble", &pePebbles.PrevGroupPebble, sizeof(pePebble), UT_POINTER, "Pebble");
-    utRegisterClass("Location", 10, &peRootData.usedLocation, &peRootData.allocatedLocation,
-        &peRootData.firstFreeLocation, 14, 4, allocLocation, destroyLocation);
+    utRegisterClass("Location", 11, &peRootData.usedLocation, &peRootData.allocatedLocation,
+        &peRootData.firstFreeLocation, 13, 4, allocLocation, destroyLocation);
     utRegisterField("NumPointers", &peLocations.NumPointers, sizeof(uint32), UT_UINT, NULL);
-    utRegisterField("Depth", &peLocations.Depth, sizeof(uint32), UT_UINT, NULL);
+    utRegisterField("UseCount", &peLocations.UseCount, sizeof(uint8), UT_UINT, NULL);
+    utRegisterField("Fixed", &peLocations.Fixed, sizeof(uint8), UT_BOOL, NULL);
     utRegisterField("Root", &peLocations.Root, sizeof(peRoot), UT_POINTER, "Root");
     utRegisterField("RootIndex", &peLocations.RootIndex, sizeof(uint32), UT_UINT, NULL);
     utRegisterField("Pebble", &peLocations.Pebble, sizeof(pePebble), UT_POINTER, "Pebble");
@@ -1521,7 +1516,7 @@ void peDatabaseStart(void)
     utRegisterField("LastLocation", &peLocations.LastLocation, sizeof(peLocation), UT_POINTER, "Location");
     utRegisterField("PrevLocationLocation", &peLocations.PrevLocationLocation, sizeof(peLocation), UT_POINTER, "Location");
     utRegisterClass("Group", 6, &peRootData.usedGroup, &peRootData.allocatedGroup,
-        &peRootData.firstFreeGroup, 23, 4, allocGroup, destroyGroup);
+        &peRootData.firstFreeGroup, 22, 4, allocGroup, destroyGroup);
     utRegisterField("AvailablePebbles", &peGroups.AvailablePebbles, sizeof(uint32), UT_UINT, NULL);
     utRegisterField("Root", &peGroups.Root, sizeof(peRoot), UT_POINTER, "Root");
     utRegisterField("NextRootGroup", &peGroups.NextRootGroup, sizeof(peGroup), UT_POINTER, "Group");
@@ -1529,7 +1524,7 @@ void peDatabaseStart(void)
     utRegisterField("FirstPebble", &peGroups.FirstPebble, sizeof(pePebble), UT_POINTER, "Pebble");
     utRegisterField("LastPebble", &peGroups.LastPebble, sizeof(pePebble), UT_POINTER, "Pebble");
     utRegisterClass("LocationArray", 5, &peRootData.usedLocationArray, &peRootData.allocatedLocationArray,
-        &peRootData.firstFreeLocationArray, 32, 4, allocLocationArray, destroyLocationArray);
+        &peRootData.firstFreeLocationArray, 31, 4, allocLocationArray, destroyLocationArray);
     utRegisterField("LocationIndex_", &peLocationArrays.LocationIndex_, sizeof(uint32), UT_UINT, NULL);
     utSetFieldHidden();
     utRegisterField("NumLocation", &peLocationArrays.NumLocation, sizeof(uint32), UT_UINT, NULL);
