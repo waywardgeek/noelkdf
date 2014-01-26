@@ -16,87 +16,65 @@ struct ContextStruct {
     uint32 *mem;
     uint8 *threadKey;
     uint32 threadKeySize;
-    const uint8 *salt;
-    uint32 saltSize;
     uint32 blockLength;
     uint32 numBlocks;
 };
 
-struct RngState {
-    uint32 z;
-    uint32 w;
-};
-
-// Simple rand() function.
-//     from: http://www.codeproject.com/Articles/25172/Simple-Random-Number-Generation
-static inline uint32 Rand(struct RngState *s) {
-    s->z = 36969 * (s->z & 65535) + (s->z >> 16);
-    s->w = 18000 * (s->w & 65535) + (s->w >> 16);
-    return (s->z << 16) + s->w;
-}
-
 // This is the function called by each thread.  It hashes a single continuous block of memory.
 static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
-    struct RngState s = {c->mem[0], c->mem[1]};
 
-    // Copy the thread key to the first block
+    // Copy the thread key to the first block and pad with 0's
+    printf("setting memory to key\n");
     be32dec_vect(c->mem, c->threadKey, c->threadKeySize);
-    uint32 i;
-    for(i = c->threadKeySize; i < c->blockLength; i++) {
-        c->mem[i] = Rand(&s);
-    }
+    memset(c->mem + c->threadKeySize, 0, (c->blockLength - c->threadKeySize)*sizeof(uint32));
 
+    printf("starting loop\n");
     uint32 *prevBlock = c->mem;
     uint32 *toBlock = c->mem + c->blockLength;
     uint32 *fromBlock;
-    uint32 hash = 1;
+    uint32 value = 1;
+    uint32 i;
     for(i = 1; i < c->numBlocks; i++) {
-        uint64 dist = *prevBlock;
-        uint64 distSquared = (dist*dist) >> 32;
-        uint64 distCubed = (distSquared*dist) >> 32;
-        dist = ((i-1)*distCubed) >> 32;
-        //printf("dist:%llu\n", dist);
-        fromBlock = c->mem + (uint64)c->blockLength*(i - 1 - (dist%i));
+        uint64 distance = value;
+        uint64 distanceSquared = (distance*distance) >> 32;
+        uint64 distanceCubed = (distanceSquared*distance) >> 32;
+        distance = ((i-1)*distanceCubed) >> 32;
+        fromBlock = c->mem + (uint64)c->blockLength*(i - 1 - (distance%1));
         uint32 j;
         for(j = 0; j < c->blockLength; j++) {
-            hash = hash*(*prevBlock++ | 3) + *fromBlock++;
-            *toBlock++ = hash;
-            //printf("hash:%u\n", hash);
+            value = value*(*prevBlock++ | 3) + *fromBlock++;
+            *toBlock++ = value;
         }
     }
+    printf("fisished loop\n");
     pthread_exit(NULL);
 }
 
 // Use the resulting output hash, which does depend on the password, to hash a small
 // percentage of the total memory.  This forces all the threads' memory to be loaded at
-// once, and if there was an attack that worked based on pre-computation of addresses,
-// this pass should kill it.
-static void cheatKillerPass(uint8 *out, uint32 outSize, uint32 *mem, uint32 numBlocks,
-        uint32 blockLength, uint32 killerFactor) {
-    uint32 outPos = 0;
-    uint32 hash = UINT32_MAX;
+// once.
+static void xorIntoHash(uint32 parallelism, uint32 *mem, uint8 *hash, uint32 hashSize,
+        uint32 blockLength, uint32 numBlocks) {
+    uint32 value = UINT32_MAX;
+    uint32 hashPos = 0;
+    uint32 memLength = parallelism*blockLength*numBlocks;
     uint32 i;
-    for(i = 0; i < numBlocks/killerFactor; i++) {
-        uint32 address = blockLength*(hash % numBlocks);
+    for(i = 0; i < parallelism*100; i++) {
+        value += mem[value % memLength] ^ i;
         uint32 j;
-        for(j = 0; j < blockLength; j++) {
-            uint32 value = mem[address++];
-            hash += value;
-            uint32 k;
-            for(k = 0; k < sizeof(uint32); k++) {
-                if(outPos == outSize) {
-                    outPos = 0;
-                }
-                out[outPos++] ^= (uint8)(value >> 24);
-                value <<= 8;
+        for(j = 0; j < sizeof(uint32); j++) {
+            if(hashPos == hashSize) {
+                hashPos = 0;
             }
+            hash[hashPos++] ^= (uint8)(value >> 24);
+            value <<= 8;
         }
     }
 }
 
 // This version allows for some more options than PHS.  They are:
-//  num_threads     - the number of threads to run in parallel
+//  parallelism     - the number of threads to run in parallel
 //  block_size      - length of memory blocks hashed at a time
 //  num_hash_rounds - number of SHA256 rounds to compute the intermediate key
 //  killer_factor   - 1 means hash m_cost locations in the cheat killer round.  K means
@@ -108,35 +86,40 @@ static void cheatKillerPass(uint8 *out, uint32 outSize, uint32 *mem, uint32 numB
 //                    freed in the memPtr variable
 int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, size_t saltlen,
         void *data, size_t datalen, unsigned int t_cost, unsigned int m_cost, unsigned int
-        num_hash_rounds, unsigned int killer_factor, unsigned int repeat_count, unsigned
-        int num_threads, unsigned int block_size, int clear_in, int return_memory, unsigned int **mem_ptr) {
+        num_hash_rounds, unsigned int repeat_count, unsigned int parallelism, unsigned int block_size,
+        int clear_in, int return_memory, unsigned int **mem_ptr) {
 
     // Allocate memory
     uint32 blockLength = block_size/sizeof(uint32);
-    uint32 numBlocks = m_cost*(1LL << 20)/(num_threads*blockLength*sizeof(uint32)) + 1;
-    uint64 memLength = (uint64)numBlocks*blockLength*num_threads << t_cost;
+    uint32 numBlocks = m_cost*(1LL << 20)/(parallelism*blockLength*sizeof(uint32)) + 1;
+    uint64 memLength = (uint64)numBlocks*blockLength*parallelism << t_cost;
     uint32 *mem = (uint32 *)malloc(memLength*sizeof(uint32));
-    pthread_t *threads = (pthread_t *)malloc(num_threads*sizeof(pthread_t));
-    uint8 *threadKeys = (uint8 *)malloc(num_threads*outlen);
-    struct ContextStruct *c = (struct ContextStruct *)malloc(num_threads*sizeof(struct ContextStruct));
+    pthread_t *threads = (pthread_t *)malloc(parallelism*sizeof(pthread_t));
+    uint8 *threadKeys = (uint8 *)malloc(parallelism*outlen);
+    struct ContextStruct *c = (struct ContextStruct *)malloc(parallelism*sizeof(struct ContextStruct));
     if(mem == NULL || threads == NULL || threadKeys == NULL || c == NULL) {
         fprintf(stderr, "Unable to allocate memory\n");
         return 0;
     }
 
     //printf("memLength:%llu numThreads:%u t_cost:%u repeat_count:%u blockLength:%u numBlocks:%u\n",
-        //memLength, num_threads, t_cost, repeat_count, blockLength, numBlocks);
+        //memLength, parallelism, t_cost, repeat_count, blockLength, numBlocks);
     // Compute intermediate key which is used to hash memory
-    PBKDF2_SHA256(in, inlen, salt, saltlen, num_hash_rounds, out, outlen);
-    if(data != NULL) {
-        uint8 tmp[outlen];
-        PBKDF2_SHA256(out, outlen, data, datalen, 1, tmp, outlen);
-        memcpy(out, tmp, outlen);
+    uint8 derivedSalt[saltlen];
+    if(data != NULL && datalen != 0) {
+        // Hash data into salt.  Treat data as a secret.
+        PBKDF2_SHA256(data, datalen, salt, saltlen, 1, derivedSalt, saltlen);
+    } else {
+        memcpy(derivedSalt, salt, saltlen);
     }
+    PBKDF2_SHA256(in, inlen, derivedSalt, saltlen, num_hash_rounds, out, outlen);
     if(clear_in) {
         // Note that an optimizer may drop this, and that data may leak through registers
         // or elsewhere.  The hand optimized version should try to deal with these issues
-        memset(in, '\0', inlen);
+        memset(in, 0, inlen);
+        if(data != NULL && datalen != 0) {
+            memset(data, 0, datalen);
+        }
     }
 
     // Using t_cost in this outer loop enables a hashed password to be strenthened in the
@@ -147,15 +130,13 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
         for(j = 0; j < repeat_count; j++) {
 
             // Initialize the thread keys from the intermediate key
-            PBKDF2_SHA256(out, outlen, salt, saltlen, 1, threadKeys, num_threads*outlen);
+            PBKDF2_SHA256(out, outlen, derivedSalt, saltlen, 1, threadKeys, parallelism*outlen);
 
             // Launch threads.  Each hashes it's own separate block of memory, which improves performance.
             uint32 t;
-            for(t = 0; t < num_threads; t++) {
+            for(t = 0; t < parallelism; t++) {
                 c[t].mem = mem + (uint64)t*numBlocks*blockLength;
                 c[t].numBlocks = numBlocks;
-                c[t].salt = salt;
-                c[t].saltSize = saltlen;
                 c[t].threadKey = threadKeys + t*outlen;
                 c[t].threadKeySize = outlen;
                 c[t].blockLength = blockLength;
@@ -166,12 +147,10 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
                 }
             }
             // Wait for threads to finish
-            for(t = 0; t < num_threads; t++) {
+            for(t = 0; t < parallelism; t++) {
                 (void)pthread_join(threads[t], NULL);
             }
-            if(num_threads > 1) {
-                cheatKillerPass(out, outlen, mem, numBlocks, blockLength, killer_factor);
-            }
+            xorIntoHash(parallelism, mem, out, outlen, blockLength, numBlocks);
         }
 
         // Double memory usage for the next loop.
@@ -194,5 +173,5 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MB of memory to hash.
 int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost) {
-    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, NULL, 0, t_cost, m_cost, 2048, 1000, 1, 2, 4096, 0, 0, NULL);
+    return NoelKDF(out, outlen, (void *)in, inlen, salt, saltlen, NULL, 0, t_cost, m_cost, 2048, 1000, 2, 4096, 0, 0, NULL);
 }

@@ -2,8 +2,7 @@
 #include <math.h>
 #include "pedatabase.h"
 
-#define MEM_LENGTH 1000000LL
-#define NUM_SAMPLES 100LL
+#define MEM_LENGTH 1000LL
 
 peRoot peTheRoot;
 peLocationArray peVisitedLocations;
@@ -72,11 +71,11 @@ static uint32 findDAGSize(uint32 pos) {
     peLocationSetVisited(location, true);
     peLocationArrayAppendLocation(peVisitedLocations, location);
     if(pos > 0) {
+        // printf("%u\n", prevPos);
+        uint32 prevPos = findPrevPos(pos);
+        numPebbles += findDAGSize(prevPos);
         // Previous guy pointer
         numPebbles += findDAGSize(pos - 1);
-        uint32 prevPos = findPrevPos(pos);
-        // printf("%u\n", prevPos);
-        numPebbles += findDAGSize(prevPos);
     }
     return numPebbles;
 }
@@ -85,18 +84,39 @@ static uint32 findDAGSize(uint32 pos) {
 // values from memory.
 static void computeAveragePenalty(void) {
     uint64 total = 0;
+    uint32 mask = 1;
+    uint32 nextMarker = MEM_LENGTH/2;
     uint32 i;
-    for(i = 0; i < NUM_SAMPLES; i++) {
-        uint32 pos = rand() % MEM_LENGTH;
-        total += findDAGSize(pos);
-        peLocation location;
-        peForeachLocationArrayLocation(peVisitedLocations, location) {
-            peLocationSetVisited(location, false);
-        } peEndLocationArrayLocation;
-        peLocationArraySetUsedLocation(peVisitedLocations, 0);
+    for(i = 0; i < MEM_LENGTH; i++) {
+        if(i > 1) {
+            if(i == nextMarker) {
+                mask++;
+                nextMarker = i + (MEM_LENGTH - i)/2;
+                printf("At %u, increased spacing to %u\n", i, mask);
+            }
+            uint32 prevPos = findPrevPos(i);
+            total += findDAGSize(prevPos);
+            peLocation location;
+            peForeachLocationArrayLocation(peVisitedLocations, location) {
+                peLocationSetVisited(location, false);
+            } peEndLocationArrayLocation;
+            peLocationArraySetUsedLocation(peVisitedLocations, 0);
+        }
+        //if(i < 50*MEM_LENGTH/100 || i % (1 << MEM_LENGTH/(MEM_LENGTH - i) == 0) {
+        if(i % mask == 0) {
+            peLocation location = peRootGetiLocation(peTheRoot, i);
+            pePebble pebble = pePebbleAlloc();
+            peLocationInsertPebble(location, pebble);
+        }
     }
-    printf("Average recalculation is %.4f%%\n", total*100.0/(MEM_LENGTH*NUM_SAMPLES));
-    printf("Recalculation penalty for 1%% coverage is %.1fX\n", total/(100.0*NUM_SAMPLES));
+    uint32 numPebbles = 0;
+    for(i = 0; i < MEM_LENGTH; i++) {
+        if(peLocationGetPebble(peRootGetiLocation(peTheRoot, i)) != pePebbleNull) {
+            numPebbles++;
+        }
+    }
+    printf("Total pebbles: %f%%\n", numPebbles*100.0/MEM_LENGTH);
+    printf("Recalculation penalty is %fX\n", (total + MEM_LENGTH)/(double)MEM_LENGTH);
 }
 
 // Set the number of pointers to each memory location.
@@ -127,14 +147,14 @@ static void randomlyDistributePebbles(void) {
     uint32 xPebble;
     for(xPebble = 0; xPebble < MEM_LENGTH; xPebble++) {
         peLocation location = peRootGetiLocation(peTheRoot, xPebble);
-        if(peLocationGetNumPointers(location) >= 3 || (xPebble % 12) == 0) {
+        if(xPebble < 99*MEM_LENGTH/100 || peLocationGetNumPointers(location) >= 100 || (xPebble % 2) == 0) {
             pePebble pebble = pePebbleAlloc();
             peLocationInsertPebble(location, pebble);
             total++;
         }
         // Distribution covering nodes pointed to by short edges
         uint32 prevPos = findPrevPos(xPebble);
-        if(xPebble - prevPos < 700) {
+        if(xPebble - prevPos < 200) {
             peLocation location = peRootGetiLocation(peTheRoot, prevPos);
             if(peLocationGetPebble(location) == pePebbleNull) {
                 pePebble pebble = pePebbleAlloc();
@@ -198,12 +218,12 @@ int main(int argc, char **argv) {
         setPrevLocation(i, type);
     }
     setNumPointers();
-    randomlyDistributePebbles();
+    //randomlyDistributePebbles();
+    computeAveragePenalty();
+    computeCut();
     if(argc >= 2 && !strcmp(argv[1], "-d")) {
         dumpGraph();
     }
-    computeAveragePenalty();
-    computeCut();
     peDatabaseStop();
     utStop(true);
     return 0;

@@ -8,11 +8,9 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
 //                    include second authentication factors such as key file hashes or
 //                    password dependent secrets decrypted on the server with it's master
 //                    key.
-//  num_threads     - the number of threads to run in parallel
+//  parallelism     - the number of threads to run in parallel
 //  block_size      - length of memory blocks hashed at a time
 //  num_hash_rounds - number of SHA256 rounds to compute the intermediate key
-//  killer_factor   - 1 means hash m_cost locations in the cheat killer round.  K means
-//                    hash m_cost/K locations.
 //  parallelism     - number of inner loops allowed to run in parallel - should match
 //                    user's machine for best protection
 //  clear_in        - when true, overwrite the in buffer with 0's early on
@@ -20,5 +18,5 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
 //                    freed in the memPtr variable
 int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, size_t saltlen,
         void *data, size_t datalen, unsigned int t_cost, unsigned int m_cost, unsigned int
-        num_hash_rounds, unsigned int killer_factor, unsigned int repeat_count, unsigned
+        num_hash_rounds, unsigned int repeat_count, unsigned
         int num_threads, unsigned int block_size, int clear_in, int return_memory, unsigned int **mem_ptr);
