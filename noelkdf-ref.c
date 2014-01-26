@@ -14,8 +14,9 @@ typedef unsigned long long uint64;
 
 struct ContextStruct {
     uint32 *mem;
-    uint8 *threadKey;
-    uint32 threadKeySize;
+    uint8 *hash;
+    uint32 hashlen;
+    uint32 id;
     uint32 blockLength;
     uint32 numBlocks;
 };
@@ -24,30 +25,36 @@ struct ContextStruct {
 static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
 
-    // Copy the thread key to the first block and pad with 0's
-    printf("setting memory to key\n");
-    be32dec_vect(c->mem, c->threadKey, c->threadKeySize);
-    memset(c->mem + c->threadKeySize, 0, (c->blockLength - c->threadKeySize)*sizeof(uint32));
+    // Initialize the thread key from the intermediate key
+    uint8 threadKey[c->blockLength*sizeof(uint32)];
+    uint8 salt[sizeof(uint32)];
+    be32enc(salt, c->id);
+    PBKDF2_SHA256(c->hash, c->hashlen, salt, sizeof(uint32), 1, threadKey, c->blockLength*sizeof(uint32));
 
-    printf("starting loop\n");
+    // Copy the thread key to the first block
+    be32dec_vect(c->mem, threadKey, c->blockLength*sizeof(uint32));
+    uint32 i;
+    //for(i = 0; i < c->blockLength; i++) {
+        //printf("%u\n", c->mem[i]);
+    //}
+
     uint32 *prevBlock = c->mem;
     uint32 *toBlock = c->mem + c->blockLength;
     uint32 *fromBlock;
     uint32 value = 1;
-    uint32 i;
+    //uint32 i;
     for(i = 1; i < c->numBlocks; i++) {
         uint64 distance = value;
         uint64 distanceSquared = (distance*distance) >> 32;
         uint64 distanceCubed = (distanceSquared*distance) >> 32;
         distance = ((i-1)*distanceCubed) >> 32;
-        fromBlock = c->mem + (uint64)c->blockLength*(i - 1 - (distance%1));
+        fromBlock = c->mem + (uint64)c->blockLength*(i - 1 - distance);
         uint32 j;
         for(j = 0; j < c->blockLength; j++) {
             value = value*(*prevBlock++ | 3) + *fromBlock++;
             *toBlock++ = value;
         }
     }
-    printf("fisished loop\n");
     pthread_exit(NULL);
 }
 
@@ -95,9 +102,8 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
     uint64 memLength = (uint64)numBlocks*blockLength*parallelism << t_cost;
     uint32 *mem = (uint32 *)malloc(memLength*sizeof(uint32));
     pthread_t *threads = (pthread_t *)malloc(parallelism*sizeof(pthread_t));
-    uint8 *threadKeys = (uint8 *)malloc(parallelism*outlen);
     struct ContextStruct *c = (struct ContextStruct *)malloc(parallelism*sizeof(struct ContextStruct));
-    if(mem == NULL || threads == NULL || threadKeys == NULL || c == NULL) {
+    if(mem == NULL || threads == NULL || c == NULL) {
         fprintf(stderr, "Unable to allocate memory\n");
         return 0;
     }
@@ -128,17 +134,12 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
     for(i = 0; i <= t_cost; i++) {
         uint32 j;
         for(j = 0; j < repeat_count; j++) {
-
-            // Initialize the thread keys from the intermediate key
-            PBKDF2_SHA256(out, outlen, derivedSalt, saltlen, 1, threadKeys, parallelism*outlen);
-
             // Launch threads.  Each hashes it's own separate block of memory, which improves performance.
             uint32 t;
             for(t = 0; t < parallelism; t++) {
+                c[t].id = t;
                 c[t].mem = mem + (uint64)t*numBlocks*blockLength;
                 c[t].numBlocks = numBlocks;
-                c[t].threadKey = threadKeys + t*outlen;
-                c[t].threadKeySize = outlen;
                 c[t].blockLength = blockLength;
                 int rc = pthread_create(&threads[t], NULL, hashMem, (void *)(c + t));
                 if (rc){

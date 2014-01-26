@@ -18,7 +18,8 @@ typedef enum {
     SLIDING_WINDOW,
     RAND_CUBED,
     RAND,
-    CATENA3
+    CATENA3,
+    REVERSE
 } peGraphType;
 
 peGraphType peCurrentType;
@@ -30,6 +31,7 @@ char *peTypeGetName(peGraphType type) {
     case RAND_CUBED: return "rand_cubed";
     case RAND: return "rand";
     case CATENA3: return "catena3";
+    case REVERSE: return "reverse";
     default:
         utExit("Unknown graph type");
     }
@@ -41,14 +43,20 @@ static peGraphType parseType(char *name) {
     if(!strcmp(name, "sliding_window")) {
         return SLIDING_WINDOW;
     }
-    if(!strcmp(name, "rand_cubed")) {
+    if(!strcasecmp(name, "rand_cubed")) {
         return RAND_CUBED;
     }
-    if(!strcmp(name, "rand")) {
+    if(!strcasecmp(name, "rand")) {
         return RAND;
     }
-    if(!strcmp(name, "catena3")) {
+    if(!strcasecmp(name, "sliding_window")) {
+        return SLIDING_WINDOW;
+    }
+    if(!strcasecmp(name, "catena3")) {
         return CATENA3;
+    }
+    if(!strcasecmp(name, "reverse")) {
+        return REVERSE;
     }
     utExit("Unknown graph type %s", name);
     return RAND_CUBED;
@@ -89,7 +97,7 @@ static uint32 findRandPos(uint32 pos) {
 }
 
 // Reverse the bits.
-static uint32 reverse(uint32 value, uint32 rowLength) {
+static uint32 bitReverse(uint32 value, uint32 rowLength) {
     //printf("rowLength:%u %x -> ", rowLength, value);
     uint32 result = 0;
     while(rowLength != 1) {
@@ -110,7 +118,25 @@ static uint32 findCatena3Pos(uint32 pos) {
         return UINT32_MAX;
     }
     uint32 rowPos = pos - row*rowLength;
-    return (row-1)*rowLength + reverse(rowPos, rowLength);
+    return (row-1)*rowLength + bitReverse(rowPos, rowLength);
+}
+
+// Find the previous position using a simple rule: dest = pow2 - i, where pow2 is the
+// largest power of 2 < i.
+static uint32 findReversePos(uint32 pos) {
+    if(pos < 3) {
+        return UINT32_MAX; // No edge
+    }
+    uint32 mask = 1;
+    while(mask <= pos) {
+        mask <<= 1;
+    }
+    uint32 prevPos = mask - pos - 1;
+    prevPos = bitReverse(prevPos, mask >> 1);
+    if(prevPos + 1 >= pos) {
+        return UINT32_MAX; // No edge
+    }
+    return prevPos;
 }
 
 // Find the previous position to point to.
@@ -125,6 +151,7 @@ static void setPrevLocation(uint32 pos, peGraphType type) {
     case RAND_CUBED: prevPos = findRandCubedPos(pos); break;
     case RAND: prevPos = findRandPos(pos); break;
     case CATENA3: prevPos = findCatena3Pos(pos); break;
+    case REVERSE: prevPos = findReversePos(pos); break;
     default:
         utExit("Unknown graph type\n");
     }
@@ -527,7 +554,7 @@ int main(int argc, char **argv) {
         runTest(parseType(argv[1]), dumpGraphs);
     } else {
         uint32 type;
-        for(type = 0; type <= CATENA3; type++) {
+        for(type = 0; type <= REVERSE; type++) {
             runTest(type, dumpGraphs);
         }
     }

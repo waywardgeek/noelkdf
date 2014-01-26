@@ -20,3 +20,5 @@ TODO
 ----
 
 Write automatic parameter picker
+Add minGarlic so admins can increase the garlic of existing hashes
+Write test vector generator.  Copy from Catena as a staring point?
