@@ -18,5 +18,5 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
 //                    freed in the memPtr variable
 int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, size_t saltlen,
         void *data, size_t datalen, unsigned int t_cost, unsigned int m_cost, unsigned int
-        num_hash_rounds, unsigned int repeat_count, unsigned
-        int num_threads, unsigned int block_size, int clear_in, int return_memory, unsigned int **mem_ptr);
+        num_hash_rounds, unsigned int repeat_count, unsigned int block_size, int clear_in,
+        int return_memory, unsigned int **mem_ptr);
