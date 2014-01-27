@@ -35,16 +35,16 @@ static inline uint32 fastRand(uint32 *z, uint32 *w) {
 
 // This function waits until every thread has reached the half-way point, and adds
 // together all the 'value' variables frome each thread and returns the result.
-static uint32 findHalfWayCombinedThreadValue(struct ContextStruct *c, uint32 value) {
+static uint32 findHalfWayCombineThreadValue(struct ContextStruct *c, uint32 value) {
     pthread_mutex_lock(c->countMutex);
     *(c->combinedValue) += value;
     *(c->threadCount) -= 1;
-    if(c->threadCount == 0) {
-        pthread_cond_signal(c->countVar);
+    if(*(c->threadCount) == 0) {
+        pthread_cond_broadcast(c->countVar);
     } else {
         pthread_cond_wait(c->countVar, c->countMutex);
     }
-    pthread_mutex_lock(c->countMutex);
+    pthread_mutex_unlock(c->countMutex);
     return *(c->combinedValue);
 }
 
@@ -68,9 +68,9 @@ static void *hashMem(void *contextPtr) {
     for(i = 1; i < c->numBlocks; i++) {
         uint64 distance = value;
         if(i == c->numBlocks >> 1) {
-            value ^= findHalfWayCombinedThreadValue(c, value);
+            value ^= findHalfWayCombineThreadValue(c, value);
         }
-        if(i << 1 < c->numBlocks) {
+        if(i < c->numBlocks >> 1) {
             distance = fastRand(&z, &w);
         } else {
             distance = value;
@@ -170,6 +170,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
             pthread_mutex_init(&countMutex, NULL);
             pthread_cond_init (&countVar, NULL);
             uint32 threadCount = parallelism;
+            uint32 combinedValue = 0;
             uint32 t;
             for(t = 0; t < parallelism; t++) {
                 c[t].id = t;
@@ -179,7 +180,7 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
                 c[t].countMutex = &countMutex;
                 c[t].countVar = &countVar;
                 c[t].threadCount = &threadCount;
-                c[t].combinedValue = 0;
+                c[t].combinedValue = &combinedValue;
                 int rc = pthread_create(&threads[t], NULL, hashMem, (void *)(c + t));
                 if (rc){
                     fprintf(stderr, "Unable to start threads\n");
@@ -190,6 +191,8 @@ int NoelKDF(void *out, size_t outlen, void *in, size_t inlen, const void *salt, 
             for(t = 0; t < parallelism; t++) {
                 (void)pthread_join(threads[t], NULL);
             }
+            pthread_mutex_destroy(&countMutex);
+            pthread_cond_destroy(&countVar);
             xorIntoHash(parallelism, mem, out, outlen, blockLength, numBlocks);
         }
 

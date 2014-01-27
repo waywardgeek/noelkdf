@@ -121,13 +121,11 @@ static uint32 bitReverse(uint32 value, uint32 rowLength) {
 static uint32 findCatenaPos(uint32 pos) {
     uint32 rowLength = peMemLength/(peCatenaLambda + 1); // Note: peMemLength/lambda must be power of 2
     uint32 row = pos/rowLength;
-    if(row == 0) {
+    if(row == 0 && rowLength >= 16) {
         if(!peCatena3InFirstRow) {
             return UINT32_MAX;
         }
-        if(rowLength > 8) {
-            rowLength /= 8; // Build a Catena-7 graph in the first row
-        }
+        rowLength /= 8; // Build a Catena-7 graph in the first row
         row = pos/rowLength;
         if(row == 0) {
             return UINT32_MAX;
@@ -454,7 +452,7 @@ static void pebbleGraph(void) {
         total += pebbleLocation(peCurrentPos);
         unmarkInUse(location);
     }
-    printf("Recalculation penalty is %.4fX\n", total/(double)peMemLength - 1.0);
+    printf("Recalculation penalty is %.4fX\n", 1 + total/(double)peMemLength - 1.0);
 }
 
 // Set the number of pointers to each memory location.
@@ -477,12 +475,18 @@ static void setNumPointers(peGraphType type) {
 // Set the fixed locations.
 static void setFixedNodes(void) {
     uint32 i;
+    bool fixNextLocation = false;
     for(i = 0; i < peMemLength; i++) {
         peLocation location = peRootGetiLocation(peTheRoot, i);
-        if(i >= peSpacingStart && (i % peSpacing) == peSpacingStart) {
+        if(i >= peSpacingStart && i % peSpacing == peSpacingStart) {
             // Fix the position of pebbles every so often to see if it helps.
+            fixNextLocation = true;
+        }
+        if(fixNextLocation && peLocationGetNumPointers(location) > 0) {
+            /* It's a waset to fix pebbles on locations that aren't pointed to by anybody. */
             peLocationSetFixed(location, true);
             peLocationSetUseCount(location, 1);
+            fixNextLocation = false;
         }
     }
 }
@@ -507,6 +511,10 @@ static void distributePebbles(void) {
         peLocation location = peRootGetiLocation(peTheRoot, xPebble);
         pePebble pebble = pePebbleAlloc();
         peLocationInsertPebble(location, pebble);
+        if(xPebble >= peSpacingStart && xPebble % peSpacing == peSpacingStart) {
+            peLocationSetFixed(location, true);
+            peLocationSetUseCount(location, 1);
+        }
         total++;
     }
     printf("Total pebbles: %u out of %u (%.1f%%)\n", total, peMemLength, total*100.0/peMemLength);
@@ -563,6 +571,10 @@ int main(int argc, char **argv) {
             if(peSpacingStart == UINT32_MAX) {
                 peSpacingStart = peSpacing - 1;
             }
+            argc--;
+            argv++;
+        } else if(argc >= 3 && !strcmp(argv[1], "-t")) {
+            peSpacingStart = atoi(argv[2]);
             argc--;
             argv++;
         } else if(argc >= 3 && !strcmp(argv[1], "-l")) {
