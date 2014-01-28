@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <pthread.h>
 #include "sha256.h"
 #include "noelkdf.h"
 
@@ -11,8 +12,44 @@ typedef unsigned short uint16;
 typedef unsigned int uint32;
 typedef unsigned long long uint64;
 
-// Thes function hashes a single continuous block of memory.
-static void *hashMem(uint32 p, uint32 *mem, uint8 *hash, uint32 hashlen, uint32 blocklen, uint32 numblocks) {
+struct ContextStruct {
+    uint32 *mem;
+    uint8 *hash;
+    pthread_mutex_t *countMutex;
+    pthread_cond_t *countVar;
+    uint32 *combinedValue;
+    uint32 *threadCount;
+    uint32 hashlen;
+    uint32 id;
+    uint32 blockLength;
+    uint32 numBlocks;
+};
+
+// Simple rand() function.
+//     from: http://www.codeproject.com/Articles/25172/Simple-Random-Number-Generation
+static inline uint32 fastRand(uint32 *z, uint32 *w) {
+    *z = 36969 * (*z & 65535) + (*z >> 16);
+    *w = 18000 * (*w & 65535) + (*w >> 16);
+    return (*z << 16) + *w;
+}
+
+// This function waits until every thread has reached the half-way point, and adds
+// together all the 'value' variables frome each thread and returns the result.
+static uint32 findHalfWayCombineThreadValue(struct ContextStruct *c, uint32 value) {
+    pthread_mutex_lock(c->countMutex);
+    *(c->combinedValue) += value;
+    *(c->threadCount) -= 1;
+    if(*(c->threadCount) == 0) {
+        pthread_cond_broadcast(c->countVar);
+    } else {
+        pthread_cond_wait(c->countVar, c->countMutex);
+    }
+    pthread_mutex_unlock(c->countMutex);
+    return *(c->combinedValue);
+}
+
+// This is the function called by each thread.  It hashes a single continuous block of memory.
+static void *hashMem(void *contextPtr) {
     struct ContextStruct *c = (struct ContextStruct *)contextPtr;
 
     // Initialize the thread key from the intermediate key

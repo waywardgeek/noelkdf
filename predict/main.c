@@ -127,7 +127,7 @@ static uint32 findCatenaPos(uint32 pos) {
         if(!peCatena3InFirstRow) {
             return UINT32_MAX;
         }
-        rowLength /= 8; // Build a Catena-7 graph in the first row
+        rowLength /= 4; // Build a Catena-3 graph in the first row
         row = pos/rowLength;
         if(row == 0) {
             return UINT32_MAX;
