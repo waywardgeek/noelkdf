@@ -6,6 +6,7 @@ uint32 peMemLength = 512;
 uint32 peNumPebbles = 127;
 uint32 peSpacingStart = UINT32_MAX;
 uint32 peSpacing = 12;
+uint32 peMaxEdgeLength = 0; // Fix pebbles all nodes with edge length < peMaxEdgeLength
 
 peRoot peTheRoot;
 peLocationArray peVisitedLocations;
@@ -579,8 +580,12 @@ int main(int argc, char **argv) {
             peSpacingStart = atoi(argv[2]);
             argc--;
             argv++;
-        } else if(argc >= 3 && !strcmp(argv[1], "-l")) {
+        } else if(argc >= 3 && !strcmp(argv[1], "--lambda")) {
             peCatenaLambda = atoi(argv[2]);
+            argc--;
+            argv++;
+        } else if(argc >= 3 && !strcmp(argv[1], "-l")) {
+            peMaxEdgeLength = atoi(argv[2]);
             argc--;
             argv++;
         } else if(argc >= 3 && !strcmp(argv[1], "-r")) {
