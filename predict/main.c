@@ -22,8 +22,8 @@ typedef enum {
     RAND_CUBED,
     RAND,
     CATENA,
-    REVERSE,
-    SLIDING_BITREVERS
+    SLIDING_REVERSE,
+    REVERSE
 } peGraphType;
 
 peGraphType peCurrentType;
@@ -35,8 +35,8 @@ char *peTypeGetName(peGraphType type) {
     case RAND_CUBED: return "rand_cubed";
     case RAND: return "rand";
     case CATENA: return "catena";
+    case SLIDING_REVERSE: return "sliding_reverse";
     case REVERSE: return "reverse";
-    case SLIDING_BITREVERSE: return "sliding_bitreverse";
     default:
         utExit("Unknown graph type");
     }
@@ -60,11 +60,11 @@ static peGraphType parseType(char *name) {
     if(!strcasecmp(name, "catena")) {
         return CATENA;
     }
+    if(!strcasecmp(name, "sliding_reverse")) {
+        return SLIDING_REVERSE;
+    }
     if(!strcasecmp(name, "reverse")) {
         return REVERSE;
-    }
-    if(!strcasecmp(name, "sliding_bitreverse")) {
-        return SLIDING_BITREVERSE;
     }
     utExit("Unknown graph type %s", name);
     return RAND_CUBED;
@@ -77,11 +77,11 @@ static uint32 findSlidingWindowPos(uint32 pos) {
         return UINT32_MAX; // No edge
     }
     uint32 mask = 1;
-    while(mask < pos - 1) {
+    while(mask <= pos) {
         mask <<= 1;
     }
-    mask = (mask >> 1) - 1;
-    return pos - 2 - (rand() & mask);
+    mask = mask >> 1;
+    return pos - mask + (rand() % (mask-1));
 }
 
 // Find the previous position using a uniform random value between 0..1, cube it, and go
@@ -138,6 +138,25 @@ static uint32 findCatenaPos(uint32 pos) {
     return (row-1)*rowLength + bitReverse(rowPos, rowLength);
 }
 
+// Find the previous position using Alexander's sliding power-of-two window, with Catena
+// bit-reversal.
+static uint32 findSlidingReversePos(uint32 pos) {
+    // This is a sliding window which is the largest power of 2 < i.
+    if(pos < 2) {
+        return UINT32_MAX;
+    }
+    uint32 mask = 1;
+    while(mask <= pos) {
+        mask <<= 1;
+    }
+    mask = mask >> 1; // Mask is greatest power of 2 <= pos
+    uint32 reversePos = bitReverse((pos) & (mask-1), mask);
+    if(reversePos + 1 >= pos - mask) {
+        return reversePos;
+    }
+    return reversePos + mask;
+}
+
 // Find the previous position using a simple rule: dest = pow2 - i, where pow2 is the
 // largest power of 2 < i.
 static uint32 findReversePos(uint32 pos) {
@@ -156,37 +175,6 @@ static uint32 findReversePos(uint32 pos) {
     return prevPos;
 }
 
-// Find the previous position using a uniform random value between 0..1, cube it, and go
-// that * position back.
-static uint32 findSlidingBitreversePos(uint32 pos) {
-    if(pos < 3) {
-        return UINT32_MAX; // No edge
-    }
-    uint32 mask = 1;
-    while(mask < pos) {
-        mask <<= 1;
-    }
-    mask = mask >> 1;
-    return pos - 2 - bitReverse(pos - mask, mask);
-
-    uint32 rowLength = peMemLength/(peCatenaLambda + 1); // Note: peMemLength/lambda must be power of 2
-    uint32 row = pos/rowLength;
-    if(row == 0 && rowLength >= 16) {
-        if(!peCatena3InFirstRow) {
-            return UINT32_MAX;
-        }
-        rowLength /= 8; // Build a Catena-7 graph in the first row
-        row = pos/rowLength;
-        if(row == 0) {
-            return UINT32_MAX;
-        }
-        uint32 rowPos = pos - row*rowLength;
-        return (row-1)*rowLength + bitReverse(rowPos, rowLength);
-    }
-    uint32 rowPos = pos - row*rowLength;
-    return (row-1)*rowLength + bitReverse(rowPos, rowLength);
-}
-
 // Find the previous position to point to.
 static void setPrevLocation(uint32 pos, peGraphType type) {
     if(pos == 0) {
@@ -199,11 +187,12 @@ static void setPrevLocation(uint32 pos, peGraphType type) {
     case RAND_CUBED: prevPos = findRandCubedPos(pos); break;
     case RAND: prevPos = findRandPos(pos); break;
     case CATENA: prevPos = findCatenaPos(pos); break;
+    case SLIDING_REVERSE: prevPos = findSlidingReversePos(pos); break;
     case REVERSE: prevPos = findReversePos(pos); break;
     default:
         utExit("Unknown graph type\n");
     }
-    if(prevPos == UINT32_MAX) {
+    if(prevPos == UINT32_MAX || prevPos + 1 == pos) {
         return; // No edge
     }
     peLocation prevLocation = peRootGetiLocation(peTheRoot, prevPos);
@@ -458,22 +447,11 @@ static void pebbleGraph(void) {
     peRootAppendGroup(peTheRoot, peTheGroup);
     peCurrentPos = peNumPebbles;
     uint64 total = peNumPebbles;
-    bool fixNextLocation = false;
     for(; peCurrentPos < peMemLength; peCurrentPos++) {
         peLocation location = peRootGetiLocation(peTheRoot, peCurrentPos);
         markInUse(location);
         total += pebbleLocation(peCurrentPos);
         unmarkInUse(location);
-        if(peCurrentPos >= peSpacingStart && peCurrentPos % peSpacing == peSpacingStart) {
-            // Fix the position of pebbles every so often to see if it helps.
-            fixNextLocation = true;
-        }
-        if(fixNextLocation && peLocationGetNumPointers(location) > 0) {
-            /* It's a waset to fix pebbles on locations that aren't pointed to by anybody. */
-            peLocationSetFixed(location, true);
-            peLocationSetUseCount(location, 1);
-            fixNextLocation = false;
-        }
     }
     printf("Recalculation penalty is %.4fX\n", 1 + total/(double)peMemLength - 1.0);
 }
@@ -491,6 +469,25 @@ static void setNumPointers(peGraphType type) {
             if(numPointers > peMaxDegree) {
                 peMaxDegree = numPointers;
             }
+        }
+    }
+}
+
+// Set the fixed locations.
+static void setFixedNodes(void) {
+    uint32 i;
+    bool fixNextLocation = false;
+    for(i = 0; i < peMemLength; i++) {
+        peLocation location = peRootGetiLocation(peTheRoot, i);
+        if(i >= peSpacingStart && i % peSpacing == peSpacingStart) {
+            // Fix the position of pebbles every so often to see if it helps.
+            fixNextLocation = true;
+        }
+        if(fixNextLocation && peLocationGetNumPointers(location) > 0) {
+            /* It's a waset to fix pebbles on locations that aren't pointed to by anybody. */
+            peLocationSetFixed(location, true);
+            peLocationSetUseCount(location, 1);
+            fixNextLocation = false;
         }
     }
 }
@@ -537,11 +534,12 @@ static void runTest(peGraphType type, bool dumpGraphs) {
     printf("========= Testing %s\n", peTypeGetName(type));
     peCurrentType = type;
     setNumPointers(type);
+    setFixedNodes();
     distributePebbles();
+    pebbleGraph();
     if(dumpGraphs) {
         dumpGraph();
     }
-    pebbleGraph();
     computeCut();
     peRootDestroy(peTheRoot);
     printf("\n");
