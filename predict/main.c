@@ -1,12 +1,13 @@
 #include <stdlib.h>
-#include <math.h>
+#include <unistd.h>
 #include "pedatabase.h"
 
 uint32 peMemLength = 512;
 uint32 peNumPebbles = 127;
 uint32 peSpacingStart = UINT32_MAX;
 uint32 peSpacing = 12;
-uint32 peMaxEdgeLength = 0; // Fix pebbles all nodes with edge length < peMaxEdgeLength
+uint32 peMinEdgeLength = 0; // Fix pebbles all nodes with edge length < peMinEdgeLength
+uint32 peMaxInDegree = UINT32_MAX; // Fix pebbles all nodes with in-degree >= peMaxInDegree
 
 peRoot peTheRoot;
 peLocationArray peVisitedLocations;
@@ -29,7 +30,7 @@ typedef enum {
 peGraphType peCurrentType;
 
 // Return the name of the type.
-char *peTypeGetName(peGraphType type) {
+char *getTypeName(peGraphType type) {
     switch(type) {
     case SLIDING_WINDOW: return "sliding_window";
     case RAND_CUBED: return "rand_cubed";
@@ -483,11 +484,19 @@ static void setFixedNodes(void) {
             // Fix the position of pebbles every so often to see if it helps.
             fixNextLocation = true;
         }
-        if(fixNextLocation && peLocationGetNumPointers(location) > 0) {
-            /* It's a waset to fix pebbles on locations that aren't pointed to by anybody. */
-            peLocationSetFixed(location, true);
-            peLocationSetUseCount(location, 1);
-            fixNextLocation = false;
+        if(peLocationGetNumPointers(location) > 0) {
+            if(peLocationGetRootIndex(peLocationGetFirstLocation(location)) - i <= peMinEdgeLength) {
+                fixNextLocation = true;
+            }
+            if(peLocationGetNumPointers(location) >= peMaxInDegree) {
+                fixNextLocation = true;
+            }
+            if(fixNextLocation) {
+                /* It's a waset to fix pebbles on locations that aren't pointed to by anybody. */
+                peLocationSetFixed(location, true);
+                peLocationSetUseCount(location, 1);
+                fixNextLocation = false;
+            }
         }
     }
 }
@@ -512,10 +521,6 @@ static void distributePebbles(void) {
         peLocation location = peRootGetiLocation(peTheRoot, xPebble);
         pePebble pebble = pePebbleAlloc();
         peLocationInsertPebble(location, pebble);
-        if(xPebble >= peSpacingStart && xPebble % peSpacing == peSpacingStart) {
-            peLocationSetFixed(location, true);
-            peLocationSetUseCount(location, 1);
-        }
         total++;
     }
     printf("Total pebbles: %u out of %u (%.1f%%)\n", total, peMemLength, total*100.0/peMemLength);
@@ -531,7 +536,7 @@ static void runTest(peGraphType type, bool dumpGraphs) {
         peLocation location = peLocationAlloc();
         peRootInsertLocation(peTheRoot, i, location);
     }
-    printf("========= Testing %s\n", peTypeGetName(type));
+    printf("========= Testing %s\n", getTypeName(type));
     peCurrentType = type;
     setNumPointers(type);
     setFixedNodes();
@@ -545,57 +550,84 @@ static void runTest(peGraphType type, bool dumpGraphs) {
     printf("\n");
 }
 
+// Usage
+static void usage(void) {
+    fprintf(stderr, "usage: pebble [OPTIONS] [DAG type]\n"
+        "    -d minDegree      -- fix pebbles on nodes with in degree >= minDegree\n"
+        "    -g                -- dump graph\n"
+        "    -l maxLength      -- fix pebbles pointed to by edge <= maxLength\n"
+        "    -L lambda         -- set Catena lambda\n"
+        "    -p numPebbles     -- pebble the graph using at most numPebbles pebbles\n"
+        "    -r                -- enable sub-Catena7 graph in Catena first row\n"
+        "    -s spacing        -- fix pebbles every spacing pebels\n"
+        "    -t startSpacing   -- Start pebble spacing at startSpacing node\n"
+        "    -v                -- verbose mode\n");
+    fprintf(stderr, "graph types:");
+    uint32 i;
+    for(i = 0; i <= REVERSE; i++) {
+        fprintf(stderr, " %s", getTypeName(i));
+    }
+    fprintf(stderr, "\n");
+    exit(1);
+}
+
 int main(int argc, char **argv) {
     bool dumpGraphs = false;
     peVerbose = false;
     peCatenaLambda = 3;
     peCatena3InFirstRow = false;
-    while(argc >= 2 && *argv[1] == '-') {
-        if(!strcmp(argv[1], "-d")) {
+
+    char c;
+    while((c = getopt(argc, argv, "d:gm:l:L:Mp:rs:t:v")) != -1) {
+        switch (c) {
+        case 'g':
             dumpGraphs = true;
-        } else if(argc >= 2 && !strcmp(argv[1], "-v")) {
+            break;
+        case 'v':
             dumpGraphs = true;
             peVerbose = true;
-        } else if(argc >= 3 && !strcmp(argv[1], "-m")) {
-            peMemLength = atoi(argv[2]);
+            break;
+        case 'm':
+            peMemLength = atoi(optarg);
             if(peNumPebbles > peMemLength) {
                 peNumPebbles = peMemLength >> 1;
             }
-            argc--;
-            argv++;
-        } else if(argc >= 3 && !strcmp(argv[1], "-p")) {
-            peNumPebbles = atoi(argv[2]);
-            argc--;
-            argv++;
-        } else if(argc >= 3 && !strcmp(argv[1], "-s")) {
-            peSpacing = atoi(argv[2]);
+            break;
+        case 'p':
+            peNumPebbles = atoi(optarg);
+            break;
+        case 's':
+            peSpacing = atoi(optarg);
             if(peSpacingStart == UINT32_MAX) {
                 peSpacingStart = peSpacing - 1;
             }
-            argc--;
-            argv++;
-        } else if(argc >= 3 && !strcmp(argv[1], "-t")) {
-            peSpacingStart = atoi(argv[2]);
-            argc--;
-            argv++;
-        } else if(argc >= 3 && !strcmp(argv[1], "--lambda")) {
-            peCatenaLambda = atoi(argv[2]);
-            argc--;
-            argv++;
-        } else if(argc >= 3 && !strcmp(argv[1], "-l")) {
-            peMaxEdgeLength = atoi(argv[2]);
-            argc--;
-            argv++;
-        } else if(argc >= 3 && !strcmp(argv[1], "-r")) {
+            break;
+        case 't':
+            peSpacingStart = atoi(optarg);
+            break;
+        case 'L':
+            peCatenaLambda = atoi(optarg);
+            break;
+        case 'l':
+            peMinEdgeLength = atoi(optarg);
+            break;
+        case 'r':
             peCatena3InFirstRow = true;
+            break;
+        case 'd':
+            peMaxInDegree = atoi(optarg);
+            break;
+        default:
+            usage();
         }
-        argc--;
-        argv++;
     }
     utStart();
     peDatabaseStart();
-    if(argc == 2) {
-        runTest(parseType(argv[1]), dumpGraphs);
+    if(optind < argc - 1) {
+        fprintf(stderr, "Too many parameters\n");
+        usage();
+    } else if(optind + 1 == argc) {
+        runTest(parseType(argv[optind]), dumpGraphs);
     } else {
         uint32 type;
         for(type = 0; type <= REVERSE; type++) {
