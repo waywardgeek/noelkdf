@@ -103,7 +103,7 @@ static void printHex(
     }
 }
 
-static void readArguments(int argc, char **argv, uint32 *derivedKeySize, char **password, uint32 *passwordSize,
+static void readArguments(int argc, char **argv, uint32 *derivedKeySize, uint8 **password, uint32 *passwordSize,
         uint8 **salt, uint32 *saltSize, uint32 *garlic, uint32 *memorySize, uint32 *repeatCount,
         uint32 *numThreads, uint32 *blockSize,
         bool *freeMemory, bool *dump) {
@@ -111,8 +111,8 @@ static void readArguments(int argc, char **argv, uint32 *derivedKeySize, char **
         usage("Incorrect number of arguments");
     }
     *derivedKeySize = readUint32(argv, 1);
-    *password = argv[2];
-    *passwordSize = strlen(*password);
+    *password = (uint8 *)argv[2];
+    *passwordSize = strlen((char *)*password);
     *salt = readHexSalt(argv[3], saltSize);
     *garlic = readUint32(argv, 4);
     *memorySize = readUint32(argv, 5); // Number of MB
@@ -153,26 +153,12 @@ static void verifyParameters(uint32 garlic, uint64 memorySize, uint32
     }
 }
 
-// Dump memory in dieharder input format.  We skip numToSkip KB of initial memory since it
-// may not be very random yet.
-static void dumpMemory(uint32 *mem, uint32 memorySize) {
-    uint64 memoryLength = (1LL << 20)*memorySize/sizeof(uint32);
-    uint64 numToSkip = memoryLength >> 3;
-    printf("type: d\n"
-        "count: %llu\n"
-        "numbit: 32\n", (memoryLength - numToSkip));
-    uint64 i;
-    for(i = numToSkip; i < memoryLength; i++) {
-        printf("%u\n", mem[i]);
-    }
-}
-
 int main(int argc, char **argv) {
     uint32 memorySize;
     uint32 garlic, derivedKeySize, saltSize, passwordSize;
     uint32 repeatCount, numThreads, blockSize;
     uint8 *salt;
-    char *password;
+    uint8 *password;
     bool freeMemory, dump;
     readArguments(argc, argv, &derivedKeySize, &password, &passwordSize, &salt, &saltSize, &garlic, &memorySize,
         &repeatCount, &numThreads, &blockSize, &freeMemory, &dump);
@@ -182,17 +168,14 @@ int main(int argc, char **argv) {
     }
     verifyParameters(garlic, memorySize, derivedKeySize, saltSize, passwordSize, repeatCount, numThreads, blockSize);
     uint8 *derivedKey = (uint8 *)calloc(derivedKeySize, sizeof(uint8));
-    uint32 *mem;
-    if(NoelKDF(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize, NULL, 0, garlic, memorySize,
-            repeatCount, numThreads, blockSize, true, dump || !freeMemory, &mem)) {
+    if(!NoelKDF_HashPassword(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize,
+            memorySize, garlic, NULL, 0, blockSize, numThreads, repeatCount, dump)) {
         fprintf(stderr, "Key stretching failed.\n");
         return 1;
     }
     if(!dump) {
         printHex(derivedKey, derivedKeySize);
         printf("\n");
-    } else {
-        dumpMemory(mem, memorySize);
     }
     memset(derivedKey, '\0', derivedKeySize*sizeof(uint8));
     free(derivedKey);
