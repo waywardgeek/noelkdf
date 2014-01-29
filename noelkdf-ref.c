@@ -8,12 +8,14 @@
 static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGarlic, uint32 stopGarlic,
         uint32 blockSize, uint32 parallelism, uint32 repetitions, bool printDieharderData);
 static void hashWithoutPassword(uint32 p, uint32 *wordHash, uint32 hashlen, uint32 *mem,
-        uint32 blocklen, uint32 numblocks);
-static uint32 bitReverse(uint32 value, uint32 mask);
+        uint32 blocklen, uint32 numblocks, uint32 repetitions);
 static void hashWithPassword(uint32 p, uint32 *mem, uint32 blocklen, uint32 numblocks,
-        uint32 parallelism, uint32 value);
+        uint32 parallelism, uint32 repetitions, uint32 value);
+static inline uint32 hashBlocks(uint32 value, uint32 *mem, uint32 blocklen, uint32 fromAddr,
+        uint32 toAddr, uint32 repetitions);
 static void xorIntoHash(uint32 *wordHash, uint32 hashlen, uint32 *mem, uint32 blocklen,
         uint32 numblocks, uint32 parallelism);
+static uint32 bitReverse(uint32 value, uint32 mask);
 static void dumpMemory(uint32 *mem, uint32 memorySize);
 
 // Verify that parameters are valid for password hashing.
@@ -97,19 +99,16 @@ static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGa
     }
     uint32 i;
     for(i = startGarlic; i <= stopGarlic; i++) {
-        uint32 j;
-        for(j = 0; j < repetitions; j++) {
-            uint32 value = 0;
-            uint32 p;
-            for(p = 0; p < parallelism; p++) {
-                hashWithoutPassword(p, wordHash, hashlen, mem, blocklen, numblocks);
-                value += mem[2*p*numblocks*blocklen + blocklen-1];
-            }
-            for(p = 0; p < parallelism; p++) {
-                hashWithPassword(p, mem, blocklen, numblocks, parallelism, value);
-            }
-            xorIntoHash(wordHash, hashlen, mem, blocklen, numblocks, parallelism);
+        uint32 value = 0;
+        uint32 p;
+        for(p = 0; p < parallelism; p++) {
+            hashWithoutPassword(p, wordHash, hashlen, mem, blocklen, numblocks, repetitions);
+            value += mem[2*p*numblocks*blocklen + blocklen-1];
         }
+        for(p = 0; p < parallelism; p++) {
+            hashWithPassword(p, mem, blocklen, numblocks, parallelism, repetitions, value);
+        }
+        xorIntoHash(wordHash, hashlen, mem, blocklen, numblocks, parallelism);
         numblocks *= 2;
     }
     be32enc_vect(hash, wordHash, hashSize);
@@ -122,7 +121,7 @@ static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGa
 
 // Hash memory without doing any password dependent memory addressing to thwart cache-timing-attacks.
 static void hashWithoutPassword(uint32 p, uint32 *wordHash, uint32 hashlen, uint32 *mem,
-        uint32 blocklen, uint32 numblocks) {
+        uint32 blocklen, uint32 numblocks, uint32 repetitions) {
     uint64 start = 2*p*(uint64)numblocks*blocklen;
     uint32 hashSize = hashlen*sizeof(uint32);
     uint8 threadKey[blocklen*sizeof(uint32)];
@@ -134,7 +133,6 @@ static void hashWithoutPassword(uint32 p, uint32 *wordHash, uint32 hashlen, uint
     be32dec_vect(mem, threadKey, blocklen*sizeof(uint32));
     uint32 value = 1;
     uint32 mask = 1;
-    uint64 prevAddr = start;
     uint64 toAddr = start + blocklen;
     uint32 i;
     for(i = 1; i < numblocks; i++) {
@@ -146,31 +144,16 @@ static void hashWithoutPassword(uint32 p, uint32 *wordHash, uint32 hashlen, uint
             reversePos += mask;
         }
         uint64 fromAddr = start + blocklen*reversePos;
-        uint32 j;
-        for(j = 0; j < blocklen; j++) {
-            value = value*(mem[prevAddr++] | 3) + mem[fromAddr++];
-            mem[toAddr++] = value;
-        }
+        value = hashBlocks(value, mem, blocklen, fromAddr, toAddr, repetitions);
+        toAddr += blocklen;
     }
-}
-
-// Compute the bit reversal of value.
-static uint32 bitReverse(uint32 value, uint32 mask) {
-    uint32 result = 0;
-    while(mask != 1) {
-        result = (result << 1) | (value & 1);
-        value >>= 1;
-        mask >>= 1;
-    }
-    return result;
 }
 
 // Hash memory with dependent memory addressing to thwart TMTO attacks.
 static void hashWithPassword(uint32 p, uint32 *mem, uint32 blocklen, uint32 numblocks,
-        uint32 parallelism, uint32 value) {
+        uint32 parallelism, uint32 repetitions, uint32 value) {
     uint32 startBlock = 2*p*numblocks + numblocks;
     uint64 start = (uint64)startBlock*blocklen;
-    uint64 prevAddr = start - blocklen;
     uint64 toAddr = start;
     uint32 i;
     for(i = 0; i < numblocks; i++) {
@@ -186,12 +169,24 @@ static void hashWithPassword(uint32 p, uint32 *mem, uint32 blocklen, uint32 numb
             uint32 b = numblocks - 1 - (distance - i);
             fromAddr = (2*numblocks*q + b)*(uint64)blocklen;
         }
+        value = hashBlocks(value, mem, blocklen, fromAddr, toAddr, repetitions);
+        toAddr += blocklen;
+    }
+}
+
+// Hash three blocks together with a multiplication latency bound loop
+static inline uint32 hashBlocks(uint32 value, uint32 *mem, uint32 blocklen, uint32 fromAddr,
+        uint32 toAddr, uint32 repetitions) {
+    uint32 prevAddr = toAddr - blocklen;
+    uint32 r;
+    for(r = 0; r < repetitions; r++) {
         uint32 j;
         for(j = 0; j < blocklen; j++) {
-            value = value*(mem[prevAddr++] | 3) + mem[fromAddr++];
-            mem[toAddr++] = value;
+            value = value*(mem[prevAddr + j] | 3) + mem[fromAddr + j];
+            mem[toAddr + j] = value;
         }
     }
+    return value;
 }
 
 // XOR the last hashed data from each parallel process into the result.
@@ -205,6 +200,17 @@ static void xorIntoHash(uint32 *wordHash, uint32 hashlen, uint32 *mem, uint32 bl
             wordHash[i] ^= mem[pos+i];
         }
     }
+}
+
+// Compute the bit reversal of value.
+static uint32 bitReverse(uint32 value, uint32 mask) {
+    uint32 result = 0;
+    while(mask != 1) {
+        result = (result << 1) | (value & 1);
+        value >>= 1;
+        mask >>= 1;
+    }
+    return result;
 }
 
 // This is the prototype required for the password hashing competition.

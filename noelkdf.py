@@ -75,25 +75,23 @@ def NoelKDF(hash, memsize, startGarlic, stopGarlic, blocksize, parallelism, repe
     memlen = 2*parallelism*numblocks*blocklen
     mem = [0 for _ in range(memlen)]
     for i in range(startGarlic, stopGarlic+1):
-        for j in range(repetitions):
-            value = 0
-            for p in range(parallelism):
-                hashWithoutPassword(p, wordHash, mem, blocklen, numblocks)
-                value += (mem[2*p*numblocks*blocklen + blocklen-1]) & 0xffffffff
-            for p in range(parallelism):
-                hashWithPassword(p, mem, blocklen, numblocks, parallelism, value)
-            xorIntoHash(wordHash, mem, blocklen, numblocks, parallelism)
+        value = 0
+        for p in range(parallelism):
+            hashWithoutPassword(p, wordHash, mem, blocklen, numblocks, repetitions)
+            value += (mem[2*p*numblocks*blocklen + blocklen-1]) & 0xffffffff
+        for p in range(parallelism):
+            hashWithPassword(p, mem, blocklen, numblocks, parallelism, repetitions, value)
+        xorIntoHash(wordHash, mem, blocklen, numblocks, parallelism)
         numblocks *= 2
     return toUint8Array(wordHash)
 
-def hashWithoutPassword(p, wordHash, mem, blocklen, numblocks):
+def hashWithoutPassword(p, wordHash, mem, blocklen, numblocks, repetitions):
     start = 2*p*numblocks*blocklen
     threadKey = toUint32Array(H(blocklen*4, str(toUint8Array(wordHash)), str(toUint8(p))))
     for i in range(blocklen):
         mem[start + i] = threadKey[i]
     value = 1
     mask = 1
-    prevAddr = start
     toAddr = start + blocklen
     for i in range(1, numblocks):
         if mask << 1 <= i:
@@ -102,22 +100,10 @@ def hashWithoutPassword(p, wordHash, mem, blocklen, numblocks):
         if reversePos + mask < i:
             reversePos += mask
         fromAddr = start + blocklen*reversePos
-        for j in range(blocklen):
-            value = (value*(mem[prevAddr] | 3) + mem[fromAddr]) & 0xffffffff
-            mem[toAddr] = value
-            prevAddr += 1
-            fromAddr += 1
-            toAddr += 1
+        value = hashBlocks(value, mem, blocklen, fromAddr, toAddr, repetitions)
+        toAddr += blocklen
 
-def bitReverse(value, mask):
-    result = 0
-    while mask != 1:
-        result = (result << 1) | (value & 1)
-        value >>= 1
-        mask >>= 1
-    return result
-
-def hashWithPassword(p, mem, blocklen, numblocks, parallelism, value):
+def hashWithPassword(p, mem, blocklen, numblocks, parallelism, repetitions, value):
     startBlock = 2*p*numblocks + numblocks
     start = startBlock*blocklen
     prevAddr = start - blocklen
@@ -133,12 +119,16 @@ def hashWithPassword(p, mem, blocklen, numblocks, parallelism, value):
             q = (p + i) % parallelism
             b = numblocks - 1 - (distance - i)
             fromAddr = (2*numblocks*q + b)*blocklen
+        value = hashBlocks(value, mem, blocklen, fromAddr, toAddr, repetitions)
+        toAddr += blocklen
+
+def hashBlocks(value, mem, blocklen, fromAddr, toAddr, repetitions):
+    prevAddr = toAddr - blocklen
+    for r in range(repetitions):
         for j in range(blocklen):
-            value  = (value*(mem[prevAddr] | 3) + mem[fromAddr]) & 0xffffffff
-            mem[toAddr] = value
-            prevAddr += 1
-            fromAddr += 1
-            toAddr += 1
+            value = (value*(mem[prevAddr + j] | 3) + mem[fromAddr + j]) & 0xffffffff
+            mem[toAddr + j] = value
+    return value
 
 def xorIntoHash(wordHash, mem, blocklen, numblocks, parallelism):
     for p in range(parallelism):
@@ -146,6 +136,15 @@ def xorIntoHash(wordHash, mem, blocklen, numblocks, parallelism):
         for i in range(len(wordHash)):
             wordHash[i] ^= mem[pos+i]
 
+def bitReverse(value, mask):
+    result = 0
+    while mask != 1:
+        result = (result << 1) | (value & 1)
+        value >>= 1
+        mask >>= 1
+    return result
+
 #import pdb; pdb.set_trace()
-hash = NoelKDF_SimpleHashPassword(32, "password", "salt", 10)
+#hash = NoelKDF_SimpleHashPassword(32, "password", "salt", 1)
+hash = NoelKDF_HashPassword(32, "password", "salt", 3, 0, None, 64, 1, 4)
 print toHex(str(hash))

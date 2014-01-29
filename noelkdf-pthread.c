@@ -10,10 +10,12 @@
 static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGarlic, uint32 stopGarlic,
         uint32 blockSize, uint32 parallelism, uint32 repetitions, bool printDieharderData);
 static void *hashWithoutPassword(void *contextPtr);
-static uint32 bitReverse(uint32 value, uint32 mask);
 static void *hashWithPassword(void *contextPtr);
+static inline uint32 hashBlocks(uint32 value, uint32 *mem, uint32 blocklen, uint32 fromAddr,
+        uint32 toAddr, uint32 repetitions);
 static void xorIntoHash(uint32 *wordHash, uint32 hashlen, uint32 *mem, uint32 blocklen,
         uint32 numblocks, uint32 parallelism);
+static uint32 bitReverse(uint32 value, uint32 mask);
 static void dumpMemory(uint32 *mem, uint32 memorySize);
 
 struct NoelKDFContextStruct {
@@ -24,6 +26,7 @@ struct NoelKDFContextStruct {
     uint32 p;
     uint32 blocklen;
     uint32 numblocks;
+    uint32 repetitions;
     uint32 value;
 };
 
@@ -117,44 +120,42 @@ static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGa
     }
     uint32 i;
     for(i = startGarlic; i <= stopGarlic; i++) {
-        uint32 j;
-        for(j = 0; j < repetitions; j++) {
-            uint32 p;
-            for(p = 0; p < parallelism; p++) {
-                c[p].p = p;
-                c[p].wordHash = wordHash;
-                c[p].hashlen = hashlen;
-                c[p].mem = mem;
-                c[p].numblocks = numblocks;
-                c[p].blocklen = blocklen;
-                c[p].parallelism = parallelism;
-                c[p].value = 0;
-                int rc = pthread_create(&threads[p], NULL, hashWithoutPassword, (void *)(c + p));
-                if (rc){
-                    fprintf(stderr, "Unable to start threads\n");
-                    return false;
-                }
+        uint32 p;
+        for(p = 0; p < parallelism; p++) {
+            c[p].p = p;
+            c[p].wordHash = wordHash;
+            c[p].hashlen = hashlen;
+            c[p].mem = mem;
+            c[p].numblocks = numblocks;
+            c[p].blocklen = blocklen;
+            c[p].parallelism = parallelism;
+            c[p].repetitions = repetitions;
+            c[p].value = 0;
+            int rc = pthread_create(&threads[p], NULL, hashWithoutPassword, (void *)(c + p));
+            if (rc){
+                fprintf(stderr, "Unable to start threads\n");
+                return false;
             }
-            for(p = 0; p < parallelism; p++) {
-                (void)pthread_join(threads[p], NULL);
-            }
-            uint32 value = 0;
-            for(p = 0; p < parallelism; p++) {
-                value += mem[2*p*numblocks*blocklen + blocklen-1];
-            }
-            for(p = 0; p < parallelism; p++) {
-                c[p].value = value;
-                int rc = pthread_create(&threads[p], NULL, hashWithPassword, (void *)(c + p));
-                if (rc){
-                    fprintf(stderr, "Unable to start threads\n");
-                    return false;
-                }
-            }
-            for(p = 0; p < parallelism; p++) {
-                (void)pthread_join(threads[p], NULL);
-            }
-            xorIntoHash(wordHash, hashlen, mem, blocklen, numblocks, parallelism);
         }
+        for(p = 0; p < parallelism; p++) {
+            (void)pthread_join(threads[p], NULL);
+        }
+        uint32 value = 0;
+        for(p = 0; p < parallelism; p++) {
+            value += mem[2*p*numblocks*blocklen + blocklen-1];
+        }
+        for(p = 0; p < parallelism; p++) {
+            c[p].value = value;
+            int rc = pthread_create(&threads[p], NULL, hashWithPassword, (void *)(c + p));
+            if (rc){
+                fprintf(stderr, "Unable to start threads\n");
+                return false;
+            }
+        }
+        for(p = 0; p < parallelism; p++) {
+            (void)pthread_join(threads[p], NULL);
+        }
+        xorIntoHash(wordHash, hashlen, mem, blocklen, numblocks, parallelism);
         numblocks *= 2;
     }
     be32enc_vect(hash, wordHash, hashSize);
@@ -175,6 +176,7 @@ static void *hashWithoutPassword(void *contextPtr) {
     uint32 p = c->p;
     uint32 blocklen = c->blocklen;
     uint32 numblocks = c->numblocks;
+    uint32 repetitions = c->repetitions;
 
     uint64 start = 2*p*(uint64)numblocks*blocklen;
     uint32 hashSize = hashlen*sizeof(uint32);
@@ -187,7 +189,6 @@ static void *hashWithoutPassword(void *contextPtr) {
     be32dec_vect(mem, threadKey, blocklen*sizeof(uint32));
     uint32 value = 1;
     uint32 mask = 1;
-    uint64 prevAddr = start;
     uint64 toAddr = start + blocklen;
     uint32 i;
     for(i = 1; i < numblocks; i++) {
@@ -199,24 +200,10 @@ static void *hashWithoutPassword(void *contextPtr) {
             reversePos += mask;
         }
         uint64 fromAddr = start + blocklen*reversePos;
-        uint32 j;
-        for(j = 0; j < blocklen; j++) {
-            value = value*(mem[prevAddr++] | 3) + mem[fromAddr++];
-            mem[toAddr++] = value;
-        }
+        value = hashBlocks(value, mem, blocklen, fromAddr, toAddr, repetitions);
+        toAddr += blocklen;
     }
     pthread_exit(NULL);
-}
-
-// Compute the bit reversal of value.
-static uint32 bitReverse(uint32 value, uint32 mask) {
-    uint32 result = 0;
-    while(mask != 1) {
-        result = (result << 1) | (value & 1);
-        value >>= 1;
-        mask >>= 1;
-    }
-    return result;
 }
 
 // Hash memory with dependent memory addressing to thwart TMTO attacks.
@@ -229,10 +216,10 @@ static void *hashWithPassword(void *contextPtr) {
     uint32 blocklen = c->blocklen;
     uint32 numblocks = c->numblocks;
     uint32 value = c->value;
+    uint32 repetitions = c->repetitions;
 
     uint32 startBlock = 2*p*numblocks + numblocks;
     uint64 start = (uint64)startBlock*blocklen;
-    uint64 prevAddr = start - blocklen;
     uint64 toAddr = start;
     uint32 i;
     for(i = 0; i < numblocks; i++) {
@@ -248,13 +235,25 @@ static void *hashWithPassword(void *contextPtr) {
             uint32 b = numblocks - 1 - (distance - i);
             fromAddr = (2*numblocks*q + b)*(uint64)blocklen;
         }
-        uint32 j;
-        for(j = 0; j < blocklen; j++) {
-            value = value*(mem[prevAddr++] | 3) + mem[fromAddr++];
-            mem[toAddr++] = value;
-        }
+        value = hashBlocks(value, mem, blocklen, fromAddr, toAddr, repetitions);
+        toAddr += blocklen;
     }
     pthread_exit(NULL);
+}
+
+// Hash three blocks together with a multiplication latency bound loop
+static inline uint32 hashBlocks(uint32 value, uint32 *mem, uint32 blocklen, uint32 fromAddr,
+        uint32 toAddr, uint32 repetitions) {
+    uint32 prevAddr = toAddr - blocklen;
+    uint32 r;
+    for(r = 0; r < repetitions; r++) {
+        uint32 j;
+        for(j = 0; j < blocklen; j++) {
+            value = value*(mem[prevAddr + j] | 3) + mem[fromAddr + j];
+            mem[toAddr + j] = value;
+        }
+    }
+    return value;
 }
 
 // XOR the last hashed data from each parallel process into the result.
@@ -268,6 +267,17 @@ static void xorIntoHash(uint32 *wordHash, uint32 hashlen, uint32 *mem, uint32 bl
             wordHash[i] ^= mem[pos+i];
         }
     }
+}
+
+// Compute the bit reversal of value.
+static uint32 bitReverse(uint32 value, uint32 mask) {
+    uint32 result = 0;
+    while(mask != 1) {
+        result = (result << 1) | (value & 1);
+        value >>= 1;
+        mask >>= 1;
+    }
+    return result;
 }
 
 // This is the prototype required for the password hashing competition.
