@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <pthread.h>
 #include "sha256.h"
 #include "noelkdf.h"
 
@@ -7,14 +9,23 @@
 // Forward declarations
 static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGarlic, uint32 stopGarlic,
         uint32 blockSize, uint32 parallelism, uint32 repetitions, bool printDieharderData);
-static void hashWithoutPassword(uint32 p, uint32 *wordHash, uint32 hashlen, uint32 *mem,
-        uint32 blocklen, uint32 numblocks);
+static void *hashWithoutPassword(void *contextPtr);
 static uint32 bitReverse(uint32 value, uint32 mask);
-static void hashWithPassword(uint32 p, uint32 *mem, uint32 blocklen, uint32 numblocks,
-        uint32 parallelism, uint32 value);
+static void *hashWithPassword(void *contextPtr);
 static void xorIntoHash(uint32 *wordHash, uint32 hashlen, uint32 *mem, uint32 blocklen,
         uint32 numblocks, uint32 parallelism);
 static void dumpMemory(uint32 *mem, uint32 memorySize);
+
+struct NoelKDFContextStruct {
+    uint32 *mem;
+    uint32 *wordHash;
+    uint32 hashlen;
+    uint32 parallelism;
+    uint32 p;
+    uint32 blocklen;
+    uint32 numblocks;
+    uint32 value;
+};
 
 // Verify that parameters are valid for password hashing.
 static bool verifyParameters(uint32 hashSize, uint32 passwordSize, uint32 saltSize, uint32 memSize,
@@ -95,18 +106,52 @@ static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGa
     if(mem == NULL) {
         return false;
     }
+    pthread_t *threads = (pthread_t *)malloc(parallelism*sizeof(pthread_t));
+    if(threads == NULL) {
+        return false;
+    }
+    struct NoelKDFContextStruct *c = (struct NoelKDFContextStruct *)malloc(
+            parallelism*sizeof(struct NoelKDFContextStruct));
+    if(c == NULL) {
+        return false;
+    }
     uint32 i;
     for(i = startGarlic; i <= stopGarlic; i++) {
         uint32 j;
         for(j = 0; j < repetitions; j++) {
-            uint32 value = 0;
             uint32 p;
             for(p = 0; p < parallelism; p++) {
-                hashWithoutPassword(p, wordHash, hashlen, mem, blocklen, numblocks);
+                c[p].p = p;
+                c[p].wordHash = wordHash;
+                c[p].hashlen = hashlen;
+                c[p].mem = mem;
+                c[p].numblocks = numblocks;
+                c[p].blocklen = blocklen;
+                c[p].parallelism = parallelism;
+                c[p].value = 0;
+                int rc = pthread_create(&threads[p], NULL, hashWithoutPassword, (void *)(c + p));
+                if (rc){
+                    fprintf(stderr, "Unable to start threads\n");
+                    return false;
+                }
+            }
+            for(p = 0; p < parallelism; p++) {
+                (void)pthread_join(threads[p], NULL);
+            }
+            uint32 value = 0;
+            for(p = 0; p < parallelism; p++) {
                 value += mem[2*p*numblocks*blocklen + blocklen-1];
             }
             for(p = 0; p < parallelism; p++) {
-                hashWithPassword(p, mem, blocklen, numblocks, parallelism, value);
+                c[p].value = value;
+                int rc = pthread_create(&threads[p], NULL, hashWithPassword, (void *)(c + p));
+                if (rc){
+                    fprintf(stderr, "Unable to start threads\n");
+                    return false;
+                }
+            }
+            for(p = 0; p < parallelism; p++) {
+                (void)pthread_join(threads[p], NULL);
             }
             xorIntoHash(wordHash, hashlen, mem, blocklen, numblocks, parallelism);
         }
@@ -121,8 +166,16 @@ static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGa
 }
 
 // Hash memory without doing any password dependent memory addressing to thwart cache-timing-attacks.
-static void hashWithoutPassword(uint32 p, uint32 *wordHash, uint32 hashlen, uint32 *mem,
-        uint32 blocklen, uint32 numblocks) {
+static void *hashWithoutPassword(void *contextPtr) {
+    struct NoelKDFContextStruct *c = (struct NoelKDFContextStruct *)contextPtr;
+
+    uint32 *mem = c->mem;
+    uint32 *wordHash = c->wordHash;
+    uint32 hashlen = c->hashlen;
+    uint32 p = c->p;
+    uint32 blocklen = c->blocklen;
+    uint32 numblocks = c->numblocks;
+
     uint64 start = 2*p*(uint64)numblocks*blocklen;
     uint32 hashSize = hashlen*sizeof(uint32);
     uint8 threadKey[blocklen*sizeof(uint32)];
@@ -152,6 +205,7 @@ static void hashWithoutPassword(uint32 p, uint32 *wordHash, uint32 hashlen, uint
             mem[toAddr++] = value;
         }
     }
+    pthread_exit(NULL);
 }
 
 // Compute the bit reversal of value.
@@ -166,8 +220,16 @@ static uint32 bitReverse(uint32 value, uint32 mask) {
 }
 
 // Hash memory with dependent memory addressing to thwart TMTO attacks.
-static void hashWithPassword(uint32 p, uint32 *mem, uint32 blocklen, uint32 numblocks,
-        uint32 parallelism, uint32 value) {
+static void *hashWithPassword(void *contextPtr) {
+    struct NoelKDFContextStruct *c = (struct NoelKDFContextStruct *)contextPtr;
+
+    uint32 *mem = c->mem;
+    uint32 parallelism = c->parallelism;
+    uint32 p = c->p;
+    uint32 blocklen = c->blocklen;
+    uint32 numblocks = c->numblocks;
+    uint32 value = c->value;
+
     uint32 startBlock = 2*p*numblocks + numblocks;
     uint64 start = (uint64)startBlock*blocklen;
     uint64 prevAddr = start - blocklen;
@@ -192,6 +254,7 @@ static void hashWithPassword(uint32 p, uint32 *mem, uint32 blocklen, uint32 numb
             mem[toAddr++] = value;
         }
     }
+    pthread_exit(NULL);
 }
 
 // XOR the last hashed data from each parallel process into the result.

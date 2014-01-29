@@ -1,42 +1,36 @@
-#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <ctype.h>
 #include <string.h>
+#include <getopt.h>
 #include "noelkdf.h"
-
-typedef unsigned char uint8;
-typedef unsigned short uint16;
-typedef unsigned int uint32;
-typedef unsigned long long uint64;
 
 static void usage(char *format, ...) {
     va_list ap;
     va_start(ap, format);
     vfprintf(stderr, (char *)format, ap);
     va_end(ap);
-    fprintf(stderr, "\nUsage: noelkdf outlen password salt t_cost m_cost +\n"
-        "        repeat_count num_threads block_size free_memory dump\n"
-        "    outlen is the output derived key in bytes\n"
-        "    t_cost is \"garlic\" that multiplies memory and CPU work by 2^t_cost\n"
-        "        it is used for client independent hash updates\n"
-        "    m_cost is the ammount of memory to use in MB\n"
-        "    repeat_count is a multiplier on the total number of times we hash\n"
-        "    num_threads is the number of threads used in hashing\n"
-        "    block_size is the length of memory hashed in the inner loop, in KB\n"
-        "    when free_memory is non-zero, we free hashed memory before exiting\n"
-        "    when dump is non-zero, write to stdout dieharder input.  Use like:\n"
-        "        dieharder -a -g 202 -f foo\n");
+    fprintf(stderr, "\nUsage: noelkdf-test [OPTIONS]\n"
+        "    -h hashSize     -- The output derived key length in bytes\n"
+        "    -p password     -- Set the password to hash\n"
+        "    -s salt         -- Set the salt.  Salt must be in hexidecimal\n"
+        "    -g garlic       -- Multiplies memory and CPU work by 2^garlic\n"
+        "    -m memorySize   -- The ammount of memory to use in MB\n"
+        "    -r repetitions  -- A multiplier on the total number of times we hash\n"
+        "    -t parallelism  -- Parallelism parameter, typically the number of threads\n"
+        "    -b blockSize    -- Memory hashed in the inner loop at once, in bytes\n"
+        "    -d              -- Write to stdout dieharder input.  Use like:\n"
+        "                       dieharder -a -g 202 -f foo\n");
     exit(1);
 }
 
-static uint32 readUint32(char **argv, uint32 xArg) {
+static uint32 readUint32(char flag, char *arg) {
     char *endPtr;
-    char *p = argv[xArg];
+    char *p = arg;
     uint32 value = strtol(p, &endPtr, 0);
     if(*p == '\0' || *endPtr != '\0') {
-        usage("Invalid integer for parameter %u", xArg);
+        usage("Invalid integer for parameter -%c", flag);
     }
     return value;
 }
@@ -103,73 +97,61 @@ static void printHex(
     }
 }
 
-static void readArguments(int argc, char **argv, uint32 *derivedKeySize, uint8 **password, uint32 *passwordSize,
-        uint8 **salt, uint32 *saltSize, uint32 *garlic, uint32 *memorySize, uint32 *repeatCount,
-        uint32 *numThreads, uint32 *blockSize,
-        bool *freeMemory, bool *dump) {
-    if(argc != 11) {
-        usage("Incorrect number of arguments");
-    }
-    *derivedKeySize = readUint32(argv, 1);
-    *password = (uint8 *)argv[2];
-    *passwordSize = strlen((char *)*password);
-    *salt = readHexSalt(argv[3], saltSize);
-    *garlic = readUint32(argv, 4);
-    *memorySize = readUint32(argv, 5); // Number of MB
-    *repeatCount = readUint32(argv, 6);
-    *numThreads = readUint32(argv, 7);
-    *blockSize = readUint32(argv, 8);
-    *freeMemory = readUint32(argv, 9);
-    *dump = readUint32(argv, 10);
-}
-
-// Verify the input parameters are reasonalble.
-static void verifyParameters(uint32 garlic, uint64 memorySize, uint32
-        derivedKeySize, uint32 saltSize, uint32 passwordSize,
-        uint32 repeatCount, uint32 numThreads, uint32 blockSize) {
-    if(garlic > 16) {
-        usage("Invalid hashing multipler");
-    }
-    if(memorySize > (1 << 20) || memorySize == 0) {
-        usage("Invalid memory size");
-    }
-    if(derivedKeySize == 0 || (derivedKeySize & 0x3) != 0 || derivedKeySize > blockSize) {
-        usage("Invalid derived key size");
-    }
-    if(saltSize > (1 << 16) || saltSize < 4 || (saltSize & 0x3) != 0) {
-        usage("Invalid salt size");
-    }
-    if(passwordSize == 0 || passwordSize > (1 << 20)) {
-        usage("Invalid password size");
-    }
-    if(blockSize == 0 || (blockSize & 0x3) != 0) {
-        usage("block_size must be >= 1 and multiple of 4");
-    }
-    if(repeatCount == 0) {
-        usage("repeatCount must be >= 1");
-    }
-    if(numThreads == 0) {
-        usage("num_threads must be >= 1");
-    }
-}
-
 int main(int argc, char **argv) {
-    uint32 memorySize;
-    uint32 garlic, derivedKeySize, saltSize, passwordSize;
-    uint32 repeatCount, numThreads, blockSize;
-    uint8 *salt;
-    uint8 *password;
-    bool freeMemory, dump;
-    readArguments(argc, argv, &derivedKeySize, &password, &passwordSize, &salt, &saltSize, &garlic, &memorySize,
-        &repeatCount, &numThreads, &blockSize, &freeMemory, &dump);
-    if(!dump) {
-        printf("garlic:%u memorySize:%u repeatCount:%u numThreads:%u blockSize:%u\n", 
-            garlic, memorySize, repeatCount, numThreads, blockSize);
+    uint32 memorySize = 1024, garlic = 0, derivedKeySize = 32;
+    uint32 repetitions = 1, parallelism = 1, blockSize = 4096;
+    uint8 *salt = (uint8 *)"salt";
+    uint32 saltSize = sizeof(salt);
+    uint8 *password = (uint8 *)"password";
+    uint32 passwordSize = sizeof(password);
+    bool dump = false;
+
+    char c;
+    while((c = getopt(argc, argv, "h:p:s:g:m:r:t:b:d")) != -1) {
+        switch (c) {
+        case 'h':
+            derivedKeySize = readUint32(c, optarg);
+            break;
+        case 'p':
+            password = (uint8 *)optarg;
+            passwordSize = strlen(optarg);
+            break;
+        case 's':
+            salt = readHexSalt(optarg, &saltSize);
+            break;
+        case 'g':
+            garlic = readUint32(c, optarg);
+            break;
+        case 'm':
+            memorySize = readUint32(c, optarg);
+            break;
+        case 'r':
+            repetitions = readUint32(c, optarg);
+            break;
+        case 't':
+            parallelism = readUint32(c, optarg);
+            break;
+        case 'b':
+            blockSize = readUint32(c, optarg);
+            break;
+        case 'd':
+            dump = true;
+            break;
+        default:
+            usage("Invalid argumet");
+        }
     }
-    verifyParameters(garlic, memorySize, derivedKeySize, saltSize, passwordSize, repeatCount, numThreads, blockSize);
+    if(optind != argc) {
+        usage("Extra parameters not recognised\n");
+    }
+
+    if(!dump) {
+        printf("garlic:%u memorySize:%u repetitions:%u numThreads:%u blockSize:%u\n", 
+            garlic, memorySize, repetitions, parallelism, blockSize);
+    }
     uint8 *derivedKey = (uint8 *)calloc(derivedKeySize, sizeof(uint8));
     if(!NoelKDF_HashPassword(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize,
-            memorySize, garlic, NULL, 0, blockSize, numThreads, repeatCount, dump)) {
+            memorySize, garlic, NULL, 0, blockSize, parallelism, repetitions, dump)) {
         fprintf(stderr, "Key stretching failed.\n");
         return 1;
     }
@@ -177,7 +159,5 @@ int main(int argc, char **argv) {
         printHex(derivedKey, derivedKeySize);
         printf("\n");
     }
-    memset(derivedKey, '\0', derivedKeySize*sizeof(uint8));
-    free(derivedKey);
     return 0;
 }
