@@ -137,7 +137,7 @@ static void hashWithoutPassword(uint32 p, uint32 *wordHash, uint32 hashlen, uint
     uint64 prevAddr = start;
     uint64 toAddr = start + blocklen;
     uint32 i;
-    for(i = 0; i < numblocks; i++) {
+    for(i = 1; i < numblocks; i++) {
         if(mask << 1 <= i) {
             mask = mask << 1;
         }

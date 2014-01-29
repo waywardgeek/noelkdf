@@ -101,9 +101,9 @@ int main(int argc, char **argv) {
     uint32 memorySize = 1024, garlic = 0, derivedKeySize = 32;
     uint32 repetitions = 1, parallelism = 1, blockSize = 4096;
     uint8 *salt = (uint8 *)"salt";
-    uint32 saltSize = sizeof(salt);
+    uint32 saltSize = 4;
     uint8 *password = (uint8 *)"password";
-    uint32 passwordSize = sizeof(password);
+    uint32 passwordSize = 8;
     bool dump = false;
 
     char c;

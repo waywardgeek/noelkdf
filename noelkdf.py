@@ -8,7 +8,7 @@ def toHex(s):
 def toUint32Array(bytes):
     b = bytearray(bytes)
     words = []
-    for i in range(len(b)/4):
+    for i in range(0, len(b), 4):
         value = b[i]
         value = (value << 8) | b[i+1]
         value = (value << 8) | b[i+2]
@@ -49,7 +49,7 @@ def toUint8Array(words):
     return b
 
 def H(size, password, salt):
-    return PBKDF2(password, salt).read(size)
+    return PBKDF2(password, salt, iterations=1, digestmodule=SHA256).read(size)
 
 def NoelKDF_SimpleHashPassword(hashsize, password, salt, memsize):
     hash = H(hashsize, password, salt)
@@ -69,7 +69,7 @@ def NoelKDF_UpdatePasswordHash(hash, memsize, oldGarlic, newGarlic, blocksize, p
 
 def NoelKDF(hash, memsize, startGarlic, stopGarlic, blocksize, parallelism, repetitions):
     wordHash = toUint32Array(hash)
-    memlen = memsize/4
+    memlen = (1 << 20)*memsize/4
     blocklen = blocksize/4
     numblocks = memlen/(2*parallelism*blocklen)
     memlen = 2*parallelism*numblocks*blocklen
@@ -88,7 +88,9 @@ def NoelKDF(hash, memsize, startGarlic, stopGarlic, blocksize, parallelism, repe
 
 def hashWithoutPassword(p, wordHash, mem, blocklen, numblocks):
     start = 2*p*numblocks*blocklen
-    mem[start : start+blocklen] = toUint32Array(H(blocklen*4, str(toUint8Array(wordHash)), str(toUint8(p))))
+    threadKey = toUint32Array(H(blocklen*4, str(toUint8Array(wordHash)), str(toUint8(p))))
+    for i in range(blocklen):
+        mem[start + i] = threadKey[i]
     value = 1
     mask = 1
     prevAddr = start
@@ -145,6 +147,5 @@ def xorIntoHash(wordHash, mem, blocklen, numblocks, parallelism):
             wordHash[i] ^= mem[pos+i]
 
 #import pdb; pdb.set_trace()
-salt = os.urandom(16)
-hash = NoelKDF_SimpleHashPassword(32, "password", salt, 1 << 20)
+hash = NoelKDF_SimpleHashPassword(32, "password", "salt", 10)
 print toHex(str(hash))

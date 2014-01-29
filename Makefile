@@ -1,5 +1,5 @@
 #CFLAGS=-O2 -std=c99 -m64 -W -Wall
-CFLAGS=-O2 -std=c99 -m64 -W -Wall
+CFLAGS=-g -std=c99 -m64 -W -Wall
 
 all: noelkdf-ref noelkdf memorycpy
 
