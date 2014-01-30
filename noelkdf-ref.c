@@ -22,10 +22,10 @@ static void dumpMemory(uint32 *mem, uint32 memorySize);
 static bool verifyParameters(uint32 hashSize, uint32 passwordSize, uint32 saltSize, uint32 memSize,
         uint32 startGarlic, uint32 stopGarlic, uint32 dataSize, uint32 blockSize, uint32 parallelism,
         uint32 repetitions) {
-    if(hashSize > 256 || hashSize < 4 || (hashSize & 0x3) || passwordSize > 256 ||
-            passwordSize == 0 || blockSize < 4 || blockSize & 0x3 || saltSize > 256  || saltSize == 0 ||
+    if(hashSize > 1024 || hashSize < 4 || (hashSize & 0x3) || passwordSize > 1024 ||
+            passwordSize == 0 || blockSize < 4 || blockSize & 0x3 || saltSize > 1024  || saltSize == 0 ||
             memSize == 0 || memSize > 1 << 30 || startGarlic > stopGarlic || stopGarlic > 30 ||
-            dataSize > 256 || blockSize > 1 << 30 ||
+            dataSize > 1024 || blockSize > 1 << 30 ||
             ((uint64)memSize << 18) < (uint64)blockSize*parallelism || parallelism == 0 ||
             parallelism > 1 << 20 || repetitions == 0 || repetitions > 1 << 30) {
         return false;
