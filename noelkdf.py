@@ -72,8 +72,8 @@ def NoelKDF(hash, memsize, startGarlic, stopGarlic, blocksize, parallelism, repe
     memlen = (1 << 20)*memsize/4
     blocklen = blocksize/4
     numblocks = memlen/(2*parallelism*blocklen)
-    memlen = 2*parallelism*numblocks*blocklen
-    mem = [0 for _ in range(memlen)]
+    adjMemlen = 2*parallelism*numblocks*blocklen
+    mem = [0 for _ in range((1 << stopGarlic)*adjMemlen)]
     for i in range(startGarlic, stopGarlic+1):
         value = 0
         for p in range(parallelism):

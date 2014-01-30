@@ -12,4 +12,4 @@
 #     -d              -- Write to stdout dieharder input.  Use like:
 #                        dieharder -a -g 202 -f foo
 
-time ./noelkdf -g 0 -m 16 -r 64 -t 1 -b 64
+time ./noelkdf-ref -g 0 -m 3 -r 4 -t 1 -b 64

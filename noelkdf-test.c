@@ -59,8 +59,8 @@ void PHC_test()
   int i;
   uint8_t j = 0;
 
-  for(i=0; i< 256; i++)test_output((uint8_t *) &i, 1, &j, 1, NULL ,0, 10, 32);
-  for(i=0; i< 256; i++)test_output(&j, 1, (uint8_t *) &i, 1, NULL ,0, 10, 32);
+  for(i=0; i< 256; i++)test_output((uint8_t *) &i, 1, &j, 1, NULL ,0, 0, 32);
+  for(i=0; i< 256; i++)test_output(&j, 1, (uint8_t *) &i, 1, NULL ,0, 0, 32);
 }
 
 /*******************************************************************/
@@ -72,7 +72,7 @@ int main()
   simpletest("password", "salt", "data", 10);
 
   simpletest("passwordPASSWORDpassword",
-	     "saltSALTsaltSALTsaltSALTsaltSALTsalt","", 10);
+	     "saltSALTsaltSALTsaltSALTsaltSALTsalt","", 0);
 
 
   PHC_test();
