@@ -23,7 +23,7 @@ static bool verifyParameters(uint32 hashSize, uint32 passwordSize, uint32 saltSi
         uint32 startGarlic, uint32 stopGarlic, uint32 dataSize, uint32 blockSize, uint32 parallelism,
         uint32 repetitions) {
     if(hashSize > 256 || hashSize < 4 || (hashSize & 0x3) || passwordSize > 256 ||
-            passwordSize == 0 || blockSize < 4 || blockSize & 0x3 || saltSize > 256  || saltSize < 4 ||
+            passwordSize == 0 || blockSize < 4 || blockSize & 0x3 || saltSize > 256  || saltSize == 0 ||
             memSize == 0 || memSize > 1 << 30 || startGarlic > stopGarlic || stopGarlic > 30 ||
             dataSize > 256 || blockSize > 1 << 30 ||
             ((uint64)memSize << 18) < (uint64)blockSize*parallelism || parallelism == 0 ||
@@ -89,11 +89,11 @@ static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGa
     uint32 hashlen = hashSize/sizeof(uint32);
     uint32 wordHash[hashlen];
     be32dec_vect(wordHash, hash, hashSize);
-    uint32 memlen = (1 << 20)*memSize/sizeof(uint32);
+    uint64 adjMemlen = (1 << 20)*memSize/sizeof(uint32);
     uint32 blocklen = blockSize/sizeof(uint32);
-    uint32 numblocks = memlen/(2*parallelism*blocklen);
-    memlen = 2*parallelism*numblocks*blocklen;
-    uint32 *mem = (uint32 *)malloc(memlen*sizeof(uint32));
+    uint32 numblocks = adjMemlen/(2*parallelism*blocklen);
+    adjMemlen = 2*parallelism*(uint64)numblocks*blocklen;
+    uint32 *mem = (uint32 *)malloc((1 << stopGarlic)*adjMemlen*sizeof(uint32));
     if(mem == NULL) {
         return false;
     }
