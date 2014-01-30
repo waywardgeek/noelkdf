@@ -13,12 +13,13 @@ License
 
 I, Bill Cox, wrote this code in January of 2014, and place this code into the public
 domain.  There are no hidden back-doors or intentional weaknesses, and I believe it
-violates no patents.  I will file no patents on any material in this project.  I have
-included sha.c and sha.h which I copied from the scrypt project, and which is available
-through the BSD license.
+violates no patents.  I will file no patents on any material in this project.
+
+NoelKDF includes sha.c and sha.h which I copied from the scrypt source code, and which is
+released under the BSD license, and noelkdf-test.c was copied from Catena's
+catena_test_vectors.c and is released under the MIT license.
 
 TODO
 ----
 
 Write automatic parameter picker
-Write test vector generator.  Copy from Catena as a staring point?
