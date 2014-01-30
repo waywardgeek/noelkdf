@@ -4,6 +4,7 @@
 
 #include <stdint.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include "noelkdf.h"
@@ -29,9 +30,12 @@ void test_output(const uint8_t *pwd,   const uint32_t pwdlen,
 {
   uint8_t hash[hashlen];
 
-  NoelKDF_HashPassword(hash, hashlen, (uint8_t *)pwd, pwdlen,
-        (uint8_t *)salt, saltlen, 128, garlic, (uint8_t *)data, datalen,
-        4096, 1, 1, false);
+  if(!NoelKDF_HashPassword(hash, hashlen, (uint8_t *)pwd, pwdlen,
+        (uint8_t *)salt, saltlen, 1, garlic, (uint8_t *)data, datalen,
+        4096, 1, 1, false)) {
+      fprintf(stderr, "Password hashing failed!\n");
+      exit(1);
+  }
 
   print_hex("Password: ",pwd, pwdlen);
   print_hex("Salt: ",salt, saltlen);
