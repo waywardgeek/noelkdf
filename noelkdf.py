@@ -3,7 +3,7 @@ from Crypto.Hash import SHA256
 import os
 
 def toHex(s):
-    return ":".join("{0:x}".format(ord(c)) for c in s)
+    return "".join("{0:02X}".format(ord(c)) for c in s)
 
 def toUint32Array(bytes):
     b = bytearray(bytes)
