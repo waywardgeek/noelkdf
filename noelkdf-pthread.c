@@ -245,13 +245,16 @@ static void *hashWithPassword(void *contextPtr) {
 static inline uint32 hashBlocks(uint32 value, uint32 *mem, uint32 blocklen, uint32 fromAddr,
         uint32 toAddr, uint32 repetitions) {
     uint32 prevAddr = toAddr - blocklen;
+    uint32 i;
     uint32 r;
-    for(r = 0; r < repetitions; r++) {
-        uint32 j;
-        for(j = 0; j < blocklen; j++) {
-            value = value*(mem[prevAddr + j] | 3) + mem[fromAddr + j];
-            mem[toAddr + j] = value;
+    for(r = 1; r < repetitions; r++) {
+        for(i = 0; i < blocklen; i++) {
+            value = value*(mem[prevAddr + i] | 3) + mem[fromAddr + i];
         }
+    }
+    for(i = 0; i < blocklen; i++) {
+        value = value*(mem[prevAddr + i] | 3) + mem[fromAddr + i];
+        mem[toAddr + i] = value;
     }
     return value;
 }

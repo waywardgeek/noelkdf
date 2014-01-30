@@ -16,21 +16,6 @@ def toUint32Array(bytes):
         words.append(value)
     return words
 
-def toUint8(word):
-    b3 = word & 0xff
-    word >>= 8
-    b2 = word & 0xff
-    word >>= 8
-    b1 = word & 0xff
-    word >>= 8
-    b0 = word & 0xff
-    b = []
-    b.append(b0)
-    b.append(b1)
-    b.append(b2)
-    b.append(b3)
-    return bytearray(b)
-
 def toUint8Array(words):
     b = bytearray()
     for i in range(len(words)):
@@ -87,7 +72,7 @@ def NoelKDF(hash, memsize, startGarlic, stopGarlic, blocksize, parallelism, repe
 
 def hashWithoutPassword(p, wordHash, mem, blocklen, numblocks, repetitions):
     start = 2*p*numblocks*blocklen
-    threadKey = toUint32Array(H(blocklen*4, str(toUint8Array(wordHash)), str(toUint8(p))))
+    threadKey = toUint32Array(H(blocklen*4, str(toUint8Array(wordHash)), str(toUint8Array([p]))))
     for i in range(blocklen):
         mem[start + i] = threadKey[i]
     value = 1
