@@ -131,5 +131,5 @@ def bitReverse(value, mask):
 
 #import pdb; pdb.set_trace()
 #hash = NoelKDF_SimpleHashPassword(32, "password", "salt", 1)
-hash = NoelKDF_HashPassword(32, "password", "salt", 3, 0, None, 64, 1, 4)
+hash = NoelKDF_HashPassword(32, "password", "salt", 3, 0, None, 64, 2, 4)
 print toHex(str(hash))
