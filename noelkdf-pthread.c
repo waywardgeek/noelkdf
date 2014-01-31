@@ -11,8 +11,8 @@ static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGa
         uint32 blockSize, uint32 parallelism, uint32 repetitions, bool printDieharderData);
 static void *hashWithoutPassword(void *contextPtr);
 static void *hashWithPassword(void *contextPtr);
-static inline uint32 hashBlocks(uint32 value, uint32 *mem, uint32 blocklen, uint32 fromAddr,
-        uint32 toAddr, uint32 repetitions);
+static inline uint32 hashBlocks(uint32 value, uint32 *mem, uint32 blocklen, uint64 fromAddr,
+        uint64 toAddr, uint32 repetitions);
 static void xorIntoHash(uint32 *wordHash, uint32 hashlen, uint32 *mem, uint32 blocklen,
         uint32 numblocks, uint32 parallelism);
 static uint32 bitReverse(uint32 value, uint32 mask);
@@ -186,7 +186,7 @@ static void *hashWithoutPassword(void *contextPtr) {
     uint8 salt[sizeof(uint32)];
     be32enc(salt, p);
     H(threadKey, blocklen*sizeof(uint32), hash, hashSize, salt, sizeof(uint32));
-    be32dec_vect(mem, threadKey, blocklen*sizeof(uint32));
+    be32dec_vect(mem + start, threadKey, blocklen*sizeof(uint32));
     uint32 value = 1;
     uint32 mask = 1;
     uint64 toAddr = start + blocklen;
@@ -199,7 +199,7 @@ static void *hashWithoutPassword(void *contextPtr) {
         if(reversePos + mask < i) {
             reversePos += mask;
         }
-        uint64 fromAddr = start + blocklen*reversePos;
+        uint64 fromAddr = start + (uint64)blocklen*reversePos;
         value = hashBlocks(value, mem, blocklen, fromAddr, toAddr, repetitions);
         toAddr += blocklen;
     }
@@ -229,7 +229,7 @@ static void *hashWithPassword(void *contextPtr) {
         uint32 distance = (i + numblocks - 1)*v3 >> 32;
         uint64 fromAddr;
         if(distance < i) {
-            fromAddr = start + (i - 1 - distance)*blocklen;
+            fromAddr = start + (i - 1 - distance)*(uint64)blocklen;
         } else {
             uint32 q = (p + i) % parallelism;
             uint32 b = numblocks - 1 - (distance - i);
@@ -242,9 +242,9 @@ static void *hashWithPassword(void *contextPtr) {
 }
 
 // Hash three blocks together with a multiplication latency bound loop
-static inline uint32 hashBlocks(uint32 value, uint32 *mem, uint32 blocklen, uint32 fromAddr,
-        uint32 toAddr, uint32 repetitions) {
-    uint32 prevAddr = toAddr - blocklen;
+static inline uint32 hashBlocks(uint32 value, uint32 *mem, uint32 blocklen, uint64 fromAddr,
+        uint64 toAddr, uint32 repetitions) {
+    uint64 prevAddr = toAddr - blocklen;
     uint32 i;
     uint32 r;
     for(r = 1; r < repetitions; r++) {
