@@ -6,8 +6,10 @@ class Pebble
 
 class Location array
     uint32 numPointers
+    uint32 recomputations
     uint8 useCount
     bool fixed
+    bool visited
 
 class Group
     uint32 availablePebbles

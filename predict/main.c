@@ -232,9 +232,11 @@ static void dumpGraph(void) {
             }
         }
         if(peLocationGetLocation(location) == peLocationNull) {
-            printf("%c %c n%-17u %u pointers\n", c, l, pos, peLocationGetNumPointers(location));
+            printf("%c %c n%-17u %u pointers %u\n", c, l, pos,
+                peLocationGetNumPointers(location), peLocationGetRecomputations(location));
         } else {
-            printf("%c %c n%-6u -> n%-6u %u pointers\n", c, l, pos, findPrevPos(pos), peLocationGetNumPointers(location));
+            printf("%c %c n%-6u -> n%-6u %u pointers %u\n", c, l, pos, findPrevPos(pos),
+                peLocationGetNumPointers(location), peLocationGetRecomputations(location));
         }
     }
 }
@@ -475,7 +477,7 @@ static void setNumPointers(peGraphType type) {
 }
 
 // Set the fixed locations.
-static void setFixedNodes(void) {
+static void setFixedNodes(bool computePenalty) {
     uint32 i;
     bool fixNextLocation = false;
     for(i = 0; i < peMemLength; i++) {
@@ -484,8 +486,9 @@ static void setFixedNodes(void) {
             // Fix the position of pebbles every so often to see if it helps.
             fixNextLocation = true;
         }
-        if(peLocationGetNumPointers(location) > 0) {
-            if(peLocationGetRootIndex(peLocationGetFirstLocation(location)) - i <= peMinEdgeLength) {
+        if(peLocationGetNumPointers(location) > 0 || computePenalty) {
+            peLocation prevLocation = peLocationGetFirstLocation(location);
+            if(prevLocation != peLocationNull && peLocationGetRootIndex(prevLocation) - i <= peMinEdgeLength) {
                 fixNextLocation = true;
             }
             if(peLocationGetNumPointers(location) >= peMaxInDegree) {
@@ -526,8 +529,52 @@ static void distributePebbles(void) {
     printf("Total pebbles: %u out of %u (%.1f%%)\n", total, peMemLength, total*100.0/peMemLength);
 }
 
+// Find the size of the uncovered DAG starting at pos.
+static uint32 findDAGSize(uint32 pos) {
+    peLocation location = peRootGetiLocation(peTheRoot, pos);
+    if(peLocationFixed(location) || peLocationVisited(location)) {
+        return 0;
+    }
+    uint32 numPebbles = 1;
+    peLocationSetVisited(location, true);
+    peLocationArrayAppendLocation(peVisitedLocations, location);
+    if(pos > 0) {
+        uint32 prevPos = findPrevPos(pos);
+        numPebbles += findDAGSize(prevPos);
+        numPebbles += findDAGSize(pos - 1);
+    }
+    return numPebbles;
+}
+
+// Find the average size of the sub-DAG that has to be recomputed when I randomly ask for
+// values from memory.
+static void computeAveragePenalty(void) {
+    uint64 total = 0;
+    uint32 i;
+    for(i = 0; i < peMemLength; i++) {
+        peLocation location = peRootGetiLocation(peTheRoot, i);
+        if(!peLocationFixed(location)) {
+            uint32 recomputations = findDAGSize(i);
+            peLocationSetRecomputations(location, recomputations);
+            total += recomputations;
+            peForeachLocationArrayLocation(peVisitedLocations, location) {
+                peLocationSetVisited(location, false);
+            } peEndLocationArrayLocation;
+            peLocationArraySetUsedLocation(peVisitedLocations, 0);
+        }
+    }
+    uint32 numPebbles = 0;
+    for(i = 0; i < peMemLength; i++) {
+        if(peLocationFixed(peRootGetiLocation(peTheRoot, i))) {
+            numPebbles++;
+        }
+    }
+    printf("Total pebbles: %f%%\n", numPebbles*100.0/peMemLength);
+    printf("Recalculation penalty is %fX\n", (total + peMemLength)/(double)peMemLength);
+}
+
 // Test the type of graph.
-static void runTest(peGraphType type, bool dumpGraphs) {
+static void runTest(peGraphType type, bool dumpGraphs, bool computePenalty) {
     peTheRoot = peRootAlloc();
     peVisitedLocations = peLocationArrayAlloc();
     peRootAllocLocations(peTheRoot, peMemLength);
@@ -539,9 +586,13 @@ static void runTest(peGraphType type, bool dumpGraphs) {
     printf("========= Testing %s\n", getTypeName(type));
     peCurrentType = type;
     setNumPointers(type);
-    setFixedNodes();
-    distributePebbles();
-    pebbleGraph();
+    setFixedNodes(computePenalty);
+    if(computePenalty) {
+        computeAveragePenalty();
+    } else {
+        distributePebbles();
+        pebbleGraph();
+    }
     if(dumpGraphs) {
         dumpGraph();
     }
@@ -553,6 +604,7 @@ static void runTest(peGraphType type, bool dumpGraphs) {
 // Usage
 static void usage(void) {
     fprintf(stderr, "usage: pebble [OPTIONS] [DAG type]\n"
+        "    -c                -- compute average recomputation penalty\n"
         "    -d minDegree      -- fix pebbles on nodes with in degree >= minDegree\n"
         "    -g                -- dump graph\n"
         "    -l maxLength      -- fix pebbles pointed to by edge <= maxLength\n"
@@ -576,10 +628,13 @@ int main(int argc, char **argv) {
     peVerbose = false;
     peCatenaLambda = 3;
     peCatena3InFirstRow = false;
+    bool computePenalty = false;
 
     char c;
-    while((c = getopt(argc, argv, "d:gm:l:L:Mp:rs:t:v")) != -1) {
+    while((c = getopt(argc, argv, "cd:gm:l:L:Mp:rs:t:v")) != -1) {
         switch (c) {
+        case 'c':
+            computePenalty = true;
         case 'g':
             dumpGraphs = true;
             break;
@@ -627,11 +682,11 @@ int main(int argc, char **argv) {
         fprintf(stderr, "Too many parameters\n");
         usage();
     } else if(optind + 1 == argc) {
-        runTest(parseType(argv[optind]), dumpGraphs);
+        runTest(parseType(argv[optind]), dumpGraphs, computePenalty);
     } else {
         uint32 type;
         for(type = 0; type <= REVERSE; type++) {
-            runTest(type, dumpGraphs);
+            runTest(type, dumpGraphs, computePenalty);
         }
     }
     peDatabaseStop();

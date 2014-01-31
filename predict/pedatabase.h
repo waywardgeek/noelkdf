@@ -322,8 +322,10 @@ utInlineC pePebble pePebbleAlloc(void) {
 ----------------------------------------------------------------------------------------*/
 struct peLocationFields {
     uint32 *NumPointers;
+    uint32 *Recomputations;
     uint8 *UseCount;
     uint8 *Fixed;
+    uint8 *Visited;
     peRoot *Root;
     uint32 *RootIndex;
     pePebble *Pebble;
@@ -339,10 +341,14 @@ void peLocationAllocMore(void);
 void peLocationCopyProps(peLocation peOldLocation, peLocation peNewLocation);
 utInlineC uint32 peLocationGetNumPointers(peLocation Location) {return peLocations.NumPointers[peLocation2ValidIndex(Location)];}
 utInlineC void peLocationSetNumPointers(peLocation Location, uint32 value) {peLocations.NumPointers[peLocation2ValidIndex(Location)] = value;}
+utInlineC uint32 peLocationGetRecomputations(peLocation Location) {return peLocations.Recomputations[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetRecomputations(peLocation Location, uint32 value) {peLocations.Recomputations[peLocation2ValidIndex(Location)] = value;}
 utInlineC uint8 peLocationGetUseCount(peLocation Location) {return peLocations.UseCount[peLocation2ValidIndex(Location)];}
 utInlineC void peLocationSetUseCount(peLocation Location, uint8 value) {peLocations.UseCount[peLocation2ValidIndex(Location)] = value;}
 utInlineC uint8 peLocationFixed(peLocation Location) {return peLocations.Fixed[peLocation2ValidIndex(Location)];}
 utInlineC void peLocationSetFixed(peLocation Location, uint8 value) {peLocations.Fixed[peLocation2ValidIndex(Location)] = value;}
+utInlineC uint8 peLocationVisited(peLocation Location) {return peLocations.Visited[peLocation2ValidIndex(Location)];}
+utInlineC void peLocationSetVisited(peLocation Location, uint8 value) {peLocations.Visited[peLocation2ValidIndex(Location)] = value;}
 utInlineC peRoot peLocationGetRoot(peLocation Location) {return peLocations.Root[peLocation2ValidIndex(Location)];}
 utInlineC void peLocationSetRoot(peLocation Location, peRoot value) {peLocations.Root[peLocation2ValidIndex(Location)] = value;}
 utInlineC uint32 peLocationGetRootIndex(peLocation Location) {return peLocations.RootIndex[peLocation2ValidIndex(Location)];}
@@ -386,8 +392,10 @@ utInlineC peLocation peLocationAllocRaw(void) {
 utInlineC peLocation peLocationAlloc(void) {
     peLocation Location = peLocationAllocRaw();
     peLocationSetNumPointers(Location, 0);
+    peLocationSetRecomputations(Location, 0);
     peLocationSetUseCount(Location, 0);
     peLocationSetFixed(Location, 0);
+    peLocationSetVisited(Location, 0);
     peLocationSetRoot(Location, peRootNull);
     peLocationSetRootIndex(Location, UINT32_MAX);
     peLocationSetPebble(Location, pePebbleNull);
