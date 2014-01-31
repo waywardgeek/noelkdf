@@ -123,8 +123,8 @@ static uint32 bitReverse(uint32 value, uint32 rowLength) {
 static uint32 findCatenaPos(uint32 pos) {
     uint32 rowLength = peMemLength/(peCatenaLambda + 1); // Note: peMemLength/lambda must be power of 2
     uint32 row = pos/rowLength;
-    if(row == 0 && rowLength >= 16) {
-        if(!peCatena3InFirstRow) {
+    if(row == 0) {
+        if(!peCatena3InFirstRow || rowLength < 8) {
             return UINT32_MAX;
         }
         rowLength /= 4; // Build a Catena-3 graph in the first row
