@@ -1,5 +1,5 @@
-#CFLAGS=-O2 -std=c99 -m64 -W -Wall
-CFLAGS=-g -std=c99 -m64 -W -Wall
+CFLAGS=-O2 -std=c99 -m64 -W -Wall
+#CFLAGS=-g -std=c99 -m64 -W -Wall
 
 all: noelkdf-ref noelkdf noelkdf-test
 
@@ -13,4 +13,4 @@ noelkdf-test: noelkdf-test.c noelkdf.h noelkdf-ref.c
 	gcc $(CFLAGS) noelkdf-test.c noelkdf-ref.c sha256.c -o noelkdf-test
 
 clean:
-	rm -f noelkdf-ref noelkdf
+	rm -f noelkdf-ref noelkdf noelkdf-test
