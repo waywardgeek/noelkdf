@@ -1,0 +1,10342 @@
+Password: 
+70 61 73 73 77 6f 72 64      8 (octets)
+
+Salt: 
+73 61 6c 74      4 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  1
+
+Output: 
+d1 40 d1 3e 92 1c 70 ec 
+ae 98 2c 3c 59 04 15 99 
+b0 31 e5 c8 45 18 bb bf 
+27 70 eb ee a6 45 c4 78 
+7e eb a2 0b ec 31 e0 3a 
+32 bb 3f 8c 1c 8f e5 22 
+01 e6 af 76 e7 60 c9 47 
+ec 60 5b c8 71 0d 49 1c      64 (octets)
+
+
+
+
+Password: 
+70 61 73 73 77 6f 72 64      8 (octets)
+
+Salt: 
+73 61 6c 74      4 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  10
+
+Output: 
+b9 bd 1e 62 4b 5d 52 ca 
+6b e4 64 91 3d d8 41 13 
+bc 9a 31 6f 3f 87 67 85 
+87 db e9 14 6d 7b 92 cf 
+67 ec 77 c5 a5 43 fc cf 
+e2 2e 61 4b 1c 71 79 d1 
+3d e0 e1 8c d9 56 fb 86 
+d1 96 83 33 f5 94 93 2b      64 (octets)
+
+
+
+
+Password: 
+70 61 73 73 77 6f 72 64      8 (octets)
+
+Salt: 
+73 61 6c 74      4 (octets)
+
+Associated data:
+64 61 74 61      4 (octets)
+
+(Min-)Garlic:  10
+
+Output: 
+35 90 2e 7b 31 eb be 27 
+52 f7 dc 46 27 12 5c 55 
+71 87 e7 1b a0 15 54 c6 
+c9 02 e1 0b 21 0d 39 de 
+be 73 37 20 a9 3d 7e f7 
+11 25 bf 14 53 d4 f4 ae 
+c3 21 6d 8a da b2 e9 20 
+1f ea d5 03 1a 35 69 92      64 (octets)
+
+
+
+
+Password: 
+70 61 73 73 77 6f 72 64 
+50 41 53 53 57 4f 52 44 
+70 61 73 73 77 6f 72 64      24 (octets)
+
+Salt: 
+73 61 6c 74 53 41 4c 54 
+73 61 6c 74 53 41 4c 54 
+73 61 6c 74 53 41 4c 54 
+73 61 6c 74 53 41 4c 54 
+73 61 6c 74      36 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b8 46 41 33 bb e9 78 e0 
+fb 96 6a 8b 68 63 e0 42 
+03 43 e4 20 53 b4 7b 27 
+5e 3a db 1a f8 75 6f 34 
+a2 b1 2b a6 e0 be f0 c7 
+77 0d f2 33 68 23 fb 52 
+d5 e5 24 0b 0f a6 79 e1 
+13 40 fe a7 38 23 5e 51      64 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+50 56 7c fa 84 96 2b 59 
+94 c4 f3 0a b0 14 33 95 
+b7 84 d5 a2 dc 66 44 44 
+af 11 f5 1b 74 70 a9 ce      32 (octets)
+
+
+
+
+Password: 
+01      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d6 63 e1 06 2b ac 76 e1 
+e4 69 df df 26 a5 b2 08 
+51 d1 35 0c 89 b6 dd 2e 
+d8 24 bf de b1 09 8e 15      32 (octets)
+
+
+
+
+Password: 
+02      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+91 67 6a a2 b5 4f 33 67 
+f3 e2 4c 3d 3f 03 cc 45 
+56 2e 45 50 d9 64 0f e5 
+ea 39 c9 03 ba a3 ea d0      32 (octets)
+
+
+
+
+Password: 
+03      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0c cb 5e 8a 11 59 f4 b6 
+1d f9 43 c5 dc 9d 14 ec 
+57 c3 e8 2a e3 f0 84 d2 
+22 ad e3 47 34 e1 57 4a      32 (octets)
+
+
+
+
+Password: 
+04      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+fe 3a 21 f3 40 95 e2 89 
+b9 3e b5 08 49 d4 ee 31 
+74 33 bf 1c c0 f1 ed 84 
+02 8d d3 d9 5f ab 3d b6      32 (octets)
+
+
+
+
+Password: 
+05      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+25 73 41 09 67 34 8a 58 
+88 8d 48 35 4f dd 52 a2 
+81 0f 01 bd ec 07 8c 4f 
+fd 6f e8 b9 98 68 80 5d      32 (octets)
+
+
+
+
+Password: 
+06      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d0 a3 dd c8 5f bd 19 4e 
+ff 62 f5 a7 f6 ad c8 0e 
+be 86 03 85 27 6c a2 14 
+36 6c e4 6e 83 9e a5 3f      32 (octets)
+
+
+
+
+Password: 
+07      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a3 a5 47 4f 6b 71 7a cf 
+ed ef c7 11 e2 9f dc de 
+f8 4f a6 ed 0e b7 fd 97 
+9e 6a 0b 23 ed ff f0 e4      32 (octets)
+
+
+
+
+Password: 
+08      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d5 2b c1 92 d2 a2 77 14 
+fa b7 04 85 78 0d ba fc 
+0e ec 98 4f d0 55 9d ae 
+3a 91 5c 2d ad 0f fe 9f      32 (octets)
+
+
+
+
+Password: 
+09      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+80 8a 19 18 10 c8 cd d6 
+36 80 5f fe 9b 2f c0 19 
+a1 0a 4e 37 90 a5 20 63 
+3b a5 f0 df 84 66 1f 4c      32 (octets)
+
+
+
+
+Password: 
+0a      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+21 98 c2 3a 77 42 ea 5f 
+a2 87 84 5c 38 1a 4f cb 
+87 2e d3 29 7a 94 7f 70 
+95 2b 42 eb 75 38 86 61      32 (octets)
+
+
+
+
+Password: 
+0b      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+14 d7 56 f0 1a 26 58 17 
+ea 28 22 6d 12 ab d7 6a 
+40 09 50 eb 75 d6 11 c2 
+df 28 da bc b7 10 02 f1      32 (octets)
+
+
+
+
+Password: 
+0c      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f9 8b ad 95 a9 77 b7 3e 
+10 81 fa 7b 22 d0 6f b1 
+46 76 9a e9 ea 2c e4 1c 
+3a 18 72 ec ee 7c 04 00      32 (octets)
+
+
+
+
+Password: 
+0d      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+de 8f 1f c2 f1 4b c9 29 
+70 97 12 e2 c6 e5 8d 7c 
+e5 cf 00 ca 22 f5 c9 df 
+9a 98 59 f0 c3 05 f1 a9      32 (octets)
+
+
+
+
+Password: 
+0e      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b6 cf c8 cf 99 db c7 bd 
+aa e4 84 ce 36 9c 8a b8 
+be 62 16 08 d2 b2 a7 9c 
+9a 65 15 11 1a 92 77 4d      32 (octets)
+
+
+
+
+Password: 
+0f      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+da 12 c8 f9 67 96 62 6d 
+3a b0 75 f3 c5 b4 f3 2b 
+3e 4d 2c 0d f3 30 f5 c0 
+b8 c0 c6 1f 09 44 7b 07      32 (octets)
+
+
+
+
+Password: 
+10      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+81 7c 5d 96 0a 2f de 9e 
+41 b3 3c 3c 11 5d 6e 3e 
+62 68 bc 29 a0 25 9a 9d 
+9d ce 86 5f b2 e5 9a d6      32 (octets)
+
+
+
+
+Password: 
+11      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+76 ed 0e 77 fd a4 65 bc 
+7c eb c7 dc 04 90 c1 0b 
+df 5e 41 8f 1f a0 26 70 
+a3 7e 5d cc dc 17 c0 b7      32 (octets)
+
+
+
+
+Password: 
+12      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+61 5a 58 28 63 0d f2 98 
+a7 13 12 db 76 ea ba 9e 
+24 0b a9 52 9b fb 59 03 
+2b e9 32 64 5c 05 1c 89      32 (octets)
+
+
+
+
+Password: 
+13      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+29 2b 66 e7 7a a1 6e ed 
+59 29 26 35 35 e6 35 c6 
+4a 0e 54 68 ff 1c 38 be 
+94 f8 fd 05 f1 f9 1a 7d      32 (octets)
+
+
+
+
+Password: 
+14      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+df 84 2c 9b a2 25 09 6e 
+e5 c8 ee de b1 b3 f4 f5 
+b9 fd b0 07 d0 32 1d 62 
+bb 68 70 28 c3 38 0f 03      32 (octets)
+
+
+
+
+Password: 
+15      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2b 47 b2 10 b0 e5 af 9c 
+3b 05 72 f2 23 4d 96 68 
+14 cf f0 ae 41 97 5d d3 
+be 3b 9a 7b d4 ce c8 1e      32 (octets)
+
+
+
+
+Password: 
+16      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d2 45 6b 0d 06 85 86 96 
+d9 26 fc ed 3e 67 e0 bb 
+0e 28 4d dd 6f 29 29 ea 
+4c ed 6e f7 e2 78 b2 97      32 (octets)
+
+
+
+
+Password: 
+17      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+7d 4c c1 78 91 5a c2 1b 
+23 20 c9 30 74 80 4f 1f 
+c7 72 e9 f8 11 31 d9 33 
+be cb d4 fc 9a b8 8a f9      32 (octets)
+
+
+
+
+Password: 
+18      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2c 35 a9 b9 a2 f0 ee 89 
+00 15 5b 67 0d 42 9b ed 
+36 1c 64 9a ca c7 7a 50 
+f7 7c 22 a6 e2 05 53 2e      32 (octets)
+
+
+
+
+Password: 
+19      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c4 39 d9 21 6f ce c2 47 
+01 24 a3 ba fd f6 52 68 
+e3 48 75 c9 57 b9 bc 41 
+ff ba 3f 1c 86 cf f9 5d      32 (octets)
+
+
+
+
+Password: 
+1a      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9b 68 ef 0b 3c 7c d1 e8 
+26 d4 62 73 d5 61 ab 84 
+46 d2 02 af 7a 11 04 67 
+bf 11 fe 3b d4 a9 5b 3a      32 (octets)
+
+
+
+
+Password: 
+1b      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+03 9a fd 7e 0a 49 ec c0 
+1b 2c 16 0c 3e e4 d6 c5 
+76 20 0f a7 8b d0 81 91 
+3f 30 65 df 8a 09 34 2a      32 (octets)
+
+
+
+
+Password: 
+1c      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b2 40 70 3c 3b 74 8c 52 
+b9 1f 90 ab dc 68 cb a4 
+43 eb f2 08 0a 12 d8 63 
+b8 52 af eb 8a 77 53 10      32 (octets)
+
+
+
+
+Password: 
+1d      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ef c9 5c b1 5e 76 5d 89 
+75 70 6c 18 02 db 79 a4 
+f3 21 7f 42 fb 4c a9 75 
+83 69 e6 94 bd b3 0e 5e      32 (octets)
+
+
+
+
+Password: 
+1e      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+47 53 ab 60 67 26 90 37 
+db d8 45 7a e2 02 91 43 
+f7 b7 05 a1 0e d7 82 e7 
+73 f4 91 08 94 d4 10 50      32 (octets)
+
+
+
+
+Password: 
+1f      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9c e7 14 c2 dc 07 c5 e8 
+14 86 79 3e c3 e7 d2 e9 
+ee 55 63 78 58 8e a6 91 
+f8 74 01 a1 8a b5 4c 6b      32 (octets)
+
+
+
+
+Password: 
+20      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ce da 45 9b 8f c2 a7 ec 
+4e 80 75 69 e9 b8 27 53 
+6a 0b 0c e6 61 5d 1b b9 
+2e a9 8a 8b 49 58 4b b5      32 (octets)
+
+
+
+
+Password: 
+21      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9c 86 60 50 cd 3d 76 6a 
+d3 ed c6 0a b5 b2 0b 17 
+eb 6a 57 29 ec 6a bf 3c 
+6b 77 1e 47 63 1f b5 05      32 (octets)
+
+
+
+
+Password: 
+22      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bc 27 02 89 4a 0a 24 a5 
+39 2d 4e 01 66 bf d5 2f 
+7b 05 f9 75 f2 96 49 c5 
+7e 3a 3d cf c8 d7 fc b2      32 (octets)
+
+
+
+
+Password: 
+23      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+db 8a b2 a1 5b d8 97 64 
+c5 59 da 32 bb 6e d1 3e 
+5b 0e 62 21 18 d4 2b e6 
+4f 15 01 53 b4 bf 59 34      32 (octets)
+
+
+
+
+Password: 
+24      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ce 2a 18 f4 ab 64 92 f0 
+7c f7 b6 c9 4f 48 f2 3a 
+55 51 a9 9c 91 08 d1 1d 
+1e ee 1a 65 56 cb 9c 96      32 (octets)
+
+
+
+
+Password: 
+25      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+fb 5a 94 13 7e 88 44 33 
+63 61 63 12 8f cb 89 84 
+21 02 11 59 32 bb ed 50 
+84 96 02 0e 8a e4 89 7f      32 (octets)
+
+
+
+
+Password: 
+26      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e7 58 26 b1 61 3b 66 19 
+a9 e6 4b 70 01 68 ea 06 
+93 6b 20 64 19 60 ed 8c 
+71 49 27 a5 e1 f4 97 61      32 (octets)
+
+
+
+
+Password: 
+27      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+1a f6 2e a8 61 48 f0 bf 
+93 64 61 ea 3f 30 8f 05 
+3b 4b 02 6c 82 b9 f9 0d 
+57 83 c8 24 28 33 e3 85      32 (octets)
+
+
+
+
+Password: 
+28      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+af 2a 3e e2 0a e9 a9 67 
+75 1e 1c 5a 5e 94 97 43 
+ce 4c 02 8f f8 1b 08 cb 
+e1 31 8c b2 c1 8e 99 9c      32 (octets)
+
+
+
+
+Password: 
+29      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0a ad c5 7c 85 5c 9f 28 
+d3 84 1d 79 11 67 75 2e 
+e8 ac 64 c3 30 d2 a9 b9 
+ad 37 1b 5b c1 d1 76 c2      32 (octets)
+
+
+
+
+Password: 
+2a      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b7 7b b7 14 04 99 6d 1f 
+16 d6 2b 58 4b b8 81 03 
+ee 87 72 73 04 bd 4f 88 
+1f 6c 35 3c 43 ee 3f cd      32 (octets)
+
+
+
+
+Password: 
+2b      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+04 cc 4a 91 c1 cd dc a1 
+e4 e7 71 e9 a3 18 e0 26 
+a8 56 8c c5 fd 81 bd dc 
+cf 75 14 ce 60 bb df 2f      32 (octets)
+
+
+
+
+Password: 
+2c      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b7 10 ca a9 f6 24 84 96 
+02 7c 0d 6b 51 f0 e5 29 
+44 c8 ad 1a 5a b0 ad d1 
+70 8d 33 bc 65 a4 8a f9      32 (octets)
+
+
+
+
+Password: 
+2d      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c0 fc 02 0a e8 2e 38 e6 
+ac 80 80 ef 30 96 57 74 
+fc fd 60 b3 03 db 89 62 
+29 8f 05 08 c3 cb 7f 7e      32 (octets)
+
+
+
+
+Password: 
+2e      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ba 51 6d 94 b1 cb 95 3b 
+ca f8 97 f4 0a 89 26 19 
+22 68 38 42 f4 ba a9 e4 
+06 e8 85 67 09 b2 94 23      32 (octets)
+
+
+
+
+Password: 
+2f      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+22 92 e4 3f bf 11 a0 4b 
+66 7b 50 d0 a7 3d b0 03 
+30 20 69 76 21 04 60 89 
+57 98 c0 cc bd f2 19 a1      32 (octets)
+
+
+
+
+Password: 
+30      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ad 13 72 f1 b3 2e 70 b7 
+fd 5a 3a 9d f5 60 2d b1 
+64 b2 47 18 c1 6e 81 25 
+36 17 60 9e 41 0d 12 c2      32 (octets)
+
+
+
+
+Password: 
+31      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+fc c1 f9 46 ea 39 67 93 
+4b b3 0e c1 dd 7d 21 80 
+0b 1f 75 3d c7 74 e6 58 
+50 d4 b0 47 1b 84 e2 ce      32 (octets)
+
+
+
+
+Password: 
+32      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a9 06 13 73 b8 9c 79 7b 
+f5 cd 1f e1 c1 21 8c b8 
+ea 03 c3 71 a3 97 63 a1 
+25 c7 9b 06 f9 51 c0 7f      32 (octets)
+
+
+
+
+Password: 
+33      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d8 51 e3 8f 20 c2 90 40 
+38 26 e6 ff 34 67 ce 43 
+c1 cd 02 36 b6 77 52 dd 
+45 65 f0 0a f4 db 68 0d      32 (octets)
+
+
+
+
+Password: 
+34      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+7a 41 f9 e5 91 66 71 58 
+ed f8 8d 4b ff 17 84 52 
+00 a7 c2 bb 0f 1a e1 59 
+24 ab 52 5f 09 85 b1 b2      32 (octets)
+
+
+
+
+Password: 
+35      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+91 79 15 58 80 c4 6e 96 
+5b cf 47 0b 85 e4 fb 49 
+41 28 86 f2 48 6d 96 05 
+f7 9d ab 59 47 55 64 8d      32 (octets)
+
+
+
+
+Password: 
+36      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+da dd 5a 78 16 fc bb 48 
+57 62 4e 72 b1 a9 a4 35 
+e8 65 f4 42 e3 9c 65 12 
+d1 76 63 ac 18 54 25 d0      32 (octets)
+
+
+
+
+Password: 
+37      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bb bc d2 8c 45 10 2f 57 
+35 b8 d6 fd 9b d9 96 96 
+e2 bd d2 40 30 46 26 91 
+c9 71 a6 3d fc 6f 73 8c      32 (octets)
+
+
+
+
+Password: 
+38      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8c 10 f8 ab 62 14 e4 04 
+82 3d 87 52 0c 11 82 e0 
+c7 b7 ff fc da 4a c6 4c 
+83 59 69 25 b0 7c 7d 87      32 (octets)
+
+
+
+
+Password: 
+39      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+6f 8e 63 c5 00 e7 bd 2e 
+35 73 5f ed 80 01 65 35 
+8b 9c 8e 9a 6b a5 d7 ec 
+35 53 2b af 79 3e 03 be      32 (octets)
+
+
+
+
+Password: 
+3a      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2c 3b a2 13 1e cb e1 85 
+78 46 df c8 a4 9c da 71 
+d9 4b ae ad 43 71 45 58 
+9a 7e 4c 4b 8c a6 1f 47      32 (octets)
+
+
+
+
+Password: 
+3b      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b3 f9 12 8a 70 16 4c 64 
+90 33 a6 40 36 98 d5 7f 
+23 89 de 5c 02 73 f6 80 
+60 b9 03 b4 27 e6 3f 62      32 (octets)
+
+
+
+
+Password: 
+3c      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b3 47 f8 ea 1e 01 92 2f 
+13 11 ec 5e 55 ea b5 fc 
+a0 f5 d5 65 04 56 ae bf 
+83 fd b1 62 b7 2e a0 18      32 (octets)
+
+
+
+
+Password: 
+3d      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+67 99 2b ef 99 9b 82 6b 
+09 ed 09 a9 d4 d4 35 1c 
+53 e7 69 af 24 8b 31 02 
+87 0a b3 68 f2 c8 f1 ce      32 (octets)
+
+
+
+
+Password: 
+3e      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3f 15 f7 56 4f d2 b7 78 
+20 1e 56 36 79 91 f8 a5 
+77 ae 0e 8e e8 6b 7c a5 
+0e 1c 9f 0c e6 87 d9 0f      32 (octets)
+
+
+
+
+Password: 
+3f      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e8 fb eb d2 81 8a a1 71 
+c6 4e cc 82 9f 77 93 75 
+85 ff 1e 6d 3e 38 22 b7 
+f7 f7 7a 8d e7 1e ae 6e      32 (octets)
+
+
+
+
+Password: 
+40      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c3 5d 23 77 17 5b 93 13 
+6b 0a cc df e9 65 c1 77 
+b3 91 4b 62 f3 b6 73 60 
+b8 65 41 32 34 47 78 11      32 (octets)
+
+
+
+
+Password: 
+41      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+5a 72 ad 3e 23 1e f2 ae 
+9a d6 c6 b5 ce 50 33 04 
+ef 93 60 cb d5 95 ce d6 
+0c f1 d8 66 aa 87 e1 39      32 (octets)
+
+
+
+
+Password: 
+42      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+30 5e ac c4 04 94 05 4b 
+29 4b 89 22 aa aa ff 3e 
+d5 24 fe 73 6f 9d 43 f3 
+73 ff 04 2c fe 03 2e 32      32 (octets)
+
+
+
+
+Password: 
+43      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+fa ae 79 ac 0e 55 41 cc 
+ec fb f4 b8 f5 1f 89 e9 
+3d d8 a2 a7 f8 be 2f cb 
+ca 47 2f c4 4b 98 14 1e      32 (octets)
+
+
+
+
+Password: 
+44      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f2 1b 3d 78 3d a5 5d a0 
+ca 47 55 d8 78 85 99 88 
+4c c0 15 fc f5 82 f4 ab 
+d8 d4 0a 5a 33 e6 90 cc      32 (octets)
+
+
+
+
+Password: 
+45      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+10 c5 99 8f ad 2e 1f c8 
+74 28 90 f3 a6 93 f1 43 
+0b 35 ad e8 ee 38 85 43 
+6b eb dc f9 f8 a3 94 ed      32 (octets)
+
+
+
+
+Password: 
+46      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9b b3 7c cd ec 90 c9 24 
+61 b8 00 0b 1a 85 a4 26 
+18 99 ad b6 52 8b 5d 84 
+07 92 da 7e be 86 d7 01      32 (octets)
+
+
+
+
+Password: 
+47      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+04 9e 30 15 ee 8d 65 7e 
+3c 85 4c 95 79 e0 46 ee 
+da 47 a4 67 2d f5 64 7b 
+6b fc 2e a9 12 a2 85 54      32 (octets)
+
+
+
+
+Password: 
+48      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e6 06 21 f4 3f 2d 93 ff 
+3c 76 84 bc f4 ff f6 71 
+60 54 73 37 25 08 8b eb 
+ea 74 ac ef b3 22 a9 33      32 (octets)
+
+
+
+
+Password: 
+49      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ae 42 eb e3 85 d3 82 e0 
+79 67 e8 c3 c6 52 80 7d 
+fd 19 ee 32 d6 7d 6a c5 
+dd 85 5e 06 02 f8 0b b2      32 (octets)
+
+
+
+
+Password: 
+4a      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2a 96 07 62 ac eb 78 ad 
+6a 81 19 b7 d8 d7 80 d5 
+bf fe 74 cc 8b 50 c3 11 
+78 29 2d b9 9f ed ec e0      32 (octets)
+
+
+
+
+Password: 
+4b      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0c d2 2a 2d 6d 0e 94 a9 
+5f 29 c5 1a 10 66 cf 11 
+14 88 92 d9 3b ab 65 34 
+4f d6 4a f6 7e 94 d0 b0      32 (octets)
+
+
+
+
+Password: 
+4c      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+58 ca 09 83 cc 7a 74 3f 
+d2 7a c0 a9 04 88 c1 36 
+3d 37 24 2f da 89 97 eb 
+eb 80 97 fa b9 2d 6c 68      32 (octets)
+
+
+
+
+Password: 
+4d      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c4 cf b5 39 1d 0e d6 5e 
+64 2d 4f 0d b5 6b 5e c8 
+8f 88 4c 97 ba e2 a0 59 
+0f 58 02 3c 23 da d2 c9      32 (octets)
+
+
+
+
+Password: 
+4e      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2f 23 95 0d fb be 2d cd 
+ac ee e1 40 73 28 7d e4 
+c5 72 02 94 8d 57 a1 a3 
+a7 19 95 a5 80 13 f3 d9      32 (octets)
+
+
+
+
+Password: 
+4f      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8e 6e 31 d2 c8 0b 9c d4 
+bb ec 73 b4 36 33 97 d0 
+3c 4a 33 e0 bd e8 f8 b5 
+6d 66 b2 c4 91 d6 7e e2      32 (octets)
+
+
+
+
+Password: 
+50      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+86 31 e5 19 98 9e 43 3a 
+09 b5 25 72 2b 6c 43 b5 
+ee 0e 59 b7 0c 86 8d 70 
+99 ee 1b 4a 3f ad 4e ba      32 (octets)
+
+
+
+
+Password: 
+51      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ce fb bc 72 ba cf 44 57 
+81 de ab a8 f9 97 4b cc 
+0a 83 6d 7d 19 87 37 73 
+e5 c9 ed 26 e7 e8 ed 31      32 (octets)
+
+
+
+
+Password: 
+52      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4e 83 5d a0 e4 0f 6b 85 
+54 d2 ad b7 a4 5f de 3d 
+5a b4 67 45 89 39 72 4a 
+02 9a 24 97 c9 58 33 a2      32 (octets)
+
+
+
+
+Password: 
+53      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+01 4c 0a eb a5 ca 68 bd 
+25 80 ec 0f c1 b6 f2 41 
+3b dd 26 09 51 03 cd 9b 
+2a ff 60 00 9a 22 84 9a      32 (octets)
+
+
+
+
+Password: 
+54      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+6b 4a 74 71 ea 9d 21 b0 
+75 c6 f0 42 9b e7 e4 23 
+72 26 26 13 ac fe db 94 
+2d ec ba 88 71 d8 bc 7f      32 (octets)
+
+
+
+
+Password: 
+55      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+36 1f bf e4 9c 26 5d 8b 
+d7 a7 0f df 81 55 29 cc 
+5f 8d fd 36 c6 8c 8d 6c 
+a2 51 cd 09 99 ba 57 77      32 (octets)
+
+
+
+
+Password: 
+56      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+1d f5 05 6b ec b2 10 f2 
+ed 31 9c 29 6a e0 36 5a 
+76 9e 29 2d 28 37 11 0b 
+fa a2 74 ce 39 2d bd d6      32 (octets)
+
+
+
+
+Password: 
+57      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d1 be 5b b9 28 51 61 8e 
+47 5a 15 14 56 29 75 4b 
+b8 f2 f0 68 64 e0 96 d9 
+41 c9 a3 f1 58 32 6c 12      32 (octets)
+
+
+
+
+Password: 
+58      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2d 72 5f 32 5f 0a b2 78 
+cd a9 65 6e 5f 19 3d fd 
+07 3b cd ba dd 80 fb 59 
+60 e8 b1 48 36 1d 34 ab      32 (octets)
+
+
+
+
+Password: 
+59      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c1 59 da 40 e4 6d 63 ed 
+fa 77 c3 4d a6 39 c3 21 
+e0 72 71 41 f8 4c 6b 63 
+8a d3 5a b0 be 56 e7 8b      32 (octets)
+
+
+
+
+Password: 
+5a      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+96 9d ab 69 2b 3b 47 dd 
+a9 24 c1 bf 48 cf 11 5b 
+1c 82 eb b9 ac 9f 55 81 
+03 19 f2 cb 8b 26 bd de      32 (octets)
+
+
+
+
+Password: 
+5b      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+49 40 f2 81 0f b0 f5 c4 
+fd 3e 72 bd f3 60 31 c5 
+42 fb f1 8e 02 90 27 30 
+3d d5 67 47 df 23 29 b9      32 (octets)
+
+
+
+
+Password: 
+5c      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+5e f3 18 21 84 63 0d 0d 
+2a 1d 6c 0b ca 30 65 0a 
+98 02 14 39 d6 89 2f d1 
+13 50 ad 6c 5c a5 84 5c      32 (octets)
+
+
+
+
+Password: 
+5d      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9f b9 4f 0c bc 6b 41 38 
+d8 61 4c 48 d6 14 6c 75 
+84 8c 1a 07 97 32 46 45 
+6c 31 f3 cb 3c 53 fa 12      32 (octets)
+
+
+
+
+Password: 
+5e      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+1b 6e 2b ee 3e 5a 8e 40 
+c3 e6 c0 36 e8 66 1c ed 
+93 37 db ad 4c ec 2b 3c 
+d6 a2 cc ea bb 2e 6c 1f      32 (octets)
+
+
+
+
+Password: 
+5f      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+39 d9 29 14 34 a9 d9 b4 
+8b 79 66 25 90 f0 2f ab 
+93 e3 3d ee 50 93 a7 8c 
+9c 93 e8 c0 b9 58 15 88      32 (octets)
+
+
+
+
+Password: 
+60      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4c 89 13 a9 e3 08 46 0b 
+7a cc a7 91 02 0e dd 4a 
+7f 3b b1 a2 ca c5 53 35 
+78 43 c3 9e bc 47 53 97      32 (octets)
+
+
+
+
+Password: 
+61      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+64 eb ce 67 51 01 b7 50 
+60 4a b7 4c fe 11 22 ae 
+37 df 63 03 c9 3d 34 3e 
+ec 75 53 cb 00 a9 89 3e      32 (octets)
+
+
+
+
+Password: 
+62      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a7 5f b5 25 23 5a 0b ee 
+45 39 6d e1 96 3a ef 49 
+59 c2 dd 9e b7 4a 53 ae 
+79 86 00 a7 d9 a9 f6 84      32 (octets)
+
+
+
+
+Password: 
+63      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0e 83 17 f5 c7 42 70 17 
+fb 04 ac a4 68 8e 05 20 
+2e 3d 17 32 81 8c 22 13 
+52 d9 c8 0e 20 65 96 44      32 (octets)
+
+
+
+
+Password: 
+64      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+20 ea 61 cf 64 16 60 7a 
+1c 55 37 f0 ec 2c 4f 40 
+b0 76 98 5d 0a 4b 4b 07 
+2d 8c 09 42 0f 0f a5 41      32 (octets)
+
+
+
+
+Password: 
+65      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3b 16 70 34 d1 6f 61 42 
+a7 31 ad b8 21 c9 38 c8 
+fa 08 6b fb 84 6c a0 49 
+ed 3f 44 45 0e af 01 a5      32 (octets)
+
+
+
+
+Password: 
+66      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+25 25 9e c4 14 11 85 5a 
+0e 71 c1 13 5c d3 ac e4 
+e9 fc ed 5f d1 b4 a5 e9 
+14 a2 d3 08 68 1b d3 19      32 (octets)
+
+
+
+
+Password: 
+67      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c4 2c 00 c0 fc 8c 5d ab 
+02 b5 43 e9 39 b3 34 2b 
+ef 7e f6 03 ad 11 37 76 
+8e 0c 4b 5c 8d 04 80 14      32 (octets)
+
+
+
+
+Password: 
+68      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+38 4b fb 78 9c 41 e9 96 
+e6 a1 ae 7d a5 04 63 90 
+84 c6 23 2f 54 00 36 5a 
+32 36 65 94 a5 5c 4f d8      32 (octets)
+
+
+
+
+Password: 
+69      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ee b7 07 8a 88 e2 2b 87 
+58 12 43 e8 3d 4e 97 3d 
+ff f2 b6 94 9a aa 74 d3 
+b8 89 1c 73 03 22 dc 1a      32 (octets)
+
+
+
+
+Password: 
+6a      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+43 f7 d2 0c 1c d9 61 98 
+6d bf 80 e5 0a 7d de 54 
+74 4a a2 ad ad 4c ea d8 
+1c 61 f9 50 e0 c1 43 fd      32 (octets)
+
+
+
+
+Password: 
+6b      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+79 be 0b 7a 01 06 bf 84 
+05 bd 86 aa 49 79 97 51 
+0a 03 fd 2e d8 56 18 09 
+98 ad b8 49 e4 d2 5f 38      32 (octets)
+
+
+
+
+Password: 
+6c      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f2 de ed 97 a0 f1 c1 ce 
+7f b1 57 68 fd fd 5d 1b 
+90 5e 04 12 1a 95 e8 d9 
+6e e0 25 09 28 7f f3 92      32 (octets)
+
+
+
+
+Password: 
+6d      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+7b 98 6d 50 5f 12 0d 25 
+0e 95 28 42 49 0a b3 3f 
+2f 94 8e 07 a1 ae c7 b3 
+8f 85 f6 16 00 f8 45 1b      32 (octets)
+
+
+
+
+Password: 
+6e      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+36 0f 94 55 c4 c6 a0 ac 
+07 88 ad dc 5b 71 49 31 
+f5 3d 01 60 ff da df c6 
+b6 87 9b 0b b5 1d e9 e7      32 (octets)
+
+
+
+
+Password: 
+6f      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3b 0c 95 86 0e df 64 ee 
+87 8f b4 d0 5c 4c 28 e1 
+53 33 6b 37 12 94 9d 7b 
+73 52 65 51 17 8d 46 8a      32 (octets)
+
+
+
+
+Password: 
+70      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b7 7c c1 4b 3b ec 2e f4 
+6a 63 8d 3f 72 07 f6 85 
+a3 4f 97 0c f8 c8 c6 c0 
+7e 89 17 d0 e3 d2 65 0f      32 (octets)
+
+
+
+
+Password: 
+71      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+26 13 d5 61 50 df d4 a5 
+bc 4a 1d cc fc 30 ce 29 
+e3 52 fb b2 c7 d8 05 aa 
+fb d3 7a 69 80 9e f2 6f      32 (octets)
+
+
+
+
+Password: 
+72      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+12 7b 7f b3 35 1d 0d 30 
+dc 33 17 95 27 ec 58 60 
+45 dc 5e e8 7c 91 8d 4b 
+af a7 1e 32 21 e0 0d 48      32 (octets)
+
+
+
+
+Password: 
+73      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+09 65 de 1b 5a e8 0d 56 
+d1 dd 62 44 f0 8f 8b 2e 
+41 5c b7 23 41 d1 86 ee 
+01 0a 27 b4 df be 8c e2      32 (octets)
+
+
+
+
+Password: 
+74      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d5 57 71 ec 34 0e 5a d3 
+31 1a e9 30 e6 58 80 9e 
+39 ec bb f6 11 79 b8 84 
+a0 b4 e6 b9 28 4b d9 c8      32 (octets)
+
+
+
+
+Password: 
+75      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0d e9 e7 a7 88 48 a3 bc 
+ba ad 24 27 a6 ba b0 66 
+20 94 15 43 48 51 fb 6d 
+49 5c ab 47 5d 0a f4 89      32 (octets)
+
+
+
+
+Password: 
+76      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d8 55 9b 47 ee 66 e4 1c 
+7a fa d0 16 8e c1 aa 5a 
+43 91 66 50 2e 8e d4 22 
+9d f2 be b2 9e 77 1d e3      32 (octets)
+
+
+
+
+Password: 
+77      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3c d2 b0 89 ab ae 09 27 
+41 af c5 4f 3e 5c d5 5a 
+18 e2 62 e5 7a c4 12 e2 
+9c b3 40 8d 94 b2 42 a9      32 (octets)
+
+
+
+
+Password: 
+78      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+7e 29 0f 69 3e 84 99 a9 
+59 54 2f 83 46 24 b5 8b 
+cd df 60 b6 b5 49 61 39 
+c2 4c ce 3d 7b 3c 30 b0      32 (octets)
+
+
+
+
+Password: 
+79      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+39 e5 41 1d d1 a1 2d c3 
+9d 3d 88 6b 24 ef a2 d2 
+65 e3 80 6a 66 ec f4 79 
+7e a7 c1 a0 e4 50 98 b7      32 (octets)
+
+
+
+
+Password: 
+7a      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bf cc 09 3f 53 13 c0 95 
+70 73 5c ad 3b 48 a1 59 
+94 96 d2 aa f9 30 fd 95 
+e5 a8 4d 78 12 87 ff ef      32 (octets)
+
+
+
+
+Password: 
+7b      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+71 7b de c6 a3 05 bb 8d 
+92 1b b2 94 17 22 17 e9 
+47 be cd 06 2f af a0 26 
+2b 2d a4 50 c1 22 d7 7b      32 (octets)
+
+
+
+
+Password: 
+7c      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9c ed d8 71 14 bc 56 a3 
+4c a3 83 2b d7 f8 f6 2b 
+42 01 0c bd 8b f6 4e 9b 
+7f 78 3a 13 3e 50 7c e9      32 (octets)
+
+
+
+
+Password: 
+7d      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+60 db df a8 ea b2 35 6e 
+92 e1 e0 c9 16 96 d2 b2 
+0a 1b 73 57 e0 55 5c 88 
+f5 9c c2 f0 f5 e1 f8 f1      32 (octets)
+
+
+
+
+Password: 
+7e      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+95 c7 5a 51 79 8f 42 fd 
+a0 30 2b f6 57 ca fd 46 
+88 86 82 4d e5 79 11 2a 
+19 15 8d 89 ba db 66 ae      32 (octets)
+
+
+
+
+Password: 
+7f      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8e 48 e1 eb b8 32 57 62 
+63 d5 ca a8 5c b4 97 6a 
+b1 69 bd 48 ae 70 5d c5 
+77 65 c8 98 b5 6f 07 28      32 (octets)
+
+
+
+
+Password: 
+80      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+6f f9 8c e5 b1 09 18 95 
+f7 a8 27 15 b6 c1 14 f4 
+c2 93 4c 82 86 08 b0 87 
+6f 6d a7 05 1b f9 e9 98      32 (octets)
+
+
+
+
+Password: 
+81      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8c 1d f7 a9 75 69 83 ff 
+a9 6d a3 01 6f b6 05 0f 
+97 ef 40 9f e7 eb 06 0f 
+71 85 0b 52 99 39 b9 8f      32 (octets)
+
+
+
+
+Password: 
+82      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f0 14 9d 57 6d b5 e3 ee 
+a6 84 5c 0c 63 db 3e 7e 
+0f d2 75 29 8d 46 9d 4c 
+c1 03 22 71 a9 84 13 aa      32 (octets)
+
+
+
+
+Password: 
+83      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+67 f0 62 bc 50 f1 0b 00 
+8f 83 ab 55 04 a1 01 66 
+a6 07 32 cb 0c ce 7f cb 
+1d 10 ba e3 6c c6 d2 59      32 (octets)
+
+
+
+
+Password: 
+84      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e5 a1 d5 f0 a6 99 cb e4 
+ef 1e 8a 1f b5 a8 5c dc 
+a4 2c 61 e7 e6 a0 98 eb 
+c0 fc 3b 95 44 8e c0 e3      32 (octets)
+
+
+
+
+Password: 
+85      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ba 22 fb 0b 1b da 2c d4 
+9e 29 43 2c fb f2 5b 8c 
+29 d1 7a ba e2 9d 14 fa 
+75 90 5d b9 82 8e f6 dd      32 (octets)
+
+
+
+
+Password: 
+86      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ba 7a 29 08 cf 27 c4 e0 
+87 e3 79 5f af 66 13 d2 
+c4 53 4c 34 8f 74 17 47 
+26 8e d9 77 6d 8f a5 26      32 (octets)
+
+
+
+
+Password: 
+87      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b9 01 44 52 e0 ca 64 73 
+22 d6 95 d8 94 12 02 e8 
+5a 53 78 3c 83 6a b0 3f 
+b1 83 08 e5 97 fc 5c 94      32 (octets)
+
+
+
+
+Password: 
+88      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a4 ce c1 81 03 f1 d9 53 
+26 9e dd 69 d1 ca c3 65 
+ea a5 2a bc c9 a0 24 4a 
+12 7b 5a 8a 57 f1 2b e8      32 (octets)
+
+
+
+
+Password: 
+89      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c0 3e a1 eb 23 7e d7 b8 
+f7 a2 4c 9a 49 c6 d8 16 
+63 0a 2c 0b 3b 06 f8 6f 
+71 f1 44 48 ca 12 3a 5f      32 (octets)
+
+
+
+
+Password: 
+8a      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f5 14 67 45 07 99 2a 3b 
+01 21 4b 22 ec 7a de ef 
+a9 0f 06 6b f7 9d 2a 6b 
+ca 07 06 39 a3 69 d7 7e      32 (octets)
+
+
+
+
+Password: 
+8b      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c0 bf 44 d4 6b 2c 5e 28 
+d1 a2 73 ea 39 57 8d dd 
+ce 2d 85 d0 8c 56 49 eb 
+1a 6f a2 d9 db fa 66 07      32 (octets)
+
+
+
+
+Password: 
+8c      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+eb 86 69 e3 a6 d6 4e 46 
+cc 16 4d b5 63 c6 54 22 
+b7 85 1e 4b 6e 7b 00 03 
+42 ec ed 9d aa f3 74 07      32 (octets)
+
+
+
+
+Password: 
+8d      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2a a0 ec 43 08 27 04 98 
+a0 3a 33 03 2a 07 cc 7c 
+d9 ee 53 5f 4e 9d 93 61 
+65 09 26 15 8e 9d 2c 9b      32 (octets)
+
+
+
+
+Password: 
+8e      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3e de 92 3a f9 17 a7 67 
+47 84 8b 6b 24 1d bb 27 
+bb 64 d9 d8 44 58 dc 43 
+04 9a 36 b4 70 4b 8d 76      32 (octets)
+
+
+
+
+Password: 
+8f      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+80 07 90 a3 93 52 9f 1e 
+a1 77 7a 1c 1f 06 7d aa 
+32 c1 d5 cd 64 b8 0e 32 
+5b 5e 74 44 9a ab 40 2f      32 (octets)
+
+
+
+
+Password: 
+90      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a7 03 66 50 fb 2f 5f 4d 
+36 a7 c4 e3 5b 5f 10 f1 
+bc 4f fe 44 c0 8c aa 89 
+8f 7f 05 0b d4 5d f6 e4      32 (octets)
+
+
+
+
+Password: 
+91      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+cf 4e 57 aa 43 97 e5 62 
+f8 d3 b4 5c 6e ee b0 4c 
+84 6d c3 d2 32 9a 5a 00 
+48 64 f4 d9 2b e6 94 9a      32 (octets)
+
+
+
+
+Password: 
+92      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4e 39 5e 63 95 bd 13 7d 
+7c 8e 36 39 16 0d 72 14 
+b9 17 71 97 61 50 12 52 
+84 73 0a d4 8a 4a 91 88      32 (octets)
+
+
+
+
+Password: 
+93      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2a e4 13 cb a9 44 e9 47 
+65 88 fd c5 30 14 5d d3 
+6b 03 04 fb 34 73 7e 63 
+d6 08 53 97 4c 2f 06 c5      32 (octets)
+
+
+
+
+Password: 
+94      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bd 4d 3e c5 e0 f4 a0 4e 
+57 7a 36 89 c3 fc 06 fd 
+64 89 f0 89 07 a3 36 7e 
+11 03 ad 60 8a b4 2e 3a      32 (octets)
+
+
+
+
+Password: 
+95      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d5 86 16 4b 75 30 76 01 
+df 34 e5 7b ce 1e f3 be 
+4c 6c 2f cf 83 f5 3c 49 
+c3 eb a0 62 64 80 03 48      32 (octets)
+
+
+
+
+Password: 
+96      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+11 db 40 80 57 6f 8c ac 
+ca e6 a0 47 73 4c 51 ff 
+b3 bd 4d 4e 0a ff c6 89 
+8a 1b ba a2 bd e2 a7 71      32 (octets)
+
+
+
+
+Password: 
+97      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+cc 61 10 67 65 c0 1a 1b 
+8d 9e 9c bc 77 8c b6 f0 
+55 c9 35 47 1b 14 1c de 
+69 79 28 a8 c7 ae 8f ff      32 (octets)
+
+
+
+
+Password: 
+98      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+49 43 1f 2c b7 0e 4a 3e 
+f4 f1 46 1d 41 fd de 08 
+5e bd 7d 40 3e 98 97 45 
+f1 b3 20 c9 0c bf ba a6      32 (octets)
+
+
+
+
+Password: 
+99      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+6a 15 59 0e 8c e1 b3 20 
+9b 25 45 63 51 2b 87 49 
+47 22 53 de 43 9a bb f1 
+48 64 af 48 96 c3 46 56      32 (octets)
+
+
+
+
+Password: 
+9a      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+15 ef 86 83 f3 c2 1b e9 
+f4 1f 7a 91 1c 4e 6a 13 
+81 ce d8 39 28 8d 66 d8 
+f2 5d 2b 93 dc 80 87 f7      32 (octets)
+
+
+
+
+Password: 
+9b      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+6a 39 02 e0 bd df 43 90 
+43 4d 86 41 42 58 89 99 
+fa 1b fd 92 38 7a 5b ba 
+e8 8e 61 c6 4b ab 5d 1c      32 (octets)
+
+
+
+
+Password: 
+9c      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b8 ac 39 59 da 26 cd db 
+7d 06 04 d5 19 d1 b1 30 
+41 ab 87 d2 f3 d6 32 d5 
+09 54 16 05 94 0c 7f 9a      32 (octets)
+
+
+
+
+Password: 
+9d      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0a b9 72 60 38 2e c7 23 
+78 92 0a 8d 52 85 f7 f7 
+6d 42 ee 1f 09 24 07 4e 
+89 54 73 5c 1b 98 7c ec      32 (octets)
+
+
+
+
+Password: 
+9e      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ca 08 b4 b5 f1 6d fa 7d 
+80 86 37 de 7f 80 47 4a 
+09 28 63 1c ea de e8 a3 
+91 ca 7e fe b4 8a 3f 58      32 (octets)
+
+
+
+
+Password: 
+9f      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+fc ed 72 fa cd 00 8f b6 
+b9 e9 88 30 50 fd 04 96 
+96 02 df 6c 75 2f 59 23 
+ed 34 5c 5e be ab 16 6f      32 (octets)
+
+
+
+
+Password: 
+a0      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+34 eb 13 24 23 f6 5a 58 
+d2 9d 85 2f ee 71 19 f1 
+aa f3 ee 49 d4 2f 53 64 
+4f 29 e7 1d 50 b6 25 ba      32 (octets)
+
+
+
+
+Password: 
+a1      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c8 54 bb 95 e9 06 ce 45 
+4b 81 7c d3 81 3d 12 ea 
+cb 6d a2 f0 a4 a6 06 ca 
+46 12 26 55 62 0c bc d6      32 (octets)
+
+
+
+
+Password: 
+a2      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9e 79 55 8e 29 e9 31 b8 
+06 8b 48 04 f8 8d a0 fb 
+1b d1 63 b4 5d d7 65 89 
+78 7f 48 5a 94 aa 03 08      32 (octets)
+
+
+
+
+Password: 
+a3      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+69 3c b8 df b5 86 10 1b 
+e0 b5 97 fc 40 22 9a 44 
+83 cc d5 1a a0 c7 90 f7 
+93 74 9b 8a f7 41 3b 97      32 (octets)
+
+
+
+
+Password: 
+a4      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+15 98 2a 14 72 8c 8a 74 
+32 70 a0 5f 09 de 46 cc 
+49 c7 69 04 1c eb c4 36 
+43 00 02 55 07 98 5e 06      32 (octets)
+
+
+
+
+Password: 
+a5      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+65 84 47 70 44 d8 43 3c 
+d4 5d 9b 68 c3 fc 97 ba 
+87 1e 2c 83 0b 9f bd e3 
+92 ca bc ce 50 c8 cb bd      32 (octets)
+
+
+
+
+Password: 
+a6      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b8 e7 f2 93 e8 be a6 0d 
+2e f8 0c 7f 23 6d c6 1d 
+1c 4c 15 3b 55 78 95 11 
+e4 2f 4a 56 d0 51 24 00      32 (octets)
+
+
+
+
+Password: 
+a7      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+cd 78 b9 a0 90 9a 92 bc 
+58 70 62 7f 39 00 39 3b 
+8f 85 84 ba 25 14 ef fd 
+a3 90 56 bc 29 86 25 36      32 (octets)
+
+
+
+
+Password: 
+a8      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3a 18 61 ed e1 4f e5 4b 
+dd 1a 03 f4 60 25 9c fa 
+54 9e 6a 64 d1 4e da 4d 
+74 e7 f7 10 b3 04 df 4d      32 (octets)
+
+
+
+
+Password: 
+a9      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0a aa 0c 67 f3 f1 fd 19 
+73 18 8d 06 81 f9 38 6e 
+46 d8 74 18 48 52 bd 37 
+e4 b0 44 ca 88 a9 8c 7a      32 (octets)
+
+
+
+
+Password: 
+aa      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+be 7c 98 53 c3 07 11 97 
+c8 07 38 c5 27 ae ee e8 
+4f 82 f1 d7 51 a7 59 b1 
+ee 97 ca 49 86 ae 57 0a      32 (octets)
+
+
+
+
+Password: 
+ab      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c9 b3 04 ad c0 4c 55 f8 
+df 3d b0 1c 92 fd a8 70 
+ec 5c 13 15 99 34 db 30 
+89 e3 45 76 8e 72 44 f7      32 (octets)
+
+
+
+
+Password: 
+ac      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+17 6e 9a 0d e4 ea 5e 1e 
+de 9b 1b f8 de 13 05 f7 
+df e4 87 6f a0 4f 17 9a 
+8c 15 87 cd 85 24 1b 22      32 (octets)
+
+
+
+
+Password: 
+ad      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2f ab 72 e7 df 80 17 2c 
+5a b9 50 8f 0a e3 ef a4 
+81 02 c7 7c ec 55 41 fc 
+78 d4 e3 e1 40 41 a9 50      32 (octets)
+
+
+
+
+Password: 
+ae      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a7 5c 1b d9 1d cb b5 b0 
+60 98 77 1a a5 7c 31 1f 
+6a a0 a9 08 24 c1 2a 75 
+69 4c b2 1b ba 82 f6 f6      32 (octets)
+
+
+
+
+Password: 
+af      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8e 12 5d 9d df b6 51 89 
+36 e1 e4 04 28 b9 02 72 
+3c a3 69 aa 55 02 9f 86 
+7f 4d 3b fe 31 e4 d4 00      32 (octets)
+
+
+
+
+Password: 
+b0      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+eb d6 6a ad ce 78 bd 6c 
+20 04 f8 40 56 a5 46 0e 
+34 02 35 49 d6 c4 cc 64 
+d1 b5 5f 1f 56 bf b1 18      32 (octets)
+
+
+
+
+Password: 
+b1      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+db 29 db 01 a5 ba 1b a8 
+eb 9f e6 95 c3 87 ce 28 
+5b 6a ff c6 21 10 6e f9 
+b0 15 e5 bd 78 cc 8e 7b      32 (octets)
+
+
+
+
+Password: 
+b2      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+97 60 00 1d ba 92 e2 7a 
+b2 49 8e 50 d6 8b c5 15 
+d9 5b 40 cb 70 cb f4 8f 
+27 7e 68 0f bb d9 52 71      32 (octets)
+
+
+
+
+Password: 
+b3      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a0 02 dd 3e 9f 1d f4 86 
+b1 f5 94 d1 d3 d1 e2 eb 
+d1 7a 5e bd 0b 93 13 06 
+66 87 d0 f7 d4 e2 40 e8      32 (octets)
+
+
+
+
+Password: 
+b4      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+67 65 93 00 a5 c5 cf 98 
+41 93 3c ad f0 b3 45 23 
+bc 59 78 bb bf a2 2a 5f 
+13 9d 81 22 bd 8d f3 2b      32 (octets)
+
+
+
+
+Password: 
+b5      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2d a0 b6 43 f6 e7 bd e2 
+d7 61 1c 55 c4 71 ee d2 
+2f f5 69 69 d1 d4 bf 81 
+13 4d 54 8c 9d 06 f0 dc      32 (octets)
+
+
+
+
+Password: 
+b6      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+19 6d b4 9e 90 c5 9b e1 
+36 c9 30 46 21 76 57 53 
+74 9c 44 74 35 d4 27 08 
+b6 cc 12 93 00 c2 1e 1d      32 (octets)
+
+
+
+
+Password: 
+b7      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+22 3f 0d c9 05 85 2c df 
+5a 1c bd d1 2e c6 dc 28 
+8b db 33 d3 b9 2f 4e 10 
+ea 63 bf f4 8c ba c2 5f      32 (octets)
+
+
+
+
+Password: 
+b8      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+aa f6 74 c3 49 60 d2 ac 
+d3 fc 5f bd 9f 68 0c 59 
+ca b6 d2 06 92 9a c1 13 
+df ea 23 bf 50 af 9b fe      32 (octets)
+
+
+
+
+Password: 
+b9      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+cb 54 68 87 3a 85 58 5f 
+05 3c e3 3a 09 98 a9 87 
+c0 12 51 0a 0d bf c1 1a 
+6e c3 b0 5c 45 e2 0d 0f      32 (octets)
+
+
+
+
+Password: 
+ba      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e3 dc cf c0 c8 96 63 2a 
+ef c3 a3 4e 5a aa f7 ed 
+07 f9 4e 74 16 c4 27 a1 
+59 a3 d7 f3 d4 b5 b5 06      32 (octets)
+
+
+
+
+Password: 
+bb      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ee b2 b0 d3 4b 16 a4 db 
+54 ab 07 5a 72 73 75 3c 
+2e 7d a7 c9 ad 66 da 7c 
+6c 0f 43 9b 2b 7a 0f d3      32 (octets)
+
+
+
+
+Password: 
+bc      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+56 84 cf 49 98 0f 35 59 
+18 dd d5 90 7f df 64 c8 
+55 da ad 66 cf 85 85 10 
+a9 d1 1f fa ab a5 bf b6      32 (octets)
+
+
+
+
+Password: 
+bd      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+1f 32 f7 e7 06 83 1d fa 
+df 7d 4f 99 18 a2 1f dc 
+cc 43 a1 9e 78 b7 52 28 
+2d f4 29 fa 7a 69 00 07      32 (octets)
+
+
+
+
+Password: 
+be      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+76 d8 02 01 51 a9 be 03 
+d2 99 3c 3a bb 93 ad 91 
+3c 1f 42 65 5f c1 ef 29 
+59 ca af 5b 5f 87 6b 27      32 (octets)
+
+
+
+
+Password: 
+bf      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2a ed 0e 5c 73 4d ea b5 
+5f 23 be 33 7c b8 f6 5f 
+a3 79 52 25 05 0c f5 09 
+5c 2f dc 74 42 ff cb f2      32 (octets)
+
+
+
+
+Password: 
+c0      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+aa 04 22 84 23 e6 2c b8 
+f2 03 fd 0b 15 86 55 b9 
+3f 3b 5e 3d 5b 88 7c e9 
+08 db a0 7e b7 a9 5e f0      32 (octets)
+
+
+
+
+Password: 
+c1      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e0 52 7d ac 26 ea 66 7e 
+8e 57 fd 2a f3 14 d6 64 
+19 a8 a0 86 dc 0c f2 8b 
+36 56 1a d8 97 e9 3d 4c      32 (octets)
+
+
+
+
+Password: 
+c2      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+47 96 8d 9a 11 e8 b2 df 
+08 bd 52 1f 1d 3d 76 62 
+49 e6 f9 bd da c1 ab b2 
+b5 00 3c 45 fc 1f aa 53      32 (octets)
+
+
+
+
+Password: 
+c3      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+39 5b de 29 f4 fb 94 7f 
+d6 b9 4f a4 f1 2a 06 ff 
+de 91 64 5a 81 44 79 c6 
+49 44 0c 41 2e 04 51 5c      32 (octets)
+
+
+
+
+Password: 
+c4      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+80 33 83 ad 8c a2 40 32 
+5b 4a 6b 63 3a a8 ed 7f 
+96 be 4e 87 c7 89 a5 14 
+91 99 25 83 c1 ad 88 46      32 (octets)
+
+
+
+
+Password: 
+c5      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+16 06 d8 54 aa 27 9b c8 
+a8 ab ad f2 6c 4b be 40 
+83 6f 22 1b 1a 79 0e 29 
+f5 e8 fb 5f 30 02 a3 e4      32 (octets)
+
+
+
+
+Password: 
+c6      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bd 0d 45 b9 be d7 e4 74 
+bf a5 55 32 d6 48 c6 f2 
+1b 4e 98 06 a0 7b f8 bd 
+00 cd aa cc 3f 42 6a 80      32 (octets)
+
+
+
+
+Password: 
+c7      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8f d2 d2 5f 45 23 44 7e 
+56 01 44 3c 59 0b ae d7 
+be 99 09 75 ca 6d 0e 51 
+eb bf 87 cb 2c da b3 0b      32 (octets)
+
+
+
+
+Password: 
+c8      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+26 78 85 4a 3c f2 16 d6 
+03 b4 97 71 71 fb 6c 57 
+a8 84 7c 21 0c c9 cf 38 
+1e 89 fe da 84 1c 5f 8e      32 (octets)
+
+
+
+
+Password: 
+c9      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b7 45 38 11 05 c7 6c 6e 
+fd 7a 44 f0 8a 4a b2 9d 
+03 91 cb 22 01 0f c2 8e 
+f7 5b 7a a0 c4 ba c7 5a      32 (octets)
+
+
+
+
+Password: 
+ca      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2f c4 dd ab 22 cc 9b 35 
+d9 4a 26 47 45 fd e6 67 
+2a 67 e8 8c 48 9a 82 64 
+2a a7 e7 19 9e 5e 64 3a      32 (octets)
+
+
+
+
+Password: 
+cb      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+5e 5d 2f e0 0d d8 18 96 
+43 ab f6 40 21 36 31 a8 
+e1 8c 34 37 99 88 6d df 
+47 bd 20 6a 4b ff 9a c5      32 (octets)
+
+
+
+
+Password: 
+cc      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+29 c6 83 5c ab 19 c3 80 
+28 1b a6 f8 1b 7e 24 15 
+eb 01 58 af 4c 9c 07 1e 
+fd 73 82 55 86 a5 19 43      32 (octets)
+
+
+
+
+Password: 
+cd      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+54 64 01 43 95 d4 4c c3 
+83 39 8c bd 9b 08 c8 fa 
+e8 15 fe 28 fb f6 b8 00 
+2f f3 55 a8 4d 4c 06 eb      32 (octets)
+
+
+
+
+Password: 
+ce      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+1b 6c 9f ad 08 07 c6 a9 
+27 47 77 25 b4 61 00 06 
+36 a3 d2 0f cb a2 80 ff 
+4a 58 3a 90 3f c6 33 71      32 (octets)
+
+
+
+
+Password: 
+cf      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0c 82 56 5d 10 bf 61 7e 
+57 4d ef 70 17 15 46 b4 
+a0 86 5a 9d 19 d3 2c b1 
+c9 6b 76 79 d0 2e 04 a5      32 (octets)
+
+
+
+
+Password: 
+d0      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+82 8a b5 54 2e 06 3c 45 
+51 73 95 6b c3 9a e3 86 
+aa 0e b0 fd 86 0e fd d4 
+b9 4e 95 ef 9f 5e d0 8f      32 (octets)
+
+
+
+
+Password: 
+d1      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3d b8 ed 1d 02 7e 33 14 
+ef 37 6e bf 3c 64 cf c8 
+61 25 8e 24 c6 a2 d1 bc 
+ce 00 ff 2c a9 c1 95 56      32 (octets)
+
+
+
+
+Password: 
+d2      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+79 08 eb ac cb 17 b8 d1 
+11 88 4a 3d ee 9e 32 23 
+a9 d3 22 ee 96 ea 0b c3 
+bc 1a 49 a4 76 2f 2f b6      32 (octets)
+
+
+
+
+Password: 
+d3      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3d 74 e1 8e 87 b9 ba b9 
+f1 8f fc d9 26 39 7e 8c 
+01 64 4b 83 b4 bb a7 ec 
+75 10 66 d4 29 7f a7 83      32 (octets)
+
+
+
+
+Password: 
+d4      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+23 2f 67 c3 58 0f 65 b4 
+88 5c 91 e5 a6 1d ad 01 
+32 f8 2b f1 22 28 56 98 
+d1 a0 8e 65 2d a9 ae 37      32 (octets)
+
+
+
+
+Password: 
+d5      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+23 96 7b 39 aa 7c 9f c1 
+10 26 84 0c 20 cf 81 a0 
+36 5b ea 3d 79 a8 36 72 
+e5 96 a3 aa be 63 6d 41      32 (octets)
+
+
+
+
+Password: 
+d6      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+11 d0 21 80 b0 00 0d 3f 
+a8 f7 6c fe b6 62 da 02 
+2b 39 51 b5 1f b1 ed 7f 
+05 1a 93 69 c5 89 98 b4      32 (octets)
+
+
+
+
+Password: 
+d7      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b0 bc 38 d4 c5 b5 e2 a8 
+fd 7a 10 4d 91 0d 45 7d 
+06 51 1b 5b 73 18 a7 cc 
+52 5a 4f b8 db c6 1d 6d      32 (octets)
+
+
+
+
+Password: 
+d8      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bf f8 37 65 35 21 7b f9 
+56 e0 c0 ff 41 6d ae dd 
+3c 57 b0 e2 ac a0 c9 25 
+d6 5f e6 da 43 db 27 9b      32 (octets)
+
+
+
+
+Password: 
+d9      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b4 55 9b 2f 35 59 50 39 
+c1 18 36 22 44 47 3b 5f 
+7f 56 e4 3e c3 7f 52 3c 
+24 d7 6b be da d2 ed 24      32 (octets)
+
+
+
+
+Password: 
+da      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+aa 18 a5 bb c0 cc 9d e6 
+f0 57 9e 87 6e 1e 83 f8 
+eb a1 9b 24 ca dc 18 2e 
+9a 31 0b 1f e3 42 bf c7      32 (octets)
+
+
+
+
+Password: 
+db      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ab 36 f7 86 f5 1f d7 1e 
+51 e5 47 a4 ce c0 5b 99 
+80 84 b9 d5 c5 e9 32 88 
+7a 24 9a 9e 26 70 3a e2      32 (octets)
+
+
+
+
+Password: 
+dc      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e1 cd 6c f9 8a fa 30 b0 
+60 cc 08 79 26 a4 a1 1a 
+98 13 6c e7 30 da 8d 91 
+a5 8a ec 98 96 d4 cf ea      32 (octets)
+
+
+
+
+Password: 
+dd      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+db 42 5b 75 09 dc a2 c8 
+da 09 d4 e7 44 8e a5 50 
+db 1a 14 9e 51 dd d3 ef 
+b0 43 8e f7 58 1b 34 da      32 (octets)
+
+
+
+
+Password: 
+de      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+5a 5c 5d bb 78 c5 0d 41 
+29 af 29 0e 36 0a 77 1e 
+46 84 f3 99 15 9d 01 4b 
+c7 ad 39 fb 62 71 e9 53      32 (octets)
+
+
+
+
+Password: 
+df      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a3 97 71 2f 89 9d f5 93 
+12 d0 7d 56 4d f4 06 60 
+8e 9f b7 93 aa fc 71 33 
+e5 de d9 92 fa 37 6b 67      32 (octets)
+
+
+
+
+Password: 
+e0      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+5c fd 8d 3a 01 8b 03 c9 
+4b 79 f3 aa d6 43 23 ca 
+ea 04 ac 41 d8 94 06 92 
+d7 24 48 5a 56 bb 1d f1      32 (octets)
+
+
+
+
+Password: 
+e1      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2c 3a 86 18 e4 0b 4f 7f 
+f4 69 0e 03 f8 9c e9 07 
+c0 f2 63 f0 a7 cf 42 32 
+ec 83 a1 b4 12 57 bf d5      32 (octets)
+
+
+
+
+Password: 
+e2      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b3 28 a1 02 20 15 8c 56 
+89 19 f9 b6 83 24 6b 05 
+01 51 80 68 c2 4f 7c 39 
+89 1e 24 7b 0f b3 77 3a      32 (octets)
+
+
+
+
+Password: 
+e3      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e9 e6 4d ad 0c e1 76 39 
+7c 82 33 8b fc 4e 30 e3 
+18 45 3c 51 56 4c fc 9f 
+59 ba 5e 75 26 9e b5 d4      32 (octets)
+
+
+
+
+Password: 
+e4      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d5 34 15 81 af 21 d9 66 
+94 6d 8d 6f 6a 2a b1 c0 
+e0 3a 45 4f 1b 4a ad 42 
+9c 84 ab c8 b7 da 75 55      32 (octets)
+
+
+
+
+Password: 
+e5      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+32 0b b5 61 16 f8 da 26 
+6d bc bf 66 fd 33 a0 3b 
+9a 08 df 6e 6d 55 c2 f4 
+5e 15 6c c8 35 0d 0b 7d      32 (octets)
+
+
+
+
+Password: 
+e6      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c7 45 78 9a 41 73 fb a3 
+7f 69 b2 48 21 42 35 82 
+88 d2 b0 e5 f2 db 6a 61 
+6a 63 29 c2 f6 ea 0b a9      32 (octets)
+
+
+
+
+Password: 
+e7      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+53 d2 a7 d3 50 23 85 b3 
+06 45 fb de 66 82 29 70 
+c7 e9 7d f0 b2 4d 1c a9 
+fc 7a bc f7 ca 10 93 51      32 (octets)
+
+
+
+
+Password: 
+e8      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9b 96 09 01 7d 16 2e 09 
+9f ca b5 d6 f9 ba 1e f2 
+cc 5c 1c b2 d8 4a 0f 38 
+50 40 64 28 69 1d 69 ec      32 (octets)
+
+
+
+
+Password: 
+e9      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+48 b9 22 68 8b b0 4a fa 
+bf 09 7d 47 5a a5 dd 37 
+ec c1 bf dd c4 14 d9 56 
+64 c2 29 19 ca ae 35 91      32 (octets)
+
+
+
+
+Password: 
+ea      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8e 37 6e 46 03 1b 32 0f 
+8a 8f 3b 26 4f 12 8e d4 
+45 9d a9 06 db 46 1d ef 
+f1 db 68 f2 1c 68 47 dd      32 (octets)
+
+
+
+
+Password: 
+eb      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c3 f2 b7 77 da 5d 5d bb 
+34 32 76 2a 39 71 74 90 
+41 db e8 82 1f 3d 07 46 
+f6 16 47 ae 2f f8 34 00      32 (octets)
+
+
+
+
+Password: 
+ec      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+60 5a ca 7b fa d7 8a 4f 
+6d 4d 3e 62 45 63 76 9d 
+fd 60 8d a2 ce 8b a9 b4 
+e1 b8 d1 84 a8 60 fe be      32 (octets)
+
+
+
+
+Password: 
+ed      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+42 fa 0e 0f 56 a5 97 e8 
+da ac d2 25 26 63 92 5c 
+c9 82 78 59 c1 f3 08 fd 
+63 22 37 fa 2a 41 fa b1      32 (octets)
+
+
+
+
+Password: 
+ee      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+1d 03 98 d7 02 e9 d4 c2 
+12 da c1 dd 6d 2d 8c 20 
+06 c4 4c 75 1e fb 4d 34 
+f0 ee 3d 51 e5 77 25 0b      32 (octets)
+
+
+
+
+Password: 
+ef      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+17 c7 10 b4 6f 4e 82 d2 
+02 cc 33 22 fa b0 30 81 
+94 be 79 77 ea 83 1d 26 
+e3 96 3f 85 41 b4 a0 3c      32 (octets)
+
+
+
+
+Password: 
+f0      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+6d 1b 0d a3 aa 51 38 0b 
+dd 91 70 ec e5 a0 0a 51 
+dd bb 5b ab f5 75 e4 99 
+d1 30 21 ea 75 ea 44 1c      32 (octets)
+
+
+
+
+Password: 
+f1      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9c 92 4a cd 22 87 85 96 
+85 24 b2 cb 8b a8 f8 38 
+95 ba 07 e8 b9 61 c8 3d 
+37 2d 21 b9 e9 f4 1f e7      32 (octets)
+
+
+
+
+Password: 
+f2      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+17 d2 c7 3e 33 94 3e ac 
+1b a6 4d 6f 69 0c 21 29 
+28 e9 01 ee b0 b9 c5 a2 
+64 2a ca 79 4c ed 08 9a      32 (octets)
+
+
+
+
+Password: 
+f3      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+83 1d 7f f6 35 c6 ee 29 
+3e b7 94 69 12 56 fb f1 
+b0 fd 66 51 6d ab c2 29 
+50 40 5b e8 c9 2a bb 78      32 (octets)
+
+
+
+
+Password: 
+f4      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+95 84 6e e9 a7 65 64 a0 
+67 02 c7 2c 3c 09 e1 29 
+6f 22 33 02 16 f4 a3 5d 
+32 83 52 cb 07 a3 91 bf      32 (octets)
+
+
+
+
+Password: 
+f5      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+96 42 45 e9 c2 80 96 42 
+8c 07 c2 6d c8 fe 93 c2 
+4d e1 b6 6e f5 85 82 e9 
+6f 12 a4 dd 5d 92 45 3e      32 (octets)
+
+
+
+
+Password: 
+f6      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+fe 6b 58 f2 21 ed 62 d2 
+cb b9 34 df 7f 33 46 31 
+b8 e3 b2 e0 59 e5 46 4a 
+2d 54 4c 61 99 ad d2 7d      32 (octets)
+
+
+
+
+Password: 
+f7      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+5c 80 02 1c 98 72 dd 85 
+c5 60 f2 bb 3d a1 38 fe 
+79 0a 68 48 4e 05 2c b6 
+e9 b7 37 5d 04 1c 7b 6d      32 (octets)
+
+
+
+
+Password: 
+f8      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+35 f4 8f 04 a2 16 5c 49 
+33 b5 ac 86 e1 22 df d1 
+31 45 85 14 48 3f 37 5d 
+e2 04 0a 97 f6 a0 71 a5      32 (octets)
+
+
+
+
+Password: 
+f9      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+80 64 23 4f 99 c0 44 6c 
+30 64 6e 49 d8 25 8a 79 
+8e 64 71 fd 01 37 ec 58 
+02 e0 85 5e 80 44 cd d4      32 (octets)
+
+
+
+
+Password: 
+fa      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9d 1c e0 fa 12 b0 03 a6 
+be a0 d3 ad 4b b5 56 fe 
+63 b8 8b b9 73 0c 1a 24 
+8d 54 96 c0 43 94 aa d9      32 (octets)
+
+
+
+
+Password: 
+fb      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9e dc c8 88 f7 a2 a7 b9 
+f2 7c f9 4b 40 0e de 6e 
+38 ad cf cb df fc 34 30 
+3a 84 ca c9 bd da 5b 86      32 (octets)
+
+
+
+
+Password: 
+fc      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9c 81 ec b1 c1 c6 fb a2 
+79 cf 77 fa 6b 9b 1e 88 
+fc 71 96 e9 23 84 65 e6 
+da 60 58 63 6f de 27 ab      32 (octets)
+
+
+
+
+Password: 
+fd      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+40 5a e7 c1 05 05 21 d3 
+d5 4b 40 8a 08 5d ca 1b 
+85 b2 84 90 c5 05 6a 21 
+bd e2 e7 71 a8 e2 3d c2      32 (octets)
+
+
+
+
+Password: 
+fe      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+68 6b 91 a3 c7 0a 19 2b 
+7a c7 39 99 7c af f7 11 
+be 62 e4 7a 0f b7 98 4b 
+bd a6 0d 22 1f a3 2b 07      32 (octets)
+
+
+
+
+Password: 
+ff      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0b da e7 a4 ee 5b 8b 4c 
+95 72 53 41 64 06 69 90 
+82 d2 c8 9f ca 40 38 6c 
+b4 e6 0c f9 d0 b8 85 1e      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+00      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+50 56 7c fa 84 96 2b 59 
+94 c4 f3 0a b0 14 33 95 
+b7 84 d5 a2 dc 66 44 44 
+af 11 f5 1b 74 70 a9 ce      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+01      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4e 85 c1 91 9e f5 c3 54 
+3a 91 50 39 49 14 7c 77 
+58 93 a1 ad 8f 42 ec e9 
+4f 40 94 41 63 5f eb 96      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+02      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d9 66 4a 06 47 e3 57 d3 
+50 5b a5 f9 39 c7 7d 3a 
+29 63 75 a9 12 29 8c 48 
+1c f8 de 2a f1 24 a9 41      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+03      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bd 72 88 1f 7d da 68 b1 
+44 a9 79 5f 51 2b 44 ab 
+a6 d2 93 ef b8 de 7e 5e 
+91 66 ad 5f 66 e7 d9 40      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+04      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9f 81 5c 01 e2 d8 14 10 
+48 ef 72 0d f8 2d 4e 2a 
+a0 f9 8b 84 b2 4b 38 44 
+2b b4 0c 80 66 e3 9a 33      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+05      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+30 04 b5 1e e5 f3 f0 d3 
+8c 66 07 f2 13 4b 18 dc 
+7f 66 d5 72 98 27 82 c4 
+95 6e 9d e8 32 6f af 5c      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+06      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+91 ff 31 6e cb 71 46 f1 
+f2 95 8f 5c 50 9d d1 f7 
+a5 22 8b 3f f2 9f 9d 6e 
+ed 4a 7a 00 86 4f ed 34      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+07      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f5 67 08 7f 9a a5 83 98 
+f9 a4 8c 49 dc 3b f5 6e 
+c0 ed a0 a0 37 37 00 a5 
+66 a5 80 5e 17 2f c4 02      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+08      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e3 96 e2 d6 9e 02 a0 62 
+be 3a 68 c3 85 78 a3 88 
+cd 9e 90 2f 76 fe 1e 42 
+15 ea cb ea 9b 77 41 ec      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+09      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9a a9 4e d0 01 a2 bd 40 
+71 df a3 ed 2a 33 b6 b0 
+30 c5 8d b3 7d ef 81 df 
+2a 3e 96 2c d0 b3 ec 04      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+0a      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d2 ff 2e 2c a6 85 8d b7 
+24 b7 4e 69 fb 5f 25 4e 
+6d 10 46 e0 1f 0e e8 0d 
+bf 56 a7 c6 58 4d 8f 2a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+0b      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+15 c3 dc 36 be 8d 00 30 
+db 2d fa f0 ca f3 66 dd 
+ce da 84 75 b9 e8 4f fe 
+5b 7a 87 fa 13 9b f5 ab      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+0c      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+51 ac 7d c6 2d 31 b6 c4 
+00 ed a5 30 ea a0 29 9a 
+88 d1 6e 20 87 5f bc b0 
+1a b9 aa 8c fe 12 a4 53      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+0d      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+41 dd 9c 10 d0 cb c2 ff 
+52 5d ce 51 0b b8 cf de 
+90 41 3f c9 3e 27 74 df 
+60 25 be 10 db 08 73 20      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+0e      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a0 3a 76 bf f9 fc e3 30 
+ab 7a 55 32 7c 0b 4c 25 
+75 39 0e 1e 18 04 fa 9b 
+db 3c 66 f2 2c 00 02 c1      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+0f      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+47 b8 40 c5 55 ff c4 1f 
+e1 56 72 4e 24 5f f2 1d 
+ba b9 11 6c 16 d6 67 3d 
+e9 8d 1e 00 3c 13 bf 82      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+10      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a4 0d 36 f3 ac b3 e0 42 
+e9 7a 28 56 1d 2e 75 5a 
+18 c8 fa 61 e3 a2 10 36 
+3f cc 78 dc c2 2c 67 d0      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+11      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ad 23 80 5b b2 03 59 52 
+75 61 5b 43 3a ed 9e 1f 
+3d fc bb ca 46 52 36 f7 
+4d d2 a1 3b ea 51 cf 52      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+12      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4e 7c f0 40 9c d1 b9 fb 
+7f 30 ec 8e f0 71 21 f5 
+67 3d 55 00 ed 56 58 90 
+cb 37 08 e2 3e d6 99 94      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+13      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2d 22 2d 92 1c 66 33 1f 
+de 0b ed 6e 9a 12 40 3a 
+1b 3b 8d 92 e5 2c 23 c3 
+0a 4b 3a e1 f8 99 fd c4      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+14      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+52 e7 b7 ca 63 8f 52 ea 
+10 cc 44 55 f7 54 7d 98 
+c6 ad 85 10 be a1 42 33 
+e2 32 1c bc 81 36 6f 5c      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+15      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f7 3d 1c 62 1c 66 77 a7 
+7e 93 05 a4 c7 12 e8 a5 
+14 b9 d9 38 0f cd 14 04 
+6f 10 29 68 a1 33 15 85      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+16      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+6c a2 ee 19 78 69 54 27 
+c6 5f b1 8c a1 bb 67 76 
+01 92 e1 94 a5 da 5a fe 
+8b 79 31 45 21 4a 86 8d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+17      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3d 89 15 23 c3 50 00 42 
+5b 44 51 ec 4d 89 de 75 
+83 f7 a7 a9 f8 7f 2f b2 
+4c 21 ba 05 24 25 56 16      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+18      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bb 1d 44 db bb 8e 86 82 
+fd 51 5f 8a 9c 06 6c e9 
+8f 1c 03 d3 17 54 01 3a 
+9c 31 1f ba e2 fd 93 8c      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+19      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+58 29 54 ab ed b4 cb 4f 
+df 3e 49 b3 f7 df a9 35 
+14 54 0f ad df d9 e8 15 
+88 c1 6f 4a d2 60 c7 5a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+1a      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+51 2a 07 59 e6 3a 66 87 
+9f eb 1c b0 6a 75 6a dd 
+2f b3 bd 9a b7 0d 58 7d 
+c9 2a 3d 82 5b e0 b8 df      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+1b      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d1 92 c5 2f f3 23 fb 36 
+bc 1f ef fa 97 b5 a3 f2 
+c4 16 68 12 29 3d 9f fa 
+f6 7c da 89 e8 09 0a ca      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+1c      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+95 6e f2 83 16 cb 23 d2 
+1a 3d 6b 09 09 a6 88 04 
+b8 6b 41 33 f2 15 f4 5b 
+fe 78 e0 6c b3 80 78 a6      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+1d      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+26 9b 80 68 4f 2a e2 a9 
+22 78 f7 17 13 77 81 c1 
+8d 81 ee 70 06 62 4f 3a 
+3a da 81 0b 27 ad 79 cb      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+1e      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+90 5c 1d f8 fc 6e 1d 63 
+49 62 82 60 77 f2 ab 21 
+47 24 e0 ce 07 44 3d c9 
+f4 23 7a 0d ec 84 b5 a4      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+1f      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+19 63 42 0a b3 f2 12 41 
+53 4e fb 29 11 c4 5f d6 
+4b d9 99 4f 62 0d b2 a6 
+17 1e 36 23 7c 9b b1 01      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+20      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+29 c3 83 c1 81 65 0a ce 
+49 83 26 bb a7 78 e2 3d 
+7d bf 49 46 68 80 f4 62 
+8e d1 6f f7 b3 7c 48 80      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+21      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+18 b2 45 83 9b a1 86 e2 
+b6 8a 22 3d b8 14 be 51 
+16 e4 7b fe 6e 21 b7 37 
+b6 4d 5f d8 b6 f7 b5 e2      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+22      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+27 22 62 a1 4e 59 05 3c 
+38 91 f4 e0 46 a5 b5 54 
+87 06 18 35 7e 22 b8 38 
+b7 b0 60 e0 73 87 fd 3d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+23      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3a bd db 11 60 16 46 90 
+4a c2 95 59 36 56 75 ff 
+49 b7 66 02 e9 ad 81 90 
+fb 7e 45 b4 2f 59 db e9      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+24      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ec d4 ef 1e 93 3b 5f 54 
+72 4f c5 ee 66 ac 1f 23 
+06 47 a0 26 de f8 81 19 
+c3 44 16 aa 99 f3 bf 15      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+25      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d7 c6 83 3d 08 2b 07 8b 
+46 0f 3a 13 e1 d4 72 05 
+53 21 ec ef 95 e1 23 72 
+42 44 c4 e8 85 79 07 51      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+26      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b0 f5 f8 59 58 81 f4 1e 
+2d b1 49 cc 68 cb a0 1c 
+bb 51 8d dd 77 e2 c0 9f 
+11 cc 56 b1 7b d7 3b 91      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+27      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+35 ee 7e 9f 3a a8 d5 f0 
+a2 66 88 30 5b f6 d0 05 
+81 7b 59 4e 18 f0 fe 35 
+c1 52 ca 2b 19 f4 bb f1      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+28      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+1b 3c 53 84 4b 1c e0 d6 
+f0 27 5c 3f d2 1e c3 d8 
+88 56 71 88 d7 1f 27 86 
+5e ab a0 dc 81 69 d7 c3      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+29      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+29 2e 9c 48 6e a2 2d d7 
+5b b1 3b c1 75 d2 f9 81 
+83 45 0d fd 96 a8 55 b8 
+62 63 fb a6 07 d9 b1 29      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+2a      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+11 0e 0d 55 fc f9 d0 f6 
+ac d7 d5 36 3c 3f b1 a7 
+39 9e 78 70 79 d6 16 40 
+37 78 40 d5 a6 6c 37 e4      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+2b      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+85 95 50 3a 17 f8 96 1d 
+fa 12 b6 99 7f de 41 e7 
+d3 5b dd 52 62 67 eb ff 
+4b 9b 44 67 ad 9c 71 5d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+2c      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+fe 86 e5 8a 8b 57 aa 0c 
+6f ad 5c e7 b3 5a 1b 7e 
+de 22 ea 4e 11 5e 90 2d 
+d3 0d 74 1d f3 62 2f da      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+2d      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+12 1c 21 7c 23 62 8f fa 
+1e 5b c0 c6 05 38 e6 ba 
+41 a8 32 46 0e 2c a4 e3 
+15 b6 b6 54 55 80 a6 6a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+2e      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9f 2d 97 f7 e3 c7 df ae 
+86 0e 45 e9 32 a0 56 bd 
+51 9c d9 ee d1 6b fd 7e 
+e7 83 58 bb 7f 45 00 bb      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+2f      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+64 3d dc e7 69 4f e4 e6 
+92 b1 81 38 8b 45 83 4d 
+36 98 a9 12 e6 df ef 05 
+32 5a f1 02 6c 6e 3d 8d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+30      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4b 80 54 37 8e 31 ef 0b 
+db 38 59 04 e1 db 2f aa 
+04 b2 e7 0f 68 51 0a 15 
+52 f7 49 7c ab 51 0f f7      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+31      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9e d0 32 7a 96 69 e4 48 
+9e 76 31 2d e0 5f 26 7a 
+ab 95 a1 b0 cd 02 af 73 
+e6 81 bc 47 07 a9 19 10      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+32      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d7 4f 13 0a 4a 16 d3 2f 
+59 bd a2 0e c0 4a 06 dd 
+43 95 b1 ab 5e c0 76 fd 
+d2 72 f6 a8 d9 1c 8c 97      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+33      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+1a a1 c2 9d a9 ed 73 e5 
+71 56 80 e6 2a fa 0d 2c 
+03 9d 06 5c 53 8d 9a ee 
+e1 46 dc e4 98 f8 2e c1      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+34      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ea 55 f1 a3 59 fb cf 43 
+19 d3 e9 cc 3e 4d f7 94 
+dd 9a 5f 83 88 75 c2 37 
+1c 7e 44 bd 1b dc 3b c9      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+35      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f7 2f a7 03 fb dc 03 c3 
+6d a0 04 25 45 57 d1 38 
+30 7d d9 57 22 f3 14 37 
+f4 af b7 f8 80 19 33 1f      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+36      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+94 f2 14 35 67 ab 3d a9 
+3b 7b ba 09 f3 40 ae 7b 
+ee 21 f2 98 89 fc f2 0d 
+07 94 80 0c 55 bd c5 d2      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+37      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+cd 1e da f2 b7 01 cb 31 
+41 5f 72 7d 72 82 40 1a 
+3e b0 17 ee 4c c0 97 f5 
+03 7a 32 da 30 c6 b2 2d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+38      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+36 8d 47 70 9a 49 39 64 
+38 24 8b a3 a1 3a a7 3f 
+d8 56 68 76 11 b8 5b ad 
+77 2e d4 08 f6 5c d7 be      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+39      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b3 b6 6e 5e 16 3e 16 b3 
+bb a0 c7 21 b3 fe 95 20 
+79 e2 74 e6 0d 37 12 19 
+85 6b 8b f8 10 43 a6 e7      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+3a      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+66 da 20 18 85 16 9a 91 
+9e 40 31 4f 54 79 6e bb 
+ad c1 31 60 b6 52 c5 9d 
+31 b3 01 67 a2 3e c1 8d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+3b      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+61 a1 89 eb bc 3f 9e 5b 
+93 46 ce 26 bc c5 75 69 
+eb 1a 14 30 43 a8 b4 11 
+44 0b c0 d7 cf c4 f8 37      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+3c      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3c 9d c2 4b 07 97 08 c0 
+83 e9 04 95 c2 cc 12 c4 
+31 a5 3c 6c 70 46 ca 98 
+fc 40 e2 90 8b c2 fb 33      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+3d      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0a 4d 46 76 6f 7c fe 15 
+33 fa 37 f6 80 e9 d1 7c 
+30 ff c1 da 07 ec ba be 
+8e ca 49 da 63 40 f9 3a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+3e      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+92 7d bb 54 d7 3f 39 56 
+eb f9 e5 9a e5 0a 91 e4 
+5d 51 bb 74 f6 20 61 d9 
+1e 25 61 63 c3 e1 62 f0      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+3f      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c8 19 6b f0 02 da ea 60 
+07 f6 80 7e 08 5f 29 93 
+dc e0 e3 69 89 d8 a6 1d 
+d9 fa 84 3a 75 cf 1c ef      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+40      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+18 b1 92 51 d2 d6 6f 68 
+8b 1b 7b 3e 70 62 37 59 
+3d c4 2d eb 7f 68 ad 02 
+66 f2 73 a3 5b 42 87 ad      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+41      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c2 dd 7a e8 54 52 03 72 
+8e 37 99 10 a1 a0 0d 93 
+df 59 81 3d ac 21 41 e8 
+a8 16 6d 2a 7a 4f 7d 12      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+42      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0c 85 7f 5f 48 db a7 52 
+38 22 72 d1 71 0d 51 36 
+b6 ff d8 67 eb 93 e5 af 
+95 38 33 79 41 43 0d 26      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+43      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b9 50 d9 fd 3c d4 d3 7c 
+c8 a9 b6 3b 91 6d 73 b9 
+19 d7 b6 84 00 57 50 55 
+25 64 ed d0 b1 2d ae 66      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+44      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3e 24 f4 53 a3 3d bd cd 
+22 dc 66 69 ca 12 b7 62 
+6f e5 93 18 1b dd be 7f 
+a9 d7 42 e5 ef 7e 94 4e      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+45      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+aa 9a 22 46 c3 a3 a3 d4 
+28 31 28 ef 5f 50 df bf 
+88 b7 84 3e f2 26 ca 46 
+2d 55 49 a0 db c0 21 cd      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+46      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b6 41 14 5c e1 2a a6 d8 
+f3 04 78 41 c5 41 89 43 
+dd fd b3 a9 85 0e b0 cc 
+a0 ef 37 8a b1 f0 ad 28      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+47      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4a 1a c5 42 2a d7 37 26 
+d3 fb a9 93 4f 68 01 b0 
+e2 ef 82 95 a8 47 fd c0 
+7b ae 7a 7c d3 11 d4 c9      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+48      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f6 8a 21 42 cc 71 75 d5 
+dc 58 14 fd 98 9a e6 e1 
+62 1e 79 20 ff 64 dd cf 
+ad c7 34 f2 d8 b6 97 41      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+49      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f9 d9 03 d0 42 0c bf 26 
+de da 3c e5 47 7b 2a 81 
+f3 af 79 6b 12 c8 80 e9 
+e9 9d d2 54 b5 3e 17 8f      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+4a      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+10 91 48 78 c0 0b 27 84 
+ba d1 4b ea 7f ca 38 8a 
+e4 29 6b 6a 37 b3 a0 3d 
+21 6a 33 87 74 1e 15 c8      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+4b      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+35 7d 15 d0 a0 6b e8 d2 
+bd 7d 94 cd 04 4c f2 94 
+97 58 ce 1f 0b 7b c5 30 
+30 a4 e6 2f 7b e3 29 a2      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+4c      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+80 ba 7d 54 b5 b3 34 c8 
+94 43 b8 9f 3d 26 f6 ac 
+02 89 6a df 1d 6e e9 63 
+ab c3 57 ca 1f af b3 cb      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+4d      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d0 f3 53 24 af ec d2 61 
+56 db a7 69 11 57 c9 fc 
+d3 bf 9c 22 21 46 a5 7e 
+11 bd 8d 12 84 72 7b 06      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+4e      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f3 9d 8f 4f 14 b4 90 01 
+94 95 fe e7 a3 fe 95 43 
+91 ee f1 b2 ce 0d 20 85 
+65 07 9a 59 91 e5 cb 5a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+4f      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+67 29 e5 1e 78 dc f9 ce 
+b5 43 af 69 5c 43 58 f0 
+17 5c 63 3e fb 89 c2 26 
+18 02 0d 6e 4f fa ae 71      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+50      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+27 21 58 95 2b 69 83 df 
+d1 f1 7a 0f 29 3c 71 49 
+c7 e0 ae 2a a1 d3 47 48 
+4f bd 9f b6 3a 65 32 63      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+51      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+1b bc 4a f3 a3 35 6d b6 
+84 67 2d 4c 79 68 ff 16 
+71 03 b8 49 10 1d 2e db 
+b6 ea a6 ba 7a e0 1c c6      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+52      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d6 eb 70 5e f4 2f b1 09 
+98 01 b9 ee e6 1c 0f de 
+9a 8b 18 b5 d0 9d ed 58 
+58 fb c6 6d a3 59 59 9a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+53      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+7b a2 82 87 2b 8d ca 57 
+40 7f dd 01 95 6a 20 f7 
+6a 80 a1 28 31 c0 9c 8e 
+28 d0 0a 9f ef c8 9a c1      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+54      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+03 34 84 ae 2b 8a 26 a2 
+23 c0 e9 71 83 80 b3 d2 
+45 ea c5 38 ee a6 13 6e 
+2e e3 79 3d 23 0c 62 d2      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+55      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c9 33 c4 b8 a0 52 c9 4c 
+a2 58 40 20 97 48 ab 2d 
+83 70 be 60 4f 96 83 eb 
+63 bb fd b1 4f 85 0f 62      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+56      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+44 3e ff c6 bd e6 87 4c 
+3c cc 7f a6 ee 6d 4f 9b 
+a2 b7 77 35 47 04 84 a3 
+a6 33 77 18 da bb 9e 0a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+57      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e8 b1 74 44 9f f3 4a 11 
+2f 1c e0 d1 51 9e 02 bd 
+f0 55 3a 27 ca fa 1b cd 
+c8 e3 12 a5 24 91 71 bb      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+58      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+fa aa 26 ef 6d 53 14 bb 
+63 1a b1 6a 7e fb 78 36 
+7b 05 ab 59 c3 91 aa 84 
+53 3b e6 f4 29 6b 92 c1      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+59      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+fb aa 73 1c 0f a7 ce fa 
+15 58 a1 9f d7 4b db d5 
+9e 9c ab 0d 31 d0 5e d8 
+15 2e 96 fa 66 17 fc e6      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+5a      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4c a8 2e c6 bc 57 13 8d 
+f4 38 ff 46 66 d6 f0 e5 
+05 41 fe f4 d5 44 52 41 
+ca 49 a8 69 2b 45 88 83      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+5b      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+71 0f 1d 22 01 98 d5 b0 
+26 51 db ef e2 72 09 97 
+10 d3 63 ba 62 6b 28 79 
+c1 20 d3 2f 2b 66 13 e1      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+5c      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4e 0e 3c 64 91 ce e9 53 
+da e4 17 5b c6 37 cc a1 
+f0 30 89 04 40 50 73 38 
+4d a4 3d 63 80 00 3b d2      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+5d      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8a 2f 01 d6 19 7e 1d 5b 
+b9 77 0b 91 45 d5 39 52 
+87 5c f4 14 04 49 b1 78 
+ee e4 73 3d e8 f1 4a ed      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+5e      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9f 57 69 99 40 12 e3 fa 
+97 71 61 ee 95 ad d2 77 
+41 8b 00 7c e8 40 4d c7 
+ac 66 3a c4 00 43 0d 86      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+5f      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e2 d3 5b 7a e5 30 0a c6 
+80 74 38 fd 3c ee b7 28 
+84 5a 46 fb 43 3b 2c 96 
+c4 4a ce d7 44 55 bb dc      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+60      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2f 9b 13 63 78 17 0a 6b 
+50 38 0e bb 73 af bd 3c 
+ba 87 c1 4d 1d db fb 03 
+81 05 8f a1 db a7 ca e2      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+61      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+35 1a 64 d6 9e c0 65 fa 
+ff 76 80 d2 b9 65 e6 ea 
+dd 29 35 13 2d 2f 4d 65 
+21 d1 62 bc 4e af 46 4b      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+62      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0b 22 e6 36 92 03 4f a6 
+42 6a 90 4b 8c 8a f1 3a 
+65 1c 12 46 79 8a c9 b0 
+c6 75 30 71 e2 6c c0 c9      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+63      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+94 28 3a 13 ed 01 3e cc 
+18 a6 04 a4 e0 01 24 3d 
+59 c9 90 eb f0 68 51 74 
+6d 7e 89 c6 db 9b 92 d8      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+64      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+7e 51 c8 cf 9c 69 15 71 
+46 5b c6 1c 88 67 19 76 
+81 10 4e 1a fb 6f f2 14 
+b4 55 21 69 02 7b bb a4      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+65      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bc 14 8b 6b d8 8b 02 f8 
+ec 78 b9 99 59 fc 0c 66 
+38 d2 81 6a 12 ef 54 b2 
+93 e6 d1 d1 7c 74 cc 00      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+66      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2f 6d b9 24 92 31 ce a4 
+de db 46 ba cd 36 15 2c 
+71 a7 a8 ab 74 43 58 84 
+51 e6 da 01 59 25 fd eb      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+67      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4a 13 c4 b8 20 c9 cf 59 
+0b 5f 2e 5a 3a c8 00 7f 
+4b 27 d4 b8 ac 10 b4 7c 
+7f ee bc cb e2 1f d0 bb      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+68      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+90 52 d9 ec e8 bc 49 a6 
+b5 da 8f e2 8a b9 2b 64 
+73 bb dc dc 8d 4c 2e c4 
+1c a4 50 e7 d7 80 20 25      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+69      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ec f0 64 81 f1 18 5d dd 
+f7 9e 62 e2 18 90 d4 0c 
+2e 5c ad 12 6b 17 6b 57 
+8f 47 f5 8c 7d 64 6e f2      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+6a      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+17 6e 4b 9c 01 83 63 7b 
+e9 dd ed b5 2c 64 83 f0 
+f9 45 34 11 01 b7 97 0f 
+03 15 78 13 bf a3 c6 8a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+6b      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+95 b3 90 93 45 4e 42 68 
+3d 52 35 ad 78 b8 77 b9 
+eb 62 ab 78 83 76 fd f6 
+23 f8 74 2f ca 17 0d 94      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+6c      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+fc c5 72 71 04 04 25 ac 
+da fb 3f a6 c3 89 34 03 
+a8 f5 80 e8 08 08 16 6b 
+13 51 ec 1f ef 9b cb 0d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+6d      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8c f8 e5 21 58 ec 92 a5 
+55 d0 95 cb f1 92 a1 34 
+67 40 23 3c 65 e3 f1 88 
+99 11 4f 98 5e 97 9d 8a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+6e      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+99 f3 e1 b1 45 dd cd 15 
+12 e8 f2 b3 92 1b 69 f4 
+10 ee e3 e6 8c 9d 1a 95 
+31 f1 4e 3c 31 6a 25 ed      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+6f      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+fd 95 2c 2f 44 4c a9 ea 
+77 ba 18 24 7c 1c a1 34 
+2b c8 29 27 6d 26 c6 90 
+25 35 9c ed a7 99 5a 3e      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+70      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f4 21 bf 2f 3f 79 1d 69 
+23 5b 01 75 57 ec 10 0d 
+2a 18 ab f0 ad 43 41 ea 
+6d f7 f9 19 50 31 18 4b      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+71      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+82 89 ca 42 43 d3 69 1d 
+00 5f 0e ac 19 49 c4 98 
+98 0b a9 bc 1d 5d 5a 1c 
+0e de ce ea 31 7f 99 e8      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+72      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+65 64 78 bc cf 7d 48 be 
+f8 01 70 f0 15 2b b3 ba 
+b9 8c 1b 23 65 30 14 d4 
+32 af f2 57 65 ee 41 ac      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+73      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2e 24 0d 31 b5 6e 94 cc 
+03 01 57 6f 6a 5d 92 89 
+e7 28 66 e4 c0 f2 a4 6f 
+5c 2f f2 4a a2 e7 35 bd      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+74      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+07 4e 99 31 c3 86 cc ff 
+27 ba 13 a2 27 2a 93 a6 
+da e6 0c c5 1a 9b ff 0a 
+f5 16 02 8e 9c 2f 32 3e      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+75      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f5 d5 a8 d6 61 07 fb d2 
+be ea 4e ca 3c 93 cd ae 
+d7 79 59 c9 23 c3 e5 15 
+2e 25 40 97 e6 38 d5 e6      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+76      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bc 24 e1 77 0f 48 75 50 
+f3 08 0c 77 9f 40 73 65 
+c4 dd 9d c8 b9 05 ff 21 
+7f b7 1d 1f 25 4c 58 72      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+77      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+7c f1 dc 0a 54 30 20 41 
+32 9c c8 e0 28 de e4 f8 
+0c 5a 5e 9c d8 db e2 32 
+aa 0d 38 19 62 d1 42 14      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+78      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+7c 28 88 48 68 c4 69 78 
+f8 16 9a d4 b8 54 a6 9e 
+4d 72 80 e6 e3 a3 7e 6d 
+6d ff 5c 0d cb 70 32 b9      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+79      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f9 fa 9a 67 e1 51 c0 03 
+f8 11 98 5a 18 da 0b e0 
+8a 8a 3e 2f 3b 0e 66 66 
+b9 ac 28 5c d7 ff 83 1c      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+7a      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+75 bf 26 81 e1 0b 07 ca 
+eb 02 f0 25 62 fc f3 97 
+1a fb 2b 04 98 88 4b e8 
+cb f2 b8 14 29 1b 01 81      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+7b      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+17 39 c1 24 63 2e 67 45 
+4e 17 1f e1 78 a6 f0 d6 
+6a 4e e9 3f a7 a0 f0 c0 
+05 e4 c9 16 33 cd 80 85      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+7c      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+95 b0 71 05 12 9f d5 74 
+6d d6 d2 40 16 dc 35 bc 
+51 c7 30 8b 9b 29 8a 75 
+f3 6e 22 b9 df d8 9a 84      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+7d      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+db c9 e1 ab c4 68 c9 70 
+f1 25 42 50 e6 4d d0 5b 
+a8 36 ef 5e 84 27 1f 2e 
+f0 03 52 60 75 1b 8e d2      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+7e      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+52 a4 67 06 69 2f 52 4e 
+11 eb 46 5a 6a 56 37 df 
+0c 9d 4a c2 5d 4e 61 84 
+1e f0 62 07 fd c9 e0 3c      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+7f      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+69 1a 58 7c 67 72 9c c3 
+58 f6 bf 95 af 94 81 e5 
+31 c7 38 84 00 2d a1 b5 
+6e 59 c3 0a 71 10 77 ce      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+80      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3e 1c 81 8f 18 b8 e8 91 
+eb 4a 8a 83 0e d1 47 c4 
+e1 32 a6 4f ed 9a 90 9f 
+c7 25 f3 f8 5a c9 23 dc      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+81      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+16 70 99 2b 11 5e 46 db 
+96 d8 02 dd fe 40 9f 94 
+78 59 47 28 09 c1 b6 fe 
+37 a2 64 fd 2a 62 3f c3      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+82      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9c dd 62 b9 1c fc c2 4c 
+16 04 e4 54 8d 82 94 5a 
+9f fb f9 1e 0a fb b6 a6 
+35 34 38 17 dc 80 ef 2e      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+83      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c3 c5 a1 c2 17 b1 c8 de 
+3f bf 52 e2 71 1a ca a5 
+7b a8 af b5 1f 8f dd da 
+24 8e ef 54 b3 1f a6 81      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+84      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+af 6b 50 44 46 8d 5f c4 
+d0 6d 50 fa 3d 02 d8 51 
+8f 95 58 c3 2c b8 72 bc 
+6c 5d db fa 70 82 e3 33      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+85      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+14 66 8a 38 4e f6 a4 c2 
+9f 1c 03 f1 39 fe 9e 95 
+d7 98 75 8a 5a fa 94 32 
+f0 a9 f4 92 0e dc ae bf      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+86      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0b c2 48 42 9f af 20 bc 
+4b a3 47 0b 70 06 3e f4 
+c7 85 34 99 47 41 0f 40 
+b7 83 70 4e d5 05 50 0e      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+87      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f1 87 07 13 5d df c6 81 
+eb 97 88 c5 4f 11 99 57 
+dd ac 5d 07 7b 85 8f 5b 
+60 5c 1f 60 4f cc 8a 9b      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+88      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8d 8c 28 1e 15 2c 4b 30 
+70 39 4a e9 55 eb b8 c7 
+b7 98 cf a6 3b 91 a1 bd 
+6e b5 27 84 c3 91 59 b4      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+89      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c9 d7 6c f1 ad 9e a5 35 
+9d 92 da a6 40 8a a0 c6 
+71 d9 08 46 d0 f6 21 fa 
+65 3a 19 38 83 e4 29 9f      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+8a      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+1b 23 d3 2f 66 f8 09 3c 
+a2 c2 df 89 02 c4 16 b3 
+2e 27 3b a5 a7 b2 8e be 
+c2 49 72 5f 03 33 b9 c6      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+8b      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d5 45 39 aa 43 9d 90 3a 
+41 99 3b bf d7 73 24 94 
+e2 69 bf 39 81 a2 74 d6 
+eb 13 a5 82 a8 56 de 86      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+8c      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c2 53 21 fb 04 8c 6b 9a 
+82 e9 c9 d3 ab 39 d9 74 
+07 fb 4d 6d 19 e8 e0 3b 
+24 b5 e0 7d 17 b8 87 fd      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+8d      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ff 21 a0 93 65 86 ea 50 
+e2 4d a2 64 49 ea 78 7f 
+da 25 85 dc c2 9a 0e 08 
+b7 5b a4 5c 99 56 43 df      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+8e      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+aa 66 7a b0 45 94 25 63 
+17 83 17 63 b8 5c 89 0a 
+4f a1 b8 42 cd cf a7 90 
+3e db b0 7d 28 41 00 fb      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+8f      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+93 7a db 71 6d 99 f1 53 
+24 a9 dd f4 79 8d 4c 17 
+12 20 f7 aa b1 14 37 23 
+4a 15 dd 5d 3e 85 90 72      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+90      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+1e 4a 82 0b 1b 98 85 21 
+22 d1 50 2f 23 93 ab 06 
+7d d2 e1 5e a8 b9 d4 7c 
+44 cd fe f4 f7 f0 f5 c7      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+91      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+69 97 25 c5 63 63 c8 63 
+60 40 54 60 cb b6 68 22 
+74 9b 56 2a cd d0 a1 7a 
+a5 aa 58 13 89 4e b0 e1      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+92      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+77 05 96 01 a2 be 33 1e 
+e3 de bf 1c 22 13 2d 80 
+6e 16 2b f9 34 49 87 76 
+2f 7e e6 b3 c3 00 19 e9      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+93      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+51 4c 8e 7f e2 ae 32 4c 
+b2 06 3b b5 d1 3a 65 64 
+45 f6 a8 2d a5 94 45 b0 
+bb 26 3f fe d5 31 62 8f      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+94      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ab 17 f1 b0 94 a5 c3 32 
+af 55 6a 54 98 7a 8e 57 
+ad de 58 fc 41 75 eb b7 
+ff b9 59 19 17 1a a3 da      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+95      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ac 10 e1 1f aa 8a f2 66 
+93 27 59 12 1d 90 d8 2f 
+45 67 b8 3a 8e a5 5f 89 
+7e fb f2 62 f5 71 5d 8d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+96      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+55 92 4a 5d 73 3d 18 53 
+3e d0 3f 24 d6 00 89 81 
+08 ae 15 ae 6a 0a 05 03 
+49 a5 76 ed 1b 91 af fc      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+97      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+89 6b a1 9f bb 61 0e ec 
+d3 31 93 b4 6e ce 10 f9 
+ef 19 76 f5 bf 78 96 8e 
+c9 4f 22 9a 9e 0d e4 cb      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+98      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9d 8e 05 c7 56 13 4d d0 
+e0 e5 fc 65 c2 0a a8 c5 
+dc 76 b1 4f 40 14 01 2f 
+9f 62 f3 2d d1 6b d6 53      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+99      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8a de 3a 97 ac 58 74 35 
+1b 2c f8 38 b1 e4 0a 72 
+58 9e f8 2a 97 23 19 e8 
+72 9c f6 e1 a8 d6 d0 e6      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+9a      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+37 6b da dd 4c 5a 81 0f 
+57 00 41 a1 e1 57 ac da 
+4b 0f 17 93 9f 71 10 fb 
+76 39 0a 71 75 f8 95 4c      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+9b      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c7 c5 54 c9 78 b0 93 da 
+c9 8c 1b 0d c3 02 a9 dc 
+5b ec ad be eb c2 be 33 
+3e e9 13 ee 62 e0 4b 7f      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+9c      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+77 f5 99 d4 f4 c6 c8 2f 
+49 e0 9a 14 b6 e7 e4 b4 
+36 42 48 09 c4 cf 23 80 
+f4 5b dd 4c f4 f5 37 92      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+9d      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+fc cd e9 e9 65 cc c9 e4 
+5d 86 db 2e c2 cc 85 7f 
+62 94 05 17 4e 2e 62 06 
+fd 55 86 f1 34 8c b4 8a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+9e      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d5 4c d3 f2 87 0b 41 0e 
+f6 29 20 56 63 1e 3c ee 
+3e 99 d0 8e 87 6c cc 94 
+01 35 34 d2 6c b6 c7 8c      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+9f      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9a f3 fd d9 98 59 47 ce 
+91 c2 0b 89 ba e6 96 94 
+77 f3 33 8e 28 ac f0 96 
+66 4a a0 98 ca 84 a9 4c      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+a0      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c1 19 1b a5 e5 49 c5 53 
+b5 80 ec 8c c4 4e 46 5a 
+11 b8 a4 be 67 cd 28 87 
+63 b4 88 00 fd 77 b4 50      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+a1      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a1 de b6 18 38 99 f8 b4 
+21 c1 41 63 5f 4e 30 e2 
+36 1e 8c b0 ee 65 3a 28 
+7c 19 8b d0 e4 8c 24 53      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+a2      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c3 3f 00 6a 8b 25 c1 e7 
+22 0b 76 cb f6 fc 7f 6c 
+f7 24 b5 b0 91 c8 bf f3 
+5d 2e bc 7d 2e 00 70 82      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+a3      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+30 cb f6 f9 5a fb 76 81 
+a8 19 3e 60 85 3f b3 78 
+82 04 a5 40 c5 a6 ac e9 
+87 52 0c 0d c8 b6 22 ff      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+a4      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b0 96 02 3a 24 82 dd 1a 
+6c e6 a6 0d 3c 78 1b 89 
+e8 53 3a 77 57 54 30 a9 
+8c 17 74 42 d7 e2 30 09      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+a5      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3b e2 2c 00 92 04 bf 7a 
+e9 ab 27 df b8 e6 e7 28 
+ff d4 47 4c b8 3f bf df 
+74 f2 fd d3 22 9f a1 37      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+a6      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+5c 46 9a 25 a7 16 9d e0 
+54 7c c7 61 e5 4f 6a c3 
+32 17 9a 49 4c 22 2a 21 
+b3 ef 25 0b 88 fb 03 77      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+a7      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+10 8f 41 85 88 ad 55 41 
+26 74 39 e3 4e 5b 14 8d 
+7e f6 00 30 ed 2d 97 d3 
+ca bc 06 70 12 72 0f e3      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+a8      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2b c8 18 dd fc 2d 18 ef 
+1d 07 51 60 e4 5b 86 2c 
+97 76 a1 1d 27 90 b6 71 
+b5 cf 57 fe 78 59 16 b0      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+a9      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+13 44 73 0d 9a 23 fb 2d 
+41 61 38 70 b6 3d 27 88 
+48 75 f7 fe 72 b8 78 75 
+ff 01 1e 20 dd c8 38 72      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+aa      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f2 e7 48 d7 d4 65 6c 59 
+fa a8 1f 2e 00 e5 1c 1b 
+ff 3b 5b 66 50 df 19 4f 
+0b 77 c5 31 77 34 53 42      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ab      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3b 1e 7a ce 44 bf ba 24 
+50 7e ae 56 c7 4c 54 8a 
+95 8f f3 7d 4f 63 2f 01 
+49 04 84 a6 b7 c0 d3 71      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ac      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a3 94 22 14 b7 27 d2 15 
+01 6a 6e 64 9e 14 00 c6 
+43 40 62 e3 91 75 29 0e 
+3f a2 cd c8 21 5d 83 df      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ad      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+5a f2 c0 cd ea 6d 0e 5a 
+bb ab 3e 59 4a 69 92 dc 
+21 01 e4 83 6d 0c 1d a4 
+7e 1b 31 a3 4c 8b eb e5      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ae      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bd b4 79 a5 fd a2 24 6d 
+92 17 67 c7 24 74 8f 64 
+ce 45 c1 78 cc 1b 61 68 
+a9 ef ec e3 47 27 1a f3      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+af      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4b b1 4b a5 62 37 8f e8 
+b3 7e ec eb 0a 95 75 e7 
+50 b6 3c c1 a1 1a ba b1 
+51 38 74 e4 7e 0f 56 65      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+b0      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+1f 2f 3b 43 b9 d7 40 42 
+7a ce f3 6f c6 ca 93 e3 
+80 0d e2 84 66 04 fb 01 
+82 ba 08 19 24 44 51 a0      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+b1      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+c8 c3 a4 34 ef 2d ce af 
+57 09 b7 2a ea d4 03 27 
+52 3b 1d c7 41 33 e1 eb 
+47 c4 3c 2b b6 72 fa 75      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+b2      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a2 2b 6c 82 ad f2 d5 e8 
+45 91 0a 8a 17 64 fc ea 
+b9 2e 07 c9 c0 02 df 8e 
+5e 31 76 43 db 36 bf 1b      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+b3      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2f 3a 27 f5 47 89 0a f4 
+61 da 7d 52 9c 2a c9 9b 
+5d 19 4c 77 dd 7b 1a 64 
+8b 76 82 f6 b0 05 4f 12      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+b4      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+b0 95 c2 ee 51 3b bf c7 
+0b b5 00 9b d6 84 18 1b 
+16 6e 92 a2 6c 56 51 f9 
+de 02 ae 0f b9 53 7c bc      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+b5      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ca b0 ca 3a cd 01 20 b1 
+c3 9d c1 67 b6 d0 9a 4b 
+68 7a d1 41 37 7f 6a 87 
+d8 a1 59 57 38 cc 4a 6d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+b6      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bb d5 99 e7 74 78 ee f3 
+1f 90 8b 54 61 62 64 e7 
+e6 4b e0 84 bd d9 5b 9b 
+76 75 2a 1e 8d ab 64 2e      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+b7      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+17 1d 26 98 3a a8 9e b1 
+90 31 4d 60 0f 37 3b bb 
+1e 35 a1 9a 38 48 71 a7 
+98 2d 2f 7f e1 3a fd ee      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+b8      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+82 f8 34 df a4 b9 8d 0c 
+7d 5d 4b 95 da 02 62 6c 
+04 5e dd f5 f5 5f 02 d9 
+62 ed 1e fc 74 46 7b 42      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+b9      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a5 f8 a3 cf 69 0f 08 8e 
+12 ac 68 fc 5c 14 42 bf 
+a4 8c be 4b fd 07 e1 5d 
+8b 62 ee b3 ea 91 c4 68      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ba      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9e 90 c5 40 9c ac 6b af 
+7a 91 1d 58 dd 46 21 8e 
+37 30 a3 f9 ab 03 2c a5 
+6c 41 8e e4 fb b3 f5 4b      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+bb      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+21 86 6e e3 4b 8b f9 94 
+33 42 f0 d3 8c 4e 02 10 
+b5 87 bc 94 19 27 87 14 
+66 51 d3 2f 97 08 49 d1      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+bc      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d7 ca eb 56 c1 3e 6e 7a 
+ed b9 4f 10 a9 57 2e fa 
+5f 30 7c 25 78 b2 03 b4 
+51 94 84 fb e4 cb a5 6b      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+bd      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+00 e0 08 0a 09 18 de 17 
+a3 08 31 91 e9 2e 52 a5 
+86 7f 30 b8 7f a5 4d 68 
+c6 da 7c 30 a1 88 a6 af      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+be      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+db 92 95 52 8d 07 3a 31 
+96 05 5b 55 03 4e 25 a6 
+74 a5 08 78 55 7c ea 4b 
+4a 86 79 d6 c4 cf a6 5c      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+bf      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+7e 68 48 79 fa e9 f3 d7 
+5d ce 6d f9 21 9c 9d db 
+64 10 0f 88 14 52 1c 26 
+0d e1 8d 60 e5 c0 89 32      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+c0      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+49 4a 57 00 c9 53 9d 8a 
+3d ef 4a b7 8f a8 3e ce 
+23 cb e7 0b 01 0d ca 36 
+9e a4 a3 40 17 35 11 41      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+c1      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3c 1c 12 fa 4b 7f b6 b2 
+63 f7 95 08 3e 0f 19 87 
+ce b5 cb ac 29 70 f4 a5 
+be 44 34 08 a3 84 c6 b5      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+c2      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+34 42 d8 4b 5d de d2 06 
+bd c4 5e 41 60 a4 58 77 
+7d 2a c6 6a fd 81 20 8a 
+13 88 04 2d 67 d2 bd 0d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+c3      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+60 88 0d 6e 55 11 ae 41 
+8f 6f ae 6e 03 08 9b 77 
+76 bd 55 05 0d 00 c8 5b 
+ee 7a b8 4e b2 10 86 18      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+c4      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8b d0 f1 a0 b3 3a b5 63 
+18 31 60 fc a6 09 e4 c4 
+cc ec 79 9c 3f 19 71 29 
+8c 2c 7a 99 36 de d8 66      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+c5      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+85 da 63 3c 8d 2b 80 eb 
+43 46 0a ac 30 23 76 3c 
+64 54 f5 07 60 0c e5 8a 
+b8 e5 bc ec 82 a1 4d c7      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+c6      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+21 d7 4f 26 12 35 dc 27 
+2c f4 7c 36 4e 2d bc 89 
+02 a9 2f 6e 72 4d 08 06 
+10 e9 70 e5 69 ae f5 4b      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+c7      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+01 25 a0 0d 79 23 3e 40 
+f5 d4 27 17 1b 1c ed f7 
+e1 82 a6 61 3e 45 d9 4e 
+ac c9 64 be b1 e0 9d 64      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+c8      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4d 40 06 70 fd 47 10 a6 
+22 5a 97 e8 56 c1 45 83 
+a9 27 e4 59 82 9c 91 a1 
+c6 82 c0 f3 38 19 58 b6      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+c9      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+6f eb f2 4f 29 06 90 28 
+2b 29 dd 5c d2 10 b7 b7 
+d1 ea 91 41 28 e1 18 4d 
+71 7f 73 4d f6 98 69 9f      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ca      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d9 67 15 8d dc 03 e6 7e 
+b9 db cb aa 9a 09 5e b2 
+9b e2 ca c1 89 8f 4a c7 
+3f 78 05 2c 81 f3 3a 8e      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+cb      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+96 af d7 7e ff 10 a2 c2 
+9c 22 52 25 4c bf 49 bc 
+fa 41 0a d6 aa 16 7c bd 
+e4 8c dc ed 12 9c 81 7f      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+cc      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+08 ab 24 a6 7a ab 9b 62 
+9b 8a 37 9b 46 ac f1 9e 
+e7 a6 61 a4 4a 42 6d 4a 
+90 9d 80 c6 a4 40 2e 53      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+cd      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+6f 58 39 7b 05 4c 29 c1 
+2e 05 eb 31 58 c4 20 10 
+44 46 0d 30 23 23 c4 02 
+7c 38 02 af fe bd 11 02      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ce      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+67 fa 2b 35 ad 16 dd 4b 
+20 1c 3e 91 f9 12 c4 5a 
+11 e8 9c b7 39 0c ba 08 
+a2 f8 1b 26 eb 0f 1a 21      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+cf      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+4e 75 e3 ac 24 e1 45 9d 
+6f 77 eb bb 82 6f 21 da 
+4f 4d 6d 4f fe f9 a9 71 
+ae 03 64 44 ce cf 22 7c      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+d0      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f1 db f6 73 57 5c ca 9f 
+26 0e 4a 31 fc 53 ff 73 
+4b e0 a0 58 7f 26 bc 1b 
+c6 71 3d 4a 79 42 2b c5      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+d1      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ef cd 94 77 98 e0 02 ae 
+53 b1 f1 fa e0 71 ef 90 
+68 30 2e 75 61 5a dc 77 
+ca ca 57 ce 99 a9 09 73      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+d2      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+99 5a 8c f7 f1 ec 35 d9 
+65 79 8f c0 a3 23 32 d4 
+07 e6 15 e9 2e 23 9a 0c 
+2b 5c 01 3f c6 ec ed 93      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+d3      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0c 51 8d fc a0 96 eb 22 
+89 fc 4d 05 12 da 27 c5 
+96 2a 54 8b d6 5b 48 03 
+a5 ff 3a 8a ed 62 62 9e      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+d4      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+cb 1b 67 e5 50 01 14 3f 
+29 07 d2 92 16 54 02 4b 
+f2 bb 03 31 84 6e ee 0f 
+17 0a 18 fd 53 94 30 ec      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+d5      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+85 59 56 28 f3 da 56 f8 
+06 c5 1a f0 26 40 a7 4f 
+35 44 3c 42 76 60 56 7e 
+c0 57 e2 49 e2 85 bb 5f      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+d6      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+6d bf fd 09 0f ea 45 aa 
+d9 dd e2 98 02 9b 06 84 
+86 1a 09 d9 49 a1 b0 02 
+4b fc 3c 4d 7f cc 22 d1      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+d7      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+24 d4 e6 16 af 41 57 4c 
+76 d6 46 94 7b 4d b8 c2 
+39 f7 11 98 9e 95 d4 38 
+f9 f8 a5 fb 23 76 6f b6      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+d8      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+13 ec a2 b6 0e 74 7d 61 
+ce cc 1c 4c 86 00 9f 2a 
+51 b8 e1 9f ab 4f 33 be 
+8c e2 e6 a7 b4 d5 a5 95      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+d9      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+06 e0 1c 04 28 0a d5 b5 
+47 dc 1b bc bf 47 2a 59 
+f9 c1 d8 8b d6 45 98 50 
+15 08 87 03 d1 76 d6 fd      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+da      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bc f8 7c 18 b8 7e fc 0a 
+85 fd 22 41 e0 fd 6a c2 
+bc 2a 71 0b 1e 4c ad c4 
+dd 85 5c 12 50 f1 15 30      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+db      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e9 e0 ef 9a 62 3b 56 99 
+62 78 a0 cb 0d 4a c7 d7 
+06 79 46 15 98 b1 8f b9 
+7b 28 c6 18 2c 6e c2 e6      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+dc      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0e a6 2e 47 10 dd 95 0e 
+db 01 d7 9f e2 21 b3 a6 
+f1 5e d7 60 f0 6d b8 e7 
+ed ec 6d 3e ab cb 7a 1c      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+dd      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+50 d0 f9 b5 e2 76 17 81 
+cd 3c bf ec b6 1b d3 cf 
+ac ec 19 7f 58 b2 05 9a 
+a6 7f 54 50 f7 08 57 cf      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+de      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+36 dd cb 81 ed d2 8a 08 
+2e c2 3d 86 e7 a8 70 1b 
+0b 54 62 13 fc 98 4a 53 
+87 e6 52 68 cc fd b9 63      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+df      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+07 be 9b 7d 9f 20 ba de 
+ef 0b fb 5d ef b8 13 9a 
+5d 9e 4d c4 ee 7c d0 24 
+cc 70 53 00 9b eb 9b 6a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+e0      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+0b a3 3a d6 c2 02 36 f1 
+ff 53 1c 41 b2 aa 5c 46 
+2a e5 16 af a8 3e d7 9d 
+44 cd b1 e0 83 be df 37      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+e1      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+88 00 e7 75 e8 ea 1b ce 
+d5 5b e7 7d 51 08 8b a0 
+11 72 ab 28 8d e1 83 57 
+d3 76 8e a1 88 e0 9e 8d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+e2      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+92 61 5d 3d 94 2b df 9a 
+7f 87 98 6f b0 66 9a b1 
+55 94 e2 2e 9c 03 1a 18 
+04 8d 38 0a 1d b9 64 7f      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+e3      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+33 99 eb fe b1 bd 18 cb 
+68 9d 9f 43 32 a3 2c 99 
+36 ef cb 5f eb 16 90 27 
+95 0a fd be be 1b 29 5d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+e4      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+51 2a 32 c1 ec a9 94 d9 
+ab 81 d1 3c bc 86 11 6b 
+d7 87 d7 6d 1c 8f 63 2f 
+b8 d1 b2 53 97 b5 d9 32      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+e5      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2d 52 5e c5 63 a1 c1 17 
+c0 a1 f6 69 64 57 33 e1 
+d8 0e 9d ce aa 5f ef b1 
+dc d8 4b 4b bd b6 f8 f5      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+e6      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9b af bd 94 06 9a 74 43 
+c1 01 48 45 a1 5e df 45 
+a5 b4 28 96 99 31 e6 76 
+b6 14 07 61 25 57 6f 9e      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+e7      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8e a8 75 23 cd 02 21 56 
+79 77 c7 48 cf d6 ac 32 
+f3 c1 22 15 05 78 b2 7f 
+ba 4c 36 bd e2 b5 b8 b1      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+e8      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+06 26 6e ee 32 9c 69 82 
+0b 90 f4 86 40 bf 37 5d 
+86 e7 6f 9e 8c 02 42 6a 
+57 5e da 20 89 d8 23 ee      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+e9      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+9a 47 69 a8 87 41 f7 a7 
+4b e8 e8 70 88 59 20 27 
+56 58 da 14 b0 f3 2c fd 
+11 a0 58 b7 32 5e c0 e1      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ea      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f9 b9 e8 9c 97 d0 95 af 
+45 22 af 53 20 92 60 45 
+bd 82 42 aa 98 9d 35 55 
+72 33 73 d6 57 3c 9d f2      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+eb      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bc b3 60 c4 2d 78 7d 16 
+88 f0 3f 20 27 e4 7b 09 
+20 09 0d dd 95 9f 1d 91 
+69 3e 09 4a d3 e9 37 8a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ec      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+f7 a2 fb 14 8c d9 43 39 
+a2 66 77 f1 5e ce f6 03 
+1f 36 6c 67 2e 0b f0 b7 
+d0 cf ce 05 c6 89 1e 83      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ed      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+a8 25 f3 b1 3c 22 65 93 
+f6 d8 09 9f e3 ca 66 a4 
+fa 82 5c 67 dd 7f 72 2a 
+f9 d3 93 1f d9 e5 9f 50      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ee      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+bb 0a b3 60 12 1a 3f 44 
+82 b9 23 47 7b 99 d2 43 
+b5 6a b8 23 ed 73 f0 ae 
+29 2e 22 19 41 29 3a 51      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ef      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+ea 90 b4 eb 9d 20 af 66 
+ac 33 33 e6 62 a6 c5 6f 
+ed 80 ea c4 4d e4 b3 9e 
+3e 40 0a 36 9b e0 a2 48      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+f0      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+2f 8a af b8 bf 0c 42 6f 
+56 e9 00 96 da ca 7a 72 
+8f 65 c4 b0 2d 29 88 85 
+e1 c8 4d 5d f0 4d cd 16      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+f1      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+93 7f c0 9d 48 95 fa 85 
+c0 8c 16 62 ce 1e b2 8d 
+f7 e9 46 c8 bf 1d 3c b4 
+47 9b 77 8c 14 ea a9 1e      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+f2      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+cd 14 40 cc d8 6b ef 91 
+6a cd 8a 71 13 aa e3 fe 
+df 64 03 7c 6a 17 97 0a 
+a7 9a 8a 86 08 ed 08 ea      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+f3      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+5d 7f a6 59 30 3d 41 42 
+c9 06 17 90 84 8c 20 e4 
+ac f7 f1 e7 49 95 41 a7 
+7d 1c 4f 26 15 f6 77 98      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+f4      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3e 80 e9 82 bf 89 b0 6d 
+17 2d fd 11 98 e2 c7 50 
+02 a7 ef 5b bc 81 c3 36 
+db 26 cd d3 bb 85 77 7a      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+f5      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+3a 03 ca 7b f3 7e a6 7d 
+bf 25 8c 97 b4 3f 97 2d 
+8c 3c 5b d6 2b 2e cf b6 
+07 8d 51 5a df 09 58 5d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+f6      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+e0 b3 f8 20 b1 68 e1 5b 
+dd 32 84 5d 59 8e 1b 8d 
+3a e0 4a 2a c4 34 a8 4c 
+cd c3 9f 3c 8f 06 12 ac      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+f7      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+58 59 64 58 c5 f3 3b 7f 
+60 c1 0a 83 95 30 d1 82 
+a0 22 96 c1 ed b9 8b 0c 
+ee 28 88 c0 e2 e5 38 df      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+f8      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+78 01 87 4a 18 68 de 42 
+43 24 e9 42 32 db 61 8d 
+1d 3f bd 56 49 26 1f 08 
+de 36 0c 75 14 98 9d cf      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+f9      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+af a5 90 b9 51 55 c7 4f 
+ff 2c 54 2c d2 96 06 44 
+38 51 1c ba 16 75 d1 43 
+7d 2f 88 a7 99 16 58 52      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+fa      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+09 d1 6a 2d f0 1f 18 f9 
+0f 8a 6b db 66 4b 14 3a 
+f1 cf 5e b0 8a 8c 9e bb 
+1a d6 bf 36 e9 87 ec 16      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+fb      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+8f 55 72 6a 45 a1 14 09 
+9f 87 55 49 a6 71 51 3a 
+dd 7e 2c 87 9c 71 d3 bd 
+ad c7 b1 c4 6d e4 80 c7      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+fc      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+39 33 d7 71 cf 3f 69 a4 
+f1 db 34 fe 91 80 f2 e7 
+02 7d ec 35 d0 a4 33 81 
+75 55 e8 7e ef 6b 71 a7      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+fd      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+95 a4 3d 17 c2 92 5a af 
+22 f5 2d 14 07 cc f0 11 
+d5 39 b0 5c 71 e9 86 12 
+0f 88 92 2e 98 08 aa 2d      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+fe      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+d6 e1 c7 c1 75 af c6 eb 
+dd 0f d2 9b 41 2f 0e f8 
+ac ec ae bb 03 5a 6b 52 
+0b c1 3f c5 8e 90 f0 21      32 (octets)
+
+
+
+
+Password: 
+00      1 (octets)
+
+Salt: 
+ff      1 (octets)
+
+Associated data:
+     0 (octets)
+
+(Min-)Garlic:  0
+
+Output: 
+07 62 29 89 bb ad 41 e0 
+d1 b4 f7 83 0d 6f 28 d2 
+13 51 5c 53 7f af 2f 4d 
+05 86 e5 b0 e1 34 3e 74      32 (octets)
+
+
+
+
