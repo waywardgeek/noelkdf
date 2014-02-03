@@ -63,7 +63,7 @@ def NoelKDF(hash, memsize, startGarlic, stopGarlic, blocksize, parallelism, repe
         value = 0
         for p in range(parallelism):
             hashWithoutPassword(p, wordHash, mem, blocklen, numblocks, repetitions)
-            value += (mem[2*p*numblocks*blocklen + blocklen-1]) & 0xffffffff
+            value = (value + (mem[2*p*numblocks*blocklen + blocklen-1])) & 0xffffffff
         for p in range(parallelism):
             hashWithPassword(p, mem, blocklen, numblocks, parallelism, repetitions, value)
         xorIntoHash(wordHash, mem, blocklen, numblocks, parallelism)

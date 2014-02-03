@@ -31,7 +31,7 @@ static bool verifyParameters(uint32 hashSize, uint32 passwordSize, uint32 saltSi
         return false;
     }
     uint64 totalSize = (uint64)memSize << (20 + stopGarlic);
-    if(totalSize >> (20 + stopGarlic) != memSize) {
+    if(totalSize >> (20 + stopGarlic) != memSize || totalSize > 1LL << 50) {
         return false;
     }
     return true;
