@@ -62,9 +62,10 @@ bool NoelKDF_HashPassword(uint8 *hash, uint32 hashSize, uint8 *password, uint8 p
         return false;
     }
     if(data != NULL && dataSize != 0) {
+        printf("dataSize:%u\n", dataSize);
         uint8 derivedSalt[hashSize];
-        H(derivedSalt, saltSize, data, dataSize, salt, saltSize);
-        H(hash, hashSize, password, passwordSize, derivedSalt, saltSize);
+        H(derivedSalt, hashSize, data, dataSize, salt, saltSize);
+        H(hash, hashSize, password, passwordSize, derivedSalt, hashSize);
     } else {
         H(hash, hashSize, password, passwordSize, salt, saltSize);
     }
