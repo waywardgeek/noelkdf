@@ -5,3 +5,6 @@ pedatabase.h: pedatabase.c
 
 pedatabase.c: Pebble.dd
 	datadraw Pebble.dd
+
+clean:
+	rm pebble
