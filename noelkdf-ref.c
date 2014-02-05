@@ -90,8 +90,8 @@ static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint8 startGar
     uint64 memlen = (1 << 20)*(uint64)memSize/sizeof(uint32);
     uint32 blocklen = blockSize/sizeof(uint32);
     uint32 numblocks = (memlen/(2*parallelism*blocklen)) << startGarlic;
-    memlen = 2*parallelism*(uint64)numblocks*blocklen;
-    uint32 *mem = (uint32 *)malloc((1 << (stopGarlic - startGarlic))*memlen*sizeof(uint32));
+    memlen = (2*parallelism*(uint64)numblocks*blocklen) << (stopGarlic - startGarlic);
+    uint32 *mem = (uint32 *)malloc(memlen*sizeof(uint32));
     if(mem == NULL) {
         return false;
     }
