@@ -1,0 +1,32 @@
+#!/bin/bash
+
+files="\
+main.c \
+noelkdf.h \
+noelkdf-pthread.c \
+noelkdf-test.c \
+noelkdf.py \
+sha256.c \
+run_noelkdf \
+test_vectors \
+README.md \
+predict/main.c \
+predict/Pebble.dd \
+predict/README \
+predict/pedatabase.h \
+predict/pedatabase.c \
+predict/Makefile \
+noelkdf-ref.c \
+NoelKDF.pdf \
+LICENSE \
+Makefile \
+quick_check \
+sha256.h"
+
+name="noelkdf_`date +%b%d`"
+rm -rf $name
+mkdir -p $name/predict
+for file in $files; do
+    cp $file $name/$file
+done
+tar -cjf $name.tar.bz2 $name
