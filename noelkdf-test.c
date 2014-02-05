@@ -103,7 +103,7 @@ void PHC_test(void)
     }
 }
 
-void veryfyGarlic(void) {
+void verifyGarlic(void) {
     uint32 garlic;
     uint8 hash1[32], hash2[32];
 
@@ -135,13 +135,13 @@ int main()
 {
     printf("****************************************** Basic tests\n");
 
+    verifyGarlic();
+
     simpletest("password", "salt", "", 1);
     simpletest("password", "salt", "", 1024);
     simpletest("password", "salt", "data", 1024);
     simpletest("passwordPASSWORDpassword",
                          "saltSALTsaltSALTsaltSALTsaltSALTsalt","", 1);
-
-    veryfyGarlic();
 
     PHC_test();
 

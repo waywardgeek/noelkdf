@@ -53,26 +53,24 @@ def NoelKDF_UpdatePasswordHash(hash, memsize, oldGarlic, newGarlic, blocksize, p
     return NoelKDF(hash, memsize, oldGarlic, newGarlic, blocksize, parallelism, repetitions)
 
 def NoelKDF(hash, memsize, startGarlic, stopGarlic, blocksize, parallelism, repetitions):
-    wordHash = toUint32Array(hash)
     memlen = (1 << 20)*memsize/4
     blocklen = blocksize/4
-    numblocks = memlen/(2*parallelism*blocklen)
-    adjMemlen = 2*parallelism*numblocks*blocklen
-    mem = [0 for _ in range((1 << stopGarlic)*adjMemlen)]
+    numblocks = (memlen/(2*parallelism*blocklen)) << startGarlic
+    memlen = 2*parallelism*numblocks*blocklen
+    mem = [0 for _ in range((1 << (stopGarlic - startGarlic))*memlen)]
     for i in range(startGarlic, stopGarlic+1):
-        value = 0
         for p in range(parallelism):
-            hashWithoutPassword(p, wordHash, mem, blocklen, numblocks, repetitions)
-            value = (value + (mem[2*p*numblocks*blocklen + blocklen-1])) & 0xffffffff
+            hashWithoutPassword(p, hash, mem, blocklen, numblocks, repetitions)
         for p in range(parallelism):
-            hashWithPassword(p, mem, blocklen, numblocks, parallelism, repetitions, value)
-        xorIntoHash(wordHash, mem, blocklen, numblocks, parallelism)
+            hashWithPassword(p, mem, blocklen, numblocks, parallelism, repetitions)
+        hash = xorIntoHash(hash, mem, blocklen, numblocks, parallelism)
         numblocks *= 2
-    return toUint8Array(wordHash)
+        hash = H(len(hash), hash, str(bytearray([i])))
+    return hash
 
-def hashWithoutPassword(p, wordHash, mem, blocklen, numblocks, repetitions):
+def hashWithoutPassword(p, hash, mem, blocklen, numblocks, repetitions):
     start = 2*p*numblocks*blocklen
-    threadKey = toUint32Array(H(blocklen*4, str(toUint8Array(wordHash)), str(toUint8Array([p]))))
+    threadKey = toUint32Array(H(blocklen*4, hash, str(toUint8Array([p]))))
     for i in range(blocklen):
         mem[start + i] = threadKey[i]
     value = 1
@@ -88,10 +86,9 @@ def hashWithoutPassword(p, wordHash, mem, blocklen, numblocks, repetitions):
         value = hashBlocks(value, mem, blocklen, fromAddr, toAddr, repetitions)
         toAddr += blocklen
 
-def hashWithPassword(p, mem, blocklen, numblocks, parallelism, repetitions, value):
-    startBlock = 2*p*numblocks + numblocks
-    start = startBlock*blocklen
-    prevAddr = start - blocklen
+def hashWithPassword(p, mem, blocklen, numblocks, parallelism, repetitions):
+    start = (2*p + 1)*numblocks*blocklen
+    value = 1
     toAddr = start
     for i in range(numblocks):
         v = value
@@ -110,16 +107,19 @@ def hashWithPassword(p, mem, blocklen, numblocks, parallelism, repetitions, valu
 def hashBlocks(value, mem, blocklen, fromAddr, toAddr, repetitions):
     prevAddr = toAddr - blocklen
     for r in range(repetitions):
-        for j in range(blocklen):
-            value = (value*(mem[prevAddr + j] | 3) + mem[fromAddr + j]) & 0xffffffff
-            mem[toAddr + j] = value
+        for i in range(blocklen):
+            value = (value*(mem[prevAddr + i] | 3) + mem[fromAddr + i]) & 0xffffffff
+            mem[toAddr + i] = value
     return value
 
-def xorIntoHash(wordHash, mem, blocklen, numblocks, parallelism):
+def xorIntoHash(hash, mem, blocklen, numblocks, parallelism):
+    hash = bytearray(hash)
     for p in range(parallelism):
-        pos = 2*(p+1)*numblocks*blocklen - len(wordHash)
-        for i in range(len(wordHash)):
-            wordHash[i] ^= mem[pos+i]
+        pos = 2*(p+1)*numblocks*blocklen - len(hash)/4
+        data = toUint8Array(mem[pos:pos+len(hash)/4])
+        for i in range(len(hash)):
+            hash[i] ^= data[i]
+    return str(hash)
 
 def bitReverse(value, mask):
     result = 0
