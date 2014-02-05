@@ -1,46 +1,48 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "sha256.h"
 #include "noelkdf.h"
 
-
 // Forward declarations
-static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGarlic, uint32 stopGarlic,
+static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint8 startGarlic, uint8 stopGarlic,
         uint32 blockSize, uint32 parallelism, uint32 repetitions, bool printDieharderData);
-static void hashWithoutPassword(uint32 p, uint32 *wordHash, uint32 hashlen, uint32 *mem,
+static void hashWithoutPassword(uint32 p, uint8 *hash, uint32 hashSize, uint32 *mem,
         uint32 blocklen, uint32 numblocks, uint32 repetitions);
 static void hashWithPassword(uint32 p, uint32 *mem, uint32 blocklen, uint32 numblocks,
-        uint32 parallelism, uint32 repetitions, uint32 value);
+        uint32 parallelism, uint32 repetitions);
 static inline uint32 hashBlocks(uint32 value, uint32 *mem, uint32 blocklen, uint64 fromAddr,
         uint64 toAddr, uint32 repetitions);
-static void xorIntoHash(uint32 *wordHash, uint32 hashlen, uint32 *mem, uint32 blocklen,
+static void xorIntoHash(uint8 *hash, uint32 hashSize, uint32 *mem, uint32 blocklen,
         uint32 numblocks, uint32 parallelism);
 static uint32 bitReverse(uint32 value, uint32 mask);
 static void dumpMemory(uint32 *mem, uint32 memorySize);
 
 // Verify that parameters are valid for password hashing.
 static bool verifyParameters(uint32 hashSize, uint32 passwordSize, uint32 saltSize, uint32 memSize,
-        uint32 startGarlic, uint32 stopGarlic, uint32 dataSize, uint32 blockSize, uint32 parallelism,
+        uint8 startGarlic, uint8 stopGarlic, uint32 dataSize, uint32 blockSize, uint32 parallelism,
         uint32 repetitions) {
-    if(hashSize > 1024 || hashSize < 4 || (hashSize & 0x3) || passwordSize > 1024 ||
-            passwordSize == 0 || blockSize < 4 || blockSize & 0x3 || saltSize > 1024  || saltSize == 0 ||
+    if(hashSize > 1024 || hashSize < 12 || (hashSize & 0x3) || passwordSize > 1024 ||
+            passwordSize == 0 || saltSize > 1024  || saltSize == 0 ||
             memSize == 0 || memSize > 1 << 30 || startGarlic > stopGarlic || stopGarlic > 30 ||
-            dataSize > 1024 || blockSize > 1 << 30 ||
-            ((uint64)memSize << 18) < (uint64)blockSize*parallelism || parallelism == 0 ||
+            dataSize > 1024 || blockSize > 1 << 30 || blockSize < 4 || blockSize & 0x3 ||
+            ((uint64)memSize << 20) < 4*(uint64)blockSize*parallelism || parallelism == 0 ||
             parallelism > 1 << 20 || repetitions == 0 || repetitions > 1 << 30) {
         return false;
     }
     uint64 totalSize = (uint64)memSize << (20 + stopGarlic);
-    if(totalSize >> (20 + stopGarlic) != memSize || totalSize > 1LL << 50) {
+    if(totalSize >> (20 + stopGarlic) != memSize || totalSize > 1LL << 50 || totalSize/blockSize > 1 << 30) {
         return false;
     }
     return true;
 }
 
-// This is the crytographically strong hash function.  Feel free to use any other hash here.
+// This is the crytographically strong password hashing function based on PBKDF2.
 static void H(uint8 *hash, uint32 hashSize, uint8 *password, uint32 passwordSize, uint8 *salt,
         uint32 saltSize) {
-    PBKDF2_SHA256(password, passwordSize, salt, saltSize, 1, hash, hashSize);
+    uint8 result[hashSize];
+    PBKDF2_SHA256(password, passwordSize, salt, saltSize, 1, result, hashSize);
+    memcpy(hash, result, hashSize);
 }
 
 // A simple password hashing interface.  MemSize is in MB.
@@ -55,27 +57,25 @@ bool NoelKDF_SimpleHashPassword(uint8 *hash, uint32 hashSize, uint8 *password, u
 
 // The full password hashing interface.  MemSize is in MB.
 bool NoelKDF_HashPassword(uint8 *hash, uint32 hashSize, uint8 *password, uint8 passwordSize,
-        uint8 *salt, uint32 saltSize, uint32 memSize, uint32 garlic, uint8 *data, uint32 dataSize,
+        uint8 *salt, uint32 saltSize, uint32 memSize, uint8 garlic, uint8 *data, uint32 dataSize,
         uint32 blockSize, uint32 parallelism, uint32 repetitions, bool printDieharderData) {
     if(!verifyParameters(hashSize, passwordSize, saltSize, memSize, 0, garlic, dataSize,
             blockSize, parallelism, repetitions)) {
         return false;
     }
     if(data != NULL && dataSize != 0) {
-        printf("dataSize:%u\n", dataSize);
         uint8 derivedSalt[hashSize];
         H(derivedSalt, hashSize, data, dataSize, salt, saltSize);
         H(hash, hashSize, password, passwordSize, derivedSalt, hashSize);
     } else {
         H(hash, hashSize, password, passwordSize, salt, saltSize);
     }
-    return NoelKDF(hash, hashSize, memSize, 0, garlic, blockSize, parallelism, repetitions,
-        printDieharderData);
+    return NoelKDF(hash, hashSize, memSize, 0, garlic, blockSize, parallelism, repetitions, printDieharderData);
 }
 
 // Update an existing password hash to a more difficult level of garlic.
-bool NoelKDF_UpdatePasswordHash(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 oldGarlic,
-        uint32 newGarlic, uint32 blockSize, uint32 parallelism, uint32 repetitions) {
+bool NoelKDF_UpdatePasswordHash(uint8 *hash, uint32 hashSize, uint32 memSize, uint8 oldGarlic,
+        uint8 newGarlic, uint32 blockSize, uint32 parallelism, uint32 repetitions) {
     if(!verifyParameters(hashSize, 16, 16, memSize, oldGarlic, newGarlic, 0,
             blockSize, parallelism, repetitions)) {
         return false;
@@ -85,34 +85,29 @@ bool NoelKDF_UpdatePasswordHash(uint8 *hash, uint32 hashSize, uint32 memSize, ui
 }
 
 // The NoelKDF password hashing function.  MemSize is in MB.
-static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGarlic, uint32 stopGarlic,
+static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint8 startGarlic, uint8 stopGarlic,
         uint32 blockSize, uint32 parallelism, uint32 repetitions, bool printDieharderData) {
-    uint32 hashlen = hashSize/sizeof(uint32);
-    uint32 wordHash[hashlen];
-    be32dec_vect(wordHash, hash, hashSize);
     uint64 adjMemlen = (1 << 20)*(uint64)memSize/sizeof(uint32);
     uint32 blocklen = blockSize/sizeof(uint32);
-    uint32 numblocks = adjMemlen/(2*parallelism*blocklen);
+    uint32 numblocks = (adjMemlen/(2*parallelism*blocklen)) << startGarlic;
     adjMemlen = 2*parallelism*(uint64)numblocks*blocklen;
-    uint32 *mem = (uint32 *)malloc((1 << stopGarlic)*adjMemlen*sizeof(uint32));
+    uint32 *mem = (uint32 *)malloc((1 << (stopGarlic - startGarlic))*adjMemlen*sizeof(uint32));
     if(mem == NULL) {
         return false;
     }
-    uint32 i;
+    uint8 i;
     for(i = startGarlic; i <= stopGarlic; i++) {
-        uint32 value = 0;
         uint32 p;
         for(p = 0; p < parallelism; p++) {
-            hashWithoutPassword(p, wordHash, hashlen, mem, blocklen, numblocks, repetitions);
-            value += mem[2*p*numblocks*blocklen + blocklen-1];
+            hashWithoutPassword(p, hash, hashSize, mem, blocklen, numblocks, repetitions);
         }
         for(p = 0; p < parallelism; p++) {
-            hashWithPassword(p, mem, blocklen, numblocks, parallelism, repetitions, value);
+            hashWithPassword(p, mem, blocklen, numblocks, parallelism, repetitions);
         }
-        xorIntoHash(wordHash, hashlen, mem, blocklen, numblocks, parallelism);
+        xorIntoHash(hash, hashSize, mem, blocklen, numblocks, parallelism);
         numblocks *= 2;
+        H(hash, hashSize, hash, hashSize, &i, 1);
     }
-    be32enc_vect(hash, wordHash, hashSize);
     if(printDieharderData) {
         dumpMemory(mem, memSize);
     }
@@ -121,16 +116,13 @@ static bool NoelKDF(uint8 *hash, uint32 hashSize, uint32 memSize, uint32 startGa
 }
 
 // Hash memory without doing any password dependent memory addressing to thwart cache-timing-attacks.
-static void hashWithoutPassword(uint32 p, uint32 *wordHash, uint32 hashlen, uint32 *mem,
+static void hashWithoutPassword(uint32 p, uint8 *hash, uint32 hashSize, uint32 *mem,
         uint32 blocklen, uint32 numblocks, uint32 repetitions) {
     uint64 start = 2*p*(uint64)numblocks*blocklen;
-    uint32 hashSize = hashlen*sizeof(uint32);
     uint8 threadKey[blocklen*sizeof(uint32)];
-    uint8 hash[hashSize];
-    be32enc_vect(hash, wordHash, hashSize);
-    uint8 salt[sizeof(uint32)];
-    be32enc(salt, p);
-    H(threadKey, blocklen*sizeof(uint32), hash, hashSize, salt, sizeof(uint32));
+    uint8 s[sizeof(uint32)];
+    be32enc(s, p);
+    H(threadKey, blocklen*sizeof(uint32), hash, hashSize, s, sizeof(uint32));
     be32dec_vect(mem + start, threadKey, blocklen*sizeof(uint32));
     uint32 value = 1;
     uint32 mask = 1;
@@ -152,9 +144,9 @@ static void hashWithoutPassword(uint32 p, uint32 *wordHash, uint32 hashlen, uint
 
 // Hash memory with dependent memory addressing to thwart TMTO attacks.
 static void hashWithPassword(uint32 p, uint32 *mem, uint32 blocklen, uint32 numblocks,
-        uint32 parallelism, uint32 repetitions, uint32 value) {
-    uint32 startBlock = 2*p*numblocks + numblocks;
-    uint64 start = (uint64)startBlock*blocklen;
+        uint32 parallelism, uint32 repetitions) {
+    uint64 start = (2*p + 1)*(uint64)numblocks*blocklen;
+    uint32 value = 1;
     uint64 toAddr = start;
     uint32 i;
     for(i = 0; i < numblocks; i++) {
@@ -181,24 +173,26 @@ static inline uint32 hashBlocks(uint32 value, uint32 *mem, uint32 blocklen, uint
     uint64 prevAddr = toAddr - blocklen;
     uint32 r;
     for(r = 0; r < repetitions; r++) {
-        uint32 j;
-        for(j = 0; j < blocklen; j++) {
-            value = value*(mem[prevAddr + j] | 3) + mem[fromAddr + j];
-            mem[toAddr + j] = value;
+        uint32 i;
+        for(i = 0; i < blocklen; i++) {
+            value = value*(mem[prevAddr + i] | 3) + mem[fromAddr + i];
+            mem[toAddr + i] = value;
         }
     }
     return value;
 }
 
 // XOR the last hashed data from each parallel process into the result.
-static void xorIntoHash(uint32 *wordHash, uint32 hashlen, uint32 *mem, uint32 blocklen,
+static void xorIntoHash(uint8 *hash, uint32 hashSize, uint32 *mem, uint32 blocklen,
         uint32 numblocks, uint32 parallelism) {
+    uint8 data[hashSize];
     uint32 p;
     for(p = 0; p < parallelism; p++) {
-        uint64 pos = 2*(p+1)*numblocks*(uint64)blocklen - hashlen;
+        uint64 pos = 2*(p+1)*numblocks*(uint64)blocklen - hashSize/sizeof(uint32);
+        be32enc_vect(data, mem + pos, hashSize);
         uint32 i;
-        for(i = 0; i < hashlen; i++) {
-            wordHash[i] ^= mem[pos+i];
+        for(i = 0; i < hashSize; i++) {
+            hash[i] ^= data[i];
         }
     }
 }
