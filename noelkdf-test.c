@@ -94,8 +94,8 @@ void PHC_test(void)
         test_output(32, &j, 1, &j, 1, NULL, 0, 1, 0, 4096, 1, i);
     }
     printf("****************************************** Test blocklen\n");
-    for(i=4; i < 256; i += 4) {
-        test_output(32, &j, 1, &j, 1, NULL, 0, 1, 0, i, 1, 1);
+    for(i=12; i < 256; i += 4) {
+        test_output(12, &j, 1, &j, 1, NULL, 0, 1, 0, i, 1, 1);
     }
     printf("****************************************** Test memlen\n");
     for(i=1; i < 16; i += 4) {
@@ -149,12 +149,32 @@ void verifyClientServer(void) {
     }
 }
 
+void verifyHaltingPasswordPuzzles(void) {
+    uint8_t hash[32];
+    if(!NoelKDF_HashPassword(hash, 32, (uint8_t *)"password", 8, (uint8_t *)"salt", 4,
+            1, 9, (uint8_t *)"data", 4, 4096, 1, 1)) {
+        fprintf(stderr, "Password hashing failed!\n");
+        exit(1);
+    }
+    if(NoelKDF_HaltingPasswordPuzzle(hash, 32, (uint8_t *)"password", 8, (uint8_t *)"salt", 4,
+            9, (uint8_t *)"data", 4) != -10) {
+        fprintf(stderr, "Halting Password Puzzle failed!\n");
+        exit(1);
+    }
+    if(NoelKDF_HaltingPasswordPuzzle(hash, 32, (uint8_t *)"password", 8, (uint8_t *)"salt", 4,
+            10, (uint8_t *)"data", 4) != 9) {
+        fprintf(stderr, "Halting Password Puzzle failed!\n");
+        exit(1);
+    }
+}
+
 /*******************************************************************/
 
 int main()
 {
     printf("****************************************** Basic tests\n");
 
+    verifyHaltingPasswordPuzzles();
     verifyGarlic();
     verifyClientServer();
 
@@ -169,7 +189,7 @@ int main()
     printf("****************************************** Misc tests\n");
     test_output(128, (uint8_t *)"password", strlen("password"), (uint8_t *)"salt",
         strlen("salt"), NULL, 0, 1024, 0, 4096, 2, 1);
-    test_output(128, (uint8_t *)"password", strlen("password"), (uint8_t *)"salt",
+    test_output(64, (uint8_t *)"password", strlen("password"), (uint8_t *)"salt",
         strlen("salt"), NULL, 0, 10, 0, 64, 1, 64);
     test_output(64, (uint8_t *)"password", strlen("password"), (uint8_t *)"salt",
         strlen("salt"), NULL, 0, 10, 4, 128, 1, 1);

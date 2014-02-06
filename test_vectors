@@ -19143,63 +19143,13 @@ Associated data:
 
 Memlen:    1
 Garlic:    0
-Blocklen:    4
-Parallelism:    1
-Repetitions:    1
-
-Output: 
-fe 44 8c b8 e8 21 81 d4 
-67 4f 62 e2 fe 24 52 82 
-d7 42 e8 a5 d4 bd a7 ad 
-9d e2 79 94 4b db 46 2f      32 (octets)
-
-
-
-
-Password: 
-00      1 (octets)
-
-Salt: 
-00      1 (octets)
-
-Associated data:
-     0 (octets)
-
-Memlen:    1
-Garlic:    0
-Blocklen:    8
-Parallelism:    1
-Repetitions:    1
-
-Output: 
-1a d6 46 e3 8b a5 a5 3d 
-64 d5 8e 4c 96 bb 48 7e 
-08 cf 95 0a d0 95 14 ca 
-be 72 2f 96 e1 ed 09 63      32 (octets)
-
-
-
-
-Password: 
-00      1 (octets)
-
-Salt: 
-00      1 (octets)
-
-Associated data:
-     0 (octets)
-
-Memlen:    1
-Garlic:    0
 Blocklen:    12
 Parallelism:    1
 Repetitions:    1
 
 Output: 
-9c 01 19 21 87 6b 89 92 
-2a 39 5e 46 a4 46 18 82 
-81 54 73 6a d4 ac 03 6b 
-f0 90 4b b6 98 45 9f 1a      32 (octets)
+65 d7 10 fb 44 bd 32 a3 
+95 da 76 99      12 (octets)
 
 
 
@@ -19220,10 +19170,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-c4 fe db 8d da 36 9e bd 
-3a 73 c9 32 0d 19 07 12 
-10 7d 78 b1 c9 47 bb d6 
-44 46 74 bd 12 13 22 11      32 (octets)
+7b 5e be e0 fb a2 e3 99 
+22 a0 ad b7      12 (octets)
 
 
 
@@ -19244,10 +19192,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-53 f7 67 5d 4b 4a b5 73 
-25 d1 f2 db 5c 63 c4 51 
-08 e8 a3 fa 7c b0 a9 76 
-f9 dd 21 8a a2 81 4f 72      32 (octets)
+e8 63 94 df 8b 04 dc 0b 
+30 2a 38 26      12 (octets)
 
 
 
@@ -19268,10 +19214,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-fe 42 6a 10 28 18 fa 05 
-22 c2 a1 b3 d4 17 e4 92 
-f5 6c 4a 22 6b 9f 8b 4f 
-95 96 74 ef 5e 4c 12 fb      32 (octets)
+52 77 02 14 75 56 92 42 
+c2 d7 c2 be      12 (octets)
 
 
 
@@ -19292,10 +19236,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-7d 42 3e 7e a2 5d 89 9f 
-92 c0 9a 93 ae e3 2f c8 
-60 60 f3 44 38 4a 59 79 
-57 10 64 06 cb ed 98 7c      32 (octets)
+6a 08 c7 6d 39 f4 24 e5 
+ce e1 64 a9      12 (octets)
 
 
 
@@ -19316,10 +19258,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-da 9f 27 44 7f c4 e4 00 
-f3 0e a9 1b a0 92 de c3 
-25 15 32 71 38 36 cd d0 
-7a 1f f5 ee 17 0a 02 d4      32 (octets)
+df 99 13 c6 82 8a b5 b0 
+b3 02 2f 63      12 (octets)
 
 
 
@@ -19340,10 +19280,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-c2 c6 36 16 18 7b 5c 42 
-21 69 d0 6e 5d a3 66 8c 
-a9 af 84 08 f3 b8 67 4e 
-14 af 4b e0 7d e1 ee 94      32 (octets)
+e4 74 d8 15 ca 3c 7a d5 
+a7 01 66 aa      12 (octets)
 
 
 
@@ -19364,10 +19302,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-51 7f 28 fc 04 4c e3 4f 
-b4 a1 0b 88 ea ce 60 ec 
-82 ef 31 c8 24 96 b7 c8 
-43 79 bb c2 fa a4 ed fb      32 (octets)
+ea f7 88 a7 cf d3 af 80 
+a7 83 c7 49      12 (octets)
 
 
 
@@ -19388,10 +19324,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-e5 5f d4 90 cd 91 ae 32 
-70 8b b9 87 22 c7 ec aa 
-72 e5 f1 46 f9 d4 a7 29 
-1e 33 0f 83 93 9e 42 63      32 (octets)
+18 b7 42 01 7f 46 c9 46 
+8d 39 39 9c      12 (octets)
 
 
 
@@ -19412,10 +19346,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-36 84 a1 06 34 3a fe 0d 
-65 96 69 86 69 b8 44 95 
-4f 7d d7 1f 4b b1 60 dc 
-a5 b3 24 9d 2c ab 62 0f      32 (octets)
+83 2d 04 95 eb ee 44 5e 
+2c 00 35 43      12 (octets)
 
 
 
@@ -19436,10 +19368,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-f0 e2 1e ea 42 b2 0d c7 
-48 74 21 fb 2f 2d 45 06 
-1d bd 38 75 a8 ec e8 d9 
-d5 a4 df 64 f1 b3 e1 34      32 (octets)
+b5 58 ce 65 6e f9 86 f0 
+d2 fc 28 41      12 (octets)
 
 
 
@@ -19460,10 +19390,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-1f 74 f6 8b 24 4c 04 13 
-94 4d 01 83 5c 86 cc af 
-5d 5c 14 97 a9 e9 ff b5 
-d8 a4 69 7b 6b fb af e6      32 (octets)
+7d 74 7d 7f ef 12 7b 69 
+28 45 2a 52      12 (octets)
 
 
 
@@ -19484,10 +19412,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-4b 81 a9 e5 05 e1 19 7c 
-12 0b 3c e2 c2 e3 9d 09 
-e6 83 89 ed 1e 86 65 e6 
-5c 1e b7 4b f5 f4 c5 66      32 (octets)
+48 d5 f1 65 79 db 41 b8 
+e0 02 66 cf      12 (octets)
 
 
 
@@ -19508,10 +19434,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-6b 77 3d 7d 37 7b b5 67 
-0f 53 b7 6f 38 61 90 2c 
-08 e6 ec 3b f2 6e 55 80 
-8a e5 38 b5 e7 02 fa 81      32 (octets)
+e6 aa 55 7d 14 4b 9f 46 
+88 16 22 7d      12 (octets)
 
 
 
@@ -19532,10 +19456,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-9d 48 75 7d 7a 4a d4 68 
-3a 65 d9 6e 54 cd b0 6f 
-ed 35 f4 f6 8b 20 e4 15 
-19 26 51 ef d5 6a 59 ff      32 (octets)
+83 d4 cd 3c f1 f1 e0 a2 
+58 6b 94 e0      12 (octets)
 
 
 
@@ -19556,10 +19478,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-87 ef 6a 39 7a d5 f2 50 
-b9 55 9f 1d cd eb 3b 2f 
-45 c3 7b b5 d3 99 6a 19 
-92 f6 cf 82 79 51 a0 ec      32 (octets)
+06 b7 9b 0f fc 10 3b 4f 
+c9 f2 7e c7      12 (octets)
 
 
 
@@ -19580,10 +19500,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-b8 a7 0a 50 58 87 23 7d 
-94 ae 14 47 b2 f5 15 e2 
-9f 45 d7 5e cb fb cb 15 
-a2 34 46 30 27 de c2 6b      32 (octets)
+d2 9e 67 cd c2 4f 68 3e 
+be 57 a1 bb      12 (octets)
 
 
 
@@ -19604,10 +19522,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-18 bc af 15 77 a8 33 6b 
-0b c3 34 f8 f6 2a 37 db 
-dd 3a 66 dd 1b 2c d4 9c 
-88 c8 92 21 1a 13 9b 40      32 (octets)
+65 fa 70 3d 18 2a 41 58 
+89 ff c0 df      12 (octets)
 
 
 
@@ -19628,10 +19544,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-6a a9 ec 15 fa 2c e3 3d 
-e4 49 74 99 4a 20 3f 22 
-73 c0 de 51 ca c0 b5 37 
-93 04 0c a7 f6 90 f8 b4      32 (octets)
+66 23 5f 48 94 5a c9 59 
+70 ca 86 40      12 (octets)
 
 
 
@@ -19652,10 +19566,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-52 78 b3 e5 9a 8c f2 f4 
-51 1e 9b 5c b2 29 fc 99 
-c2 4b 96 1d fe 1d f7 b9 
-8c d6 22 c1 62 02 02 58      32 (octets)
+36 65 db 7c 9b fc ee e5 
+f2 9d 62 3c      12 (octets)
 
 
 
@@ -19676,10 +19588,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-1a d7 bc 79 d8 6d ad 94 
-38 35 71 35 da 60 98 46 
-fc ac e4 78 5e bc 8a a7 
-2d b3 d0 68 17 26 88 37      32 (octets)
+f7 57 93 92 48 a8 17 8f 
+66 1f 4f d7      12 (octets)
 
 
 
@@ -19700,10 +19610,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-d8 85 83 ee a2 4b c1 dc 
-ad 5c 6d d3 76 fc ff 0f 
-cb 7c 97 c4 aa 20 9e 36 
-27 c9 e3 f7 e2 e6 3c 6c      32 (octets)
+51 d0 0c b8 97 46 1b 9c 
+84 eb bc d6      12 (octets)
 
 
 
@@ -19724,10 +19632,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-3e 78 9b a1 be cd 64 6b 
-70 4f c2 8e fb c1 fd c2 
-8c 0b 00 62 e3 ff 2f 70 
-c5 ae 34 7c c4 1e 31 c8      32 (octets)
+17 95 48 ae 11 67 52 61 
+86 cc 26 4c      12 (octets)
 
 
 
@@ -19748,10 +19654,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-da fc 93 9f 8a 4a b2 03 
-c7 e6 8f 57 49 3d e3 9a 
-49 3a 86 ce f3 6c 38 26 
-dd b3 b9 5c 07 7a de 51      32 (octets)
+2e ac be 0c f7 e9 63 b4 
+6b fd 10 99      12 (octets)
 
 
 
@@ -19772,10 +19676,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-6e 8d cc 2f 1b 22 f5 46 
-7c f8 d8 4e 87 1b 9d 84 
-b6 f5 1b 3b 04 7d 53 35 
-ea e3 b5 15 66 9c bc 68      32 (octets)
+a0 3b 35 e6 e6 61 f6 4f 
+dd a8 fb 9d      12 (octets)
 
 
 
@@ -19796,10 +19698,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-6f ae e6 df 79 cb 56 6d 
-a5 8d af 47 b4 f2 e3 c4 
-78 ed 9a 67 c4 77 17 88 
-f4 69 75 b9 2a 67 cf 30      32 (octets)
+2a 20 85 23 1f a2 25 e7 
+cf c7 84 9c      12 (octets)
 
 
 
@@ -19820,10 +19720,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-a9 7a 50 83 54 49 e1 c4 
-0b 9b 40 50 e1 f0 21 ea 
-89 81 49 0d 40 04 6d ab 
-a3 55 ce 3d 49 58 49 4f      32 (octets)
+ce 01 db 6c 75 7e d5 e8 
+5f 36 67 be      12 (octets)
 
 
 
@@ -19844,10 +19742,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-2f 89 8c 65 95 56 af 71 
-2b 89 d1 c7 b5 65 7f 7d 
-c5 3d cf a1 b5 e7 8f fb 
-20 df 26 50 ce 14 34 b7      32 (octets)
+d5 05 cb be fc 4b d7 ff 
+bf af 4b f3      12 (octets)
 
 
 
@@ -19868,10 +19764,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-91 ba e3 4b 17 86 0b 9f 
-69 f8 7b 0e ef bf 8e 72 
-f6 03 22 8f 19 c8 77 0e 
-fb 55 ab c2 ae 66 92 85      32 (octets)
+46 00 da d8 73 0a 54 a4 
+54 59 8d f3      12 (octets)
 
 
 
@@ -19892,10 +19786,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-84 61 01 14 b0 ec cc 00 
-06 23 f7 b6 d6 e5 20 30 
-02 e3 74 90 b2 7f 23 e0 
-cd 07 bb fa e1 9b be 01      32 (octets)
+8e 03 36 33 69 09 a2 ab 
+3c 52 dc 81      12 (octets)
 
 
 
@@ -19916,10 +19808,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-ae b3 ec ac 32 92 d3 b9 
-20 97 c2 52 6e 4b eb 48 
-56 a5 47 86 63 8e bf 5b 
-0e 73 f8 4a a9 3f 8f d0      32 (octets)
+4f af a4 27 4e ae 33 88 
+1f 26 3a 63      12 (octets)
 
 
 
@@ -19940,10 +19830,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-b3 6b 08 19 8b 3c 47 02 
-73 1a 3d 6b 87 d9 b1 12 
-c0 95 ab e7 6e e0 6b 1d 
-27 e4 de c8 01 46 14 17      32 (octets)
+18 8d 1e 1a ca 40 cc 23 
+90 86 e8 39      12 (octets)
 
 
 
@@ -19964,10 +19852,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-b1 53 3a 10 b2 18 87 d3 
-08 b3 cd 88 76 07 1b ba 
-14 82 37 50 8f 65 f3 e5 
-b6 49 f4 9a 0a ce 43 48      32 (octets)
+08 5b da c8 d1 34 aa ce 
+7d 3f 63 47      12 (octets)
 
 
 
@@ -19988,10 +19874,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-9f e9 15 95 82 23 ec 5b 
-2b 39 ad 50 f0 e9 db 24 
-41 13 b1 cc 62 91 ad e1 
-a6 ac af 18 c3 14 3f 76      32 (octets)
+b8 03 4a f9 a5 77 79 51 
+fa 7b 8e 5c      12 (octets)
 
 
 
@@ -20012,10 +19896,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-e4 bc 93 3d d2 76 ba 2a 
-b0 9f a9 d3 07 df 4e 23 
-28 11 a0 14 ab b1 44 f7 
-13 14 5a 15 a2 5e ca a4      32 (octets)
+1e 84 db 66 43 0c 3b 6b 
+7b 1f cf 7e      12 (octets)
 
 
 
@@ -20036,10 +19918,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-56 91 7d 80 d3 a8 ea 70 
-ed 59 3a af 7f 68 8d 72 
-57 33 b5 65 0c ce 1a 1f 
-e4 40 21 c5 20 04 56 df      32 (octets)
+ee 69 39 6a 14 cc cf c7 
+1e cf 72 72      12 (octets)
 
 
 
@@ -20060,10 +19940,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-6c a3 40 17 a0 08 19 c3 
-fa ed 33 ff 65 60 6c 52 
-bc 6e d8 d0 55 1c 72 42 
-17 5a 84 bf f1 75 e6 fe      32 (octets)
+01 0b 51 6f 1b 97 02 a9 
+96 81 8c f2      12 (octets)
 
 
 
@@ -20084,10 +19962,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-32 e7 38 ef bd 16 8c 07 
-3b e3 c2 64 fc fb 9d 81 
-7f 6e 28 52 a8 1a 20 5b 
-17 99 03 3c dc 18 88 77      32 (octets)
+0d 9b fc bb b6 f8 72 30 
+7f 0c 5a d5      12 (octets)
 
 
 
@@ -20108,10 +19984,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-84 da d8 67 b3 68 49 d3 
-6c 79 be 67 a8 97 f0 ad 
-a1 95 e4 48 4d ac d5 ba 
-f5 bb 14 8f 9b 91 c6 00      32 (octets)
+f3 fe 21 56 ed cc c2 ec 
+d6 2d 9f 0d      12 (octets)
 
 
 
@@ -20132,10 +20006,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-76 a1 72 89 70 9d 29 e2 
-72 1c b7 4c 1c 71 f9 75 
-24 33 b3 3d 8b 11 e8 2d 
-c6 3e a9 58 e6 c5 8a 6c      32 (octets)
+18 01 35 55 b0 36 1c 36 
+f2 f9 51 99      12 (octets)
 
 
 
@@ -20156,10 +20028,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-79 a6 38 a3 9b 6d 7b 01 
-db 21 be 10 34 62 30 5e 
-89 d1 13 24 59 ba 4c 4d 
-7a d4 94 a8 1c eb 9b 8e      32 (octets)
+58 df 4f 9e 7a 6b 6a ab 
+a9 63 25 f0      12 (octets)
 
 
 
@@ -20180,10 +20050,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-99 30 22 bd 30 34 bf 86 
-57 ae 9d 88 09 74 e5 24 
-4d 1c 68 14 eb fd 27 a7 
-b5 12 e7 81 af c8 04 f8      32 (octets)
+24 08 5d a2 48 7d 13 88 
+33 06 05 f5      12 (octets)
 
 
 
@@ -20204,10 +20072,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-81 61 92 a4 e1 a8 b6 59 
-26 27 16 a8 0b a9 7e e6 
-27 8b 70 2c 80 1d 96 35 
-4e d0 a8 0d 7e e9 10 35      32 (octets)
+89 f5 15 05 24 6b 36 96 
+46 fd 5f 16      12 (octets)
 
 
 
@@ -20228,10 +20094,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-60 d6 48 2b 8b 39 c6 f7 
-d4 d3 2c c6 61 6f a6 7d 
-f1 64 4c 41 7b 8c 59 31 
-91 13 e0 20 d1 d3 ce 75      32 (octets)
+fd f1 26 70 6d c8 f9 a9 
+72 09 46 3d      12 (octets)
 
 
 
@@ -20252,10 +20116,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-28 8d 27 dc 56 05 9f fc 
-42 e0 a6 d5 26 9e 22 db 
-0a 36 fc a0 5d 55 08 dc 
-be 57 6e c3 72 6a 77 47      32 (octets)
+60 4c 3c 13 06 06 b5 6f 
+d7 af 66 f5      12 (octets)
 
 
 
@@ -20276,10 +20138,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-f2 d8 bc e7 a0 fb 10 f7 
-06 28 01 04 57 3b fe e8 
-5a ad b7 f0 78 ca 41 f7 
-cf 46 49 ce f1 ee e8 58      32 (octets)
+ee 45 71 f5 6b b2 98 24 
+ee 29 0e ac      12 (octets)
 
 
 
@@ -20300,10 +20160,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-2a 08 f3 e2 87 0f aa 20 
-67 e9 82 02 9f 91 fa f0 
-f0 66 5e 7d 6a fd 4f f7 
-14 b3 8e 76 05 a1 1a 6a      32 (octets)
+61 e3 92 7a db 05 2d 18 
+81 dd c5 ce      12 (octets)
 
 
 
@@ -20324,10 +20182,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-04 0a 79 8a 0f 64 58 11 
-30 8b 11 ed 23 56 01 97 
-ac 6e 91 9f 90 aa db d6 
-a0 15 39 d4 8f a0 b8 8d      32 (octets)
+35 1e 0a b2 26 8b 85 60 
+ea 29 44 06      12 (octets)
 
 
 
@@ -20348,10 +20204,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-ac 7d 32 51 07 e0 0d 99 
-5c 7f ef 3e 77 34 ba b0 
-49 00 34 ae 9a 41 52 a1 
-97 dc 4c 0f 7b dd 91 76      32 (octets)
+fb 37 37 03 c5 5a cb 3c 
+57 3a 5e b1      12 (octets)
 
 
 
@@ -20372,10 +20226,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-5c 3c 29 78 d2 94 4e 22 
-39 a6 af 25 9e 1c ca f9 
-52 92 ba 09 2f a6 c8 a3 
-de ba 46 ef 40 ca 9a 3b      32 (octets)
+d6 33 8f 59 9b 0a 80 07 
+74 6d 28 b7      12 (octets)
 
 
 
@@ -20396,10 +20248,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-17 20 52 73 59 e1 1b 97 
-5c 3b ee aa 83 c7 c7 53 
-f4 5a ea e5 2a 04 f5 5b 
-01 f6 c3 ff 21 d1 c4 8f      32 (octets)
+d1 9d ab 46 c1 06 a2 25 
+16 d6 14 da      12 (octets)
 
 
 
@@ -20420,10 +20270,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-9c 67 ee 8b 0d 41 79 c7 
-c2 d0 fb 5d b9 9e f6 f0 
-9a de 67 11 c1 6e 48 64 
-dc ba ba 63 5c 50 c2 7e      32 (octets)
+51 50 5e 3c 4c 39 07 a4 
+4e 83 68 e3      12 (octets)
 
 
 
@@ -20444,10 +20292,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-1a 09 3b 8e 4e e7 94 be 
-a4 08 18 0d 09 47 96 9f 
-a3 4c 35 eb e1 4e 45 6d 
-94 11 86 6d ef b2 3e cd      32 (octets)
+11 e1 c8 9b d7 fd 39 e3 
+9b 70 27 3a      12 (octets)
 
 
 
@@ -20468,10 +20314,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-be 34 b7 e3 81 74 f6 9e 
-51 02 f4 6c 9d b6 11 a8 
-b0 2c 96 69 4b df 19 40 
-03 07 9f 60 0c 38 2e 56      32 (octets)
+2c 32 d5 cd 97 e9 5c 0b 
+2b cd 52 5a      12 (octets)
 
 
 
@@ -20492,10 +20336,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-80 99 e6 87 7c 72 3a ac 
-e8 ec 8d 02 32 65 b1 ba 
-21 52 8f 7e ab da 54 72 
-9b e9 25 0a 0f a2 04 12      32 (octets)
+2f fb 62 a9 00 4e 9e 73 
+80 10 b4 60      12 (octets)
 
 
 
@@ -20516,10 +20358,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-4b aa 5d cb d4 73 84 01 
-95 58 20 90 ea 78 1e c3 
-56 4d 0c 12 54 a3 29 ab 
-6b e6 c0 1e 97 d1 7d 75      32 (octets)
+e4 0a 57 88 ff 7c 76 4d 
+45 34 55 31      12 (octets)
 
 
 
@@ -20540,10 +20380,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-6e 5b ab 44 5d 47 00 63 
-ae a0 9b 53 72 a6 f3 46 
-bb f0 d4 e1 d1 71 e8 8a 
-65 58 07 5c 47 b9 88 6e      32 (octets)
+87 0e 80 f1 6c 78 ab 8b 
+d4 5b 8b c0      12 (octets)
 
 
 
@@ -20564,10 +20402,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-3a 92 c3 7e d2 f3 c0 79 
-58 b0 0d 95 3d 72 01 ac 
-13 9f c9 cb b1 72 97 3d 
-4f 0a 2d e4 9c 34 38 10      32 (octets)
+c2 0c e2 f5 2a d7 49 96 
+ce b4 d8 45      12 (octets)
 
 
 
@@ -20588,10 +20424,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-5c d1 fa a7 a2 38 b9 77 
-e0 37 32 36 03 5b 17 2e 
-b6 99 d5 38 d9 87 91 f7 
-b1 62 85 b6 19 b8 08 4f      32 (octets)
+86 e0 9f 85 fa 50 e7 bb 
+1b cb a5 96      12 (octets)
 
 
 
@@ -20612,10 +20446,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-13 b8 25 7f a5 b4 43 1a 
-16 08 f0 80 f8 0c f6 2c 
-eb 1c 79 2e 25 ac 6b 14 
-a6 17 20 9b db b0 5f a9      32 (octets)
+15 a4 61 0c d2 d5 98 66 
+11 5f c6 73      12 (octets)
 
 
 
@@ -20636,10 +20468,8 @@ Parallelism:    1
 Repetitions:    1
 
 Output: 
-b9 e0 1d 73 7a 29 ce 87 
-02 5e c1 4b 31 08 71 be 
-cb 63 75 8e 22 01 81 2a 
-0f f5 a1 29 df c6 8b 91      32 (octets)
+85 65 80 81 cf cd 01 45 
+6e 56 da f7      12 (octets)
 
 
 
@@ -20794,22 +20624,14 @@ Parallelism:    1
 Repetitions:    64
 
 Output: 
-6c 06 26 c9 a9 cc 90 07 
-90 e0 42 44 ae 9e a1 e9 
-f8 b2 dc 90 84 25 4f a6 
-5b 89 28 90 7c 1b df 60 
-1b 2c 82 73 50 35 80 4b 
-12 65 49 18 ab 76 29 3a 
-01 d6 75 b7 49 83 5d ba 
-bb 5e b7 71 25 f0 43 aa 
-d2 63 66 5d 8d d9 0d 3a 
-59 d3 d8 01 24 d1 70 54 
-18 8e 70 0b b9 3b 29 bd 
-0e 46 fa 61 14 f3 de 31 
-22 6e ae 7d 18 b3 86 2f 
-7a e0 c5 57 33 48 57 ea 
-59 8b c1 4f ac 99 5a 4b 
-e7 1b 1b 86 83 4c 61 55      128 (octets)
+89 06 c8 99 fa 3c 07 35 
+97 db 25 22 b8 7e 26 cd 
+e9 0e 7e 1b c7 24 2d cd 
+a1 e4 85 ca 8c 37 b8 37 
+7f 2b 08 9b 6f f7 5d f3 
+6c ec 45 00 c9 a0 cc d4 
+0a 79 27 d3 48 a3 a6 e1 
+a1 4f ee 96 49 3a ae 69      64 (octets)
 
 
 

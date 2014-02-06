@@ -4,6 +4,10 @@
 #include "sha256.h"
 #include "noelkdf.h"
 
+// Raw interface to NoelKDF.
+bool NoelKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t startGarlic, uint8_t stopGarlic,
+    uint32_t blockSize, uint32_t parallelism, uint32_t repetitions, bool skipLastHash);
+
 // Verify that parameters are valid for password hashing.
 static bool verifyParameters(uint32_t hashSize, uint32_t passwordSize, uint32_t saltSize, uint32_t memSize,
         uint8_t startGarlic, uint8_t stopGarlic, uint32_t dataSize, uint32_t blockSize, uint32_t parallelism,
@@ -11,7 +15,7 @@ static bool verifyParameters(uint32_t hashSize, uint32_t passwordSize, uint32_t 
     if(hashSize > 1024 || hashSize < 12 || (hashSize & 0x3) || passwordSize > 1024 ||
             passwordSize == 0 || saltSize > 1024  || saltSize == 0 ||
             memSize == 0 || memSize > 1 << 30 || startGarlic > stopGarlic || stopGarlic > 30 ||
-            dataSize > 1024 || blockSize > 1 << 30 || blockSize < 4 || blockSize & 0x3 ||
+            dataSize > 1024 || blockSize > 1 << 30 || blockSize < hashSize || blockSize & 0x3 ||
             ((uint64_t)memSize << 20) < 4*(uint64_t)blockSize*parallelism || parallelism == 0 ||
             parallelism > 1 << 20 || repetitions == 0 || repetitions > 1 << 30) {
         return false;
@@ -92,6 +96,38 @@ bool NoelKDF_ClientHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t *passw
 void NoelKDF_ServerHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t garlic) {
     H(hash, hashSize, hash, hashSize, &garlic, 1);
 }
+
+// Hash the password as a Halting Password Puzzle.  Memory is initially 1MiB, and
+// increased by 2X until we see the expected hash result.  QuitGarlic enables us to give
+// up without the user halting the process manually.  Return the matching garlic level if
+// we succeed, and -1 - last garlic tried if we fail.  If the return value >= 0, the
+// password is correct.  Otherwise last garlic level successfully tried is subtracted from
+// -1 is returned.
+int NoelKDF_HaltingPasswordPuzzle(uint8_t *expectedHash, uint32_t hashSize, uint8_t *password, uint8_t passwordSize,
+        uint8_t *salt, uint32_t saltSize, uint8_t quitGarlic, uint8_t *data, uint32_t dataSize) {
+    if(!verifyParameters(hashSize, passwordSize, saltSize, 1, 0, quitGarlic - 1, dataSize, 4096, 1, 1)) {
+        return false;
+    }
+    uint8_t resultHash[hashSize];
+    if(data != NULL && dataSize != 0) {
+        uint8_t derivedSalt[hashSize];
+        H(derivedSalt, hashSize, data, dataSize, salt, saltSize);
+        H(resultHash, hashSize, password, passwordSize, derivedSalt, hashSize);
+    } else {
+        H(resultHash, hashSize, password, passwordSize, salt, saltSize);
+    }
+    uint8_t garlic;
+    for(garlic = 0; garlic < quitGarlic; garlic++) {
+        if(!NoelKDF(resultHash, hashSize, 1, garlic, garlic, 4096, 1, 1, false)) {
+            return -1 - garlic;
+        }
+        if(!memcmp(resultHash, expectedHash, hashSize)) {
+            return garlic;
+        }
+    }
+    return -1 - garlic;
+}
+
 
 // This is the prototype required for the password hashing competition.
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MiB of memory to hash.
