@@ -28,7 +28,7 @@ void test_output(uint8_t hashlen,
                  uint8_t *salt,  uint8_t saltlen,
                  uint8_t *data,  uint32_t datalen,
                  uint32_t memlen, uint8_t garlic,
-                 uint32_t blocklen, uint32 parallelism,
+                 uint32_t blocklen, uint32_t parallelism,
                  uint32_t repetitions)
 {
     uint8_t hash[hashlen];
@@ -44,7 +44,7 @@ void test_output(uint8_t hashlen,
 
     if(!NoelKDF_HashPassword(hash, hashlen, pwd, pwdlen,
             salt, saltlen, memlen, garlic, data, datalen,
-            blocklen, parallelism, repetitions, false)) {
+            blocklen, parallelism, repetitions)) {
         fprintf(stderr, "Password hashing failed!\n");
         exit(1);
     }
@@ -104,28 +104,48 @@ void PHC_test(void)
 }
 
 void verifyGarlic(void) {
-    uint32 garlic;
-    uint8 hash1[32], hash2[32];
+    uint32_t garlic;
+    uint8_t hash1[32], hash2[32];
 
-    if(!NoelKDF_HashPassword(hash1, 32, (uint8 *)"password", 8,
-            (uint8 *)"salt", 4, 1, 0, NULL, 0, 4096, 1, 1, false)) {
+    if(!NoelKDF_HashPassword(hash1, 32, (uint8_t *)"password", 8,
+            (uint8_t *)"salt", 4, 1, 0, NULL, 0, 4096, 1, 1)) {
         fprintf(stderr, "Password hashing failed!\n");
         exit(1);
     }
     for(garlic = 1; garlic < 10; garlic++) {
-        if(!NoelKDF_HashPassword(hash2, 32, (uint8 *)"password", 8,
-                (uint8 *)"salt", 4, 1, garlic, NULL, 0, 4096, 1, 1, false)) {
+        if(!NoelKDF_HashPassword(hash2, 32, (uint8_t *)"password", 8,
+                (uint8_t *)"salt", 4, 1, garlic, NULL, 0, 4096, 1, 1)) {
             fprintf(stderr, "Password hashing failed!\n");
             exit(1);
         }
-        if(!NoelKDF_UpdatePasswordHash(hash1, 32, 1, garlic - 1, garlic , 4096, 1, 1)) {
+        if(!NoelKDF_UpdatePasswordHash(hash1, 32, 1, garlic, garlic , 4096, 1, 1)) {
             fprintf(stderr, "Password hashing failed!\n");
             exit(1);
         }
-        if(!memcmp(hash1, hash2, 32)) {
+        if(memcmp(hash1, hash2, 32)) {
             fprintf(stderr, "Password update got wrong answer!\n");
             exit(1);
         }
+    }
+}
+
+void verifyClientServer(void) {
+    uint8_t hash1[32];
+    if(!NoelKDF_ClientHashPassword(hash1, 32, (uint8_t *)"password", 8, (uint8_t *)"salt",
+            4, 1024, 0, (uint8_t *)"data", 4, 4096, 2, 2)) {
+        fprintf(stderr, "Password hashing failed!\n");
+        exit(1);
+    }
+    NoelKDF_ServerHashPassword(hash1, 32, 0);
+    uint8_t hash2[32];
+    if(!NoelKDF_HashPassword(hash2, 32, (uint8_t *)"password", 8, (uint8_t *)"salt", 4,
+            1024, 0, (uint8_t *)"data", 4, 4096, 2, 2)) {
+        fprintf(stderr, "Password hashing failed!\n");
+        exit(1);
+    }
+    if(memcmp(hash1, hash2, 32)) {
+        fprintf(stderr, "Password client/server got wrong answer!\n");
+        exit(1);
     }
 }
 
@@ -136,6 +156,7 @@ int main()
     printf("****************************************** Basic tests\n");
 
     verifyGarlic();
+    verifyClientServer();
 
     simpletest("password", "salt", "", 1);
     simpletest("password", "salt", "", 1024);

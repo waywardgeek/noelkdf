@@ -19,16 +19,14 @@ static void usage(char *format, ...) {
         "    -m memorySize   -- The ammount of memory to use in MB\n"
         "    -r repetitions  -- A multiplier on the total number of times we hash\n"
         "    -t parallelism  -- Parallelism parameter, typically the number of threads\n"
-        "    -b blockSize    -- Memory hashed in the inner loop at once, in bytes\n"
-        "    -d              -- Write to stdout dieharder input.  Use like:\n"
-        "                       dieharder -a -g 202 -f foo\n");
+        "    -b blockSize    -- Memory hashed in the inner loop at once, in bytes\n");
     exit(1);
 }
 
-static uint32 readUint32(char flag, char *arg) {
+static uint32_t readuint32_t(char flag, char *arg) {
     char *endPtr;
     char *p = arg;
-    uint32 value = strtol(p, &endPtr, 0);
+    uint32_t value = strtol(p, &endPtr, 0);
     if(*p == '\0' || *endPtr != '\0') {
         usage("Invalid integer for parameter -%c", flag);
     }
@@ -36,9 +34,9 @@ static uint32 readUint32(char flag, char *arg) {
 }
 
 // Read a 2-character hex byte.
-static bool readHexByte(uint8 *dest, char *value) {
-    char c = toupper((uint8)*value++);
-    uint8 byte;
+static bool readHexByte(uint8_t *dest, char *value) {
+    char c = toupper((uint8_t)*value++);
+    uint8_t byte;
     if(c >= '0' && c <= '9') {
         byte = c - '0';
     } else if(c >= 'A' && c <= 'F') {
@@ -47,7 +45,7 @@ static bool readHexByte(uint8 *dest, char *value) {
         return false;
     }
     byte <<= 4;
-    c = toupper((uint8)*value);
+    c = toupper((uint8_t)*value);
     if(c >= '0' && c <= '9') {
         byte |= c - '0';
     } else if(c >= 'A' && c <= 'F') {
@@ -59,17 +57,17 @@ static bool readHexByte(uint8 *dest, char *value) {
     return true;
 }
 
-static uint8 *readHexSalt(char *p, uint32 *saltLength) {
-    uint32 length = strlen(p);
+static uint8_t *readHexSalt(char *p, uint32_t *saltLength) {
+    uint32_t length = strlen(p);
     if(length & 1) {
         usage("hex salt string must have an even number of digits.\n");
     }
     *saltLength = strlen(p) >> 1;
-    uint8 *salt = malloc(*saltLength*sizeof(uint8));
+    uint8_t *salt = malloc(*saltLength*sizeof(uint8_t));
     if(salt == NULL) {
         usage("Unable to allocate salt");
     }
-    uint8 *dest = salt;
+    uint8_t *dest = salt;
     while(*p != '\0' && readHexByte(dest++, p)) {
         p += 2;
     }
@@ -77,7 +75,7 @@ static uint8 *readHexSalt(char *p, uint32 *saltLength) {
 }
 
 static char findHexDigit(
-    uint8 value)
+    uint8_t value)
 {
     if(value <= 9) {
         return '0' + value;
@@ -86,57 +84,53 @@ static char findHexDigit(
 }
 
 static void printHex(
-    uint8 *values,
-    uint32 size)
+    uint8_t *values,
+    uint32_t size)
 {
-    uint8 value;
+    uint8_t value;
     while(size-- != 0) {
         value = *values++;
-        putchar(findHexDigit((uint8)(0xf & (value >> 4))));
-        putchar((uint8)findHexDigit(0xf & value));
+        putchar(findHexDigit((uint8_t)(0xf & (value >> 4))));
+        putchar((uint8_t)findHexDigit(0xf & value));
     }
 }
 
 int main(int argc, char **argv) {
-    uint32 memorySize = 1024, derivedKeySize = 32;
-    uint32 repetitions = 1, parallelism = 1, blockSize = 4096;
-    uint8 garlic = 0;
-    uint8 *salt = (uint8 *)"salt";
-    uint32 saltSize = 4;
-    uint8 *password = (uint8 *)"password";
-    uint32 passwordSize = 8;
-    bool dump = false;
+    uint32_t memorySize = 1024, derivedKeySize = 32;
+    uint32_t repetitions = 1, parallelism = 1, blockSize = 4096;
+    uint8_t garlic = 0;
+    uint8_t *salt = (uint8_t *)"salt";
+    uint32_t saltSize = 4;
+    uint8_t *password = (uint8_t *)"password";
+    uint32_t passwordSize = 8;
 
     char c;
     while((c = getopt(argc, argv, "h:p:s:g:m:r:t:b:d")) != -1) {
         switch (c) {
         case 'h':
-            derivedKeySize = readUint32(c, optarg);
+            derivedKeySize = readuint32_t(c, optarg);
             break;
         case 'p':
-            password = (uint8 *)optarg;
+            password = (uint8_t *)optarg;
             passwordSize = strlen(optarg);
             break;
         case 's':
             salt = readHexSalt(optarg, &saltSize);
             break;
         case 'g':
-            garlic = readUint32(c, optarg);
+            garlic = readuint32_t(c, optarg);
             break;
         case 'm':
-            memorySize = readUint32(c, optarg);
+            memorySize = readuint32_t(c, optarg);
             break;
         case 'r':
-            repetitions = readUint32(c, optarg);
+            repetitions = readuint32_t(c, optarg);
             break;
         case 't':
-            parallelism = readUint32(c, optarg);
+            parallelism = readuint32_t(c, optarg);
             break;
         case 'b':
-            blockSize = readUint32(c, optarg);
-            break;
-        case 'd':
-            dump = true;
+            blockSize = readuint32_t(c, optarg);
             break;
         default:
             usage("Invalid argumet");
@@ -146,19 +140,15 @@ int main(int argc, char **argv) {
         usage("Extra parameters not recognised\n");
     }
 
-    if(!dump) {
-        printf("garlic:%u memorySize:%u repetitions:%u numThreads:%u blockSize:%u\n", 
-            garlic, memorySize, repetitions, parallelism, blockSize);
-    }
-    uint8 *derivedKey = (uint8 *)calloc(derivedKeySize, sizeof(uint8));
+    printf("garlic:%u memorySize:%u repetitions:%u numThreads:%u blockSize:%u\n", 
+        garlic, memorySize, repetitions, parallelism, blockSize);
+    uint8_t *derivedKey = (uint8_t *)calloc(derivedKeySize, sizeof(uint8_t));
     if(!NoelKDF_HashPassword(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize,
-            memorySize, garlic, NULL, 0, blockSize, parallelism, repetitions, dump)) {
+            memorySize, garlic, NULL, 0, blockSize, parallelism, repetitions)) {
         fprintf(stderr, "Key stretching failed.\n");
         return 1;
     }
-    if(!dump) {
-        printHex(derivedKey, derivedKeySize);
-        printf("\n");
-    }
+    printHex(derivedKey, derivedKeySize);
+    printf("\n");
     return 0;
 }
