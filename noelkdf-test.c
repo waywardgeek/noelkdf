@@ -149,32 +149,12 @@ void verifyClientServer(void) {
     }
 }
 
-void verifyHaltingPasswordPuzzles(void) {
-    uint8_t hash[32];
-    if(!NoelKDF_HashPassword(hash, 32, (uint8_t *)"password", 8, (uint8_t *)"salt", 4,
-            1, 9, (uint8_t *)"data", 4, 4096, 1, 1)) {
-        fprintf(stderr, "Password hashing failed!\n");
-        exit(1);
-    }
-    if(NoelKDF_HaltingPasswordPuzzle(hash, 32, (uint8_t *)"password", 8, (uint8_t *)"salt", 4,
-            9, (uint8_t *)"data", 4) != -10) {
-        fprintf(stderr, "Halting Password Puzzle failed!\n");
-        exit(1);
-    }
-    if(NoelKDF_HaltingPasswordPuzzle(hash, 32, (uint8_t *)"password", 8, (uint8_t *)"salt", 4,
-            10, (uint8_t *)"data", 4) != 9) {
-        fprintf(stderr, "Halting Password Puzzle failed!\n");
-        exit(1);
-    }
-}
-
 /*******************************************************************/
 
 int main()
 {
     printf("****************************************** Basic tests\n");
 
-    verifyHaltingPasswordPuzzles();
     verifyGarlic();
     verifyClientServer();
 
