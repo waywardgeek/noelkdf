@@ -1,2 +1,2 @@
 constmult: constmult.c
-	gcc -g constmult.c -o constmult
+	gcc -Wall -O2 constmult.c -o constmult
