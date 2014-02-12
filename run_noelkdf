@@ -11,4 +11,4 @@
 #     -b blockSize    -- Memory hashed in the inner loop at once, in bytes
 #                        dieharder -a -g 202 -f foo
 
-time ./noelkdf -g 0 -m 2048 -r 10 -t 1 -b 4096
+time ./noelkdf -g 0 -m 2048 -r 1 -t 1 -b 4096
