@@ -164,14 +164,11 @@ static inline uint32_t hashBlocks(uint32_t value, uint32_t *mem, uint32_t blockl
     uint64_t prevAddr = toAddr - blocklen;
     uint32_t i;
     uint32_t r;
-    for(r = 1; r < repetitions; r++) {
+    for(r = 0; r < repetitions; r++) {
         for(i = 0; i < blocklen; i++) {
             value = value*(mem[prevAddr + i] | 3) + mem[fromAddr + i];
+            mem[toAddr + i] = value;
         }
-    }
-    for(i = 0; i < blocklen; i++) {
-        value = value*(mem[prevAddr + i] | 3) + mem[fromAddr + i];
-        mem[toAddr + i] = value;
     }
     return value;
 }
