@@ -1,4 +1,4 @@
-CFLAGS=-O3 -std=c11 -W -Wall
+CFLAGS=-O3 -std=c11 -W -Wall -funroll-loops
 #CFLAGS=-O3 -std=c11 -W -Wall -msse4.2
 #CFLAGS=-g -std=c11 -W -Wall
 
