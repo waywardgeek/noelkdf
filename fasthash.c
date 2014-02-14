@@ -31,6 +31,10 @@ int main(int argc, char **argv) {
         }
     }
     uint32_t numblocks = memlen/blocklen;
+    if(parallelism*4 > blocklen) {
+        printf("parallelism must be <= blocksize/16\n");
+        return 1;
+    }
 
     uint32_t *mem = aligned_alloc(32, memlen*sizeof(uint32_t));
     uint32_t i;
@@ -59,8 +63,7 @@ int main(int argc, char **argv) {
                     __m128i f = _mm_load_si128(fm++);
                     vm = _mm_add_epi32(vm, p);
                     vm = _mm_xor_si128(vm, f);
-                    _mm_store_si128(tm, vm);
-                    _mm_prefetch(tm++, 3);
+                    _mm_store_si128(tm++, vm);
                     vs = vs * (*fs | 3) + *psl;
                     vs = vs * (*psl | 3) + *fs;
                     psl += 4;
