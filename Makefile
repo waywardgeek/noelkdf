@@ -5,7 +5,7 @@ CFLAGS=-O3 -std=c11 -W -Wall
 all: noelkdf-ref noelkdf noelkdf-test fasthash
 
 fasthash: fasthash.c
-	gcc $(CFLAGS) -msse4.2 fasthash.c -o fasthash
+	gcc $(CFLAGS) -msse4.2 fasthash.c sha256.c -o fasthash
 
 noelkdf-ref: main.c noelkdf-ref.c noelkdf-common.c noelkdf.h sha256.c sha256.h
 	gcc $(CFLAGS) main.c noelkdf-ref.c noelkdf-common.c sha256.c -o noelkdf-ref

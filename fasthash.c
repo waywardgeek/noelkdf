@@ -6,6 +6,20 @@
 #include <immintrin.h>
 #include "sha256.h"
 
+void SHA256_Uint8(const uint8_t input[32], uint8_t hash[32]) {
+  SHA256_CTX ctx;
+  SHA256_Init(&ctx);
+  SHA256_Update(&ctx, input, 32);
+  SHA256_Final(hash, &ctx);
+}
+
+void SHA256_Uint32(uint32_t hash[8]) {
+    uint8_t in[32], out[32];
+    be32enc_vect(in, hash, 32);
+    SHA256_Uint8(in, out);
+    be32dec_vect(hash, out, 32);
+}
+
 int main(int argc, char **argv) {
     uint64_t memlen = (1u << 31)/sizeof(uint32_t);
     uint32_t blocklen = 32768/sizeof(uint32_t);
@@ -85,7 +99,7 @@ int main(int argc, char **argv) {
             ps += blocklen;
             if((i & 0x3f) == 0) {
                 uint32_t *data = ps - 8;
-                SHA256_Hash_Int(data);
+                SHA256_Uint32(data);
                 vm1 = _mm_load_si128(tm - 2);
                 vm2 = _mm_load_si128(tm - 1);
             }
