@@ -16,7 +16,7 @@ static void usage(char *format, ...) {
         "    -p password     -- Set the password to hash\n"
         "    -s salt         -- Set the salt.  Salt must be in hexidecimal\n"
         "    -g garlic       -- Multiplies memory and CPU work by 2^garlic\n"
-        "    -m memorySize   -- The ammount of memory to use in MB\n"
+        "    -m memorySize   -- The ammount of memory to use in KB\n"
         "    -r repetitions  -- A multiplier on the total number of times we hash\n"
         "    -t parallelism  -- Parallelism parameter, typically the number of threads\n"
         "    -b blockSize    -- Memory hashed in the inner loop at once, in bytes\n");
@@ -96,7 +96,7 @@ static void printHex(
 }
 
 int main(int argc, char **argv) {
-    uint32_t memorySize = 1024, derivedKeySize = 32;
+    uint32_t memorySize = 2048*1024, derivedKeySize = 32;
     uint32_t repetitions = 1, parallelism = 1, blockSize = 4096;
     uint8_t garlic = 0;
     uint8_t *salt = (uint8_t *)"salt";

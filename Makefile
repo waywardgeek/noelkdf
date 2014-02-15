@@ -14,7 +14,7 @@ tigerkdf-ref: main.c tigerkdf-ref.c tigerkdf-common.c tigerkdf.h sha256.c sha256
 	gcc $(CFLAGS) main.c tigerkdf-ref.c tigerkdf-common.c sha256.c -o tigerkdf-ref
 
 tigerkdf: main.c tigerkdf-sse.c tigerkdf-common.c tigerkdf.h sha256.c sha256.h
-	gcc $(CFLAGS) -pthread main.c tigerkdf-sse.c tigerkdf-common.c sha256.c -o tigerkdf
+	gcc $(CFLAGS) -msse4.2 -pthread main.c tigerkdf-sse.c tigerkdf-common.c sha256.c -o tigerkdf
 	#gcc -mavx -g -O3 -S -std=c99 -m64 main.c tigerkdf-sse.c tigerkdf-common.c sha256.c
 
 tigerkdf-test: tigerkdf-test.c tigerkdf.h tigerkdf-ref.c tigerkdf-common.c
