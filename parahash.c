@@ -7,11 +7,13 @@
 #include <string.h>
 #include <pthread.h>
 #include <immintrin.h>
+#include <x86intrin.h>
 
 #define MEM_SIZE (1LL << 31)
 #define MEM_LENGTH (MEM_SIZE/sizeof(__m128i))
 #define NUM_THREADS 2
 #define BLOCK_SIZE 16384
+//#define BLOCK_SIZE 1024
 #define BLOCK_LENGTH (BLOCK_SIZE/sizeof(__m128i))
 #define NUM_BLOCKS (MEM_LENGTH/(NUM_THREADS*BLOCK_LENGTH))
 
@@ -39,26 +41,50 @@ static void *multHash(void *hashPtr) {
     pthread_exit(NULL);
 }
 
+static void printM128(__m128i value) {
+    uint32_t *p = (uint32_t *)&value;
+    uint32_t i;
+    for(i = 0; i < 4; i++) {
+        printf("%u ", *p++);
+    }
+    printf("\n");
+}
+
 static void *hashMem(void *memPtr) {
     __m128i *mem = (__m128i *)memPtr;
     uint32_t i;
+    // This needs to be replaced with crypto-strength initialization
     for(i = 0; i < BLOCK_LENGTH*2; i++) {
         __m128i v = _mm_set_epi32(i, i, i, i);
         mem[i] = v;
     }
     __m128i *prev1 = mem + BLOCK_LENGTH;
     __m128i *prev2 = mem;
-    __m128i *to = mem + BLOCK_LENGTH;
+    __m128i *to = mem + 2*BLOCK_LENGTH;
+    __m128i shiftRightVal = _mm_set_epi32(25, 25, 25, 25);
+    __m128i shiftLeftVal = _mm_set_epi32(7, 7, 7, 7);
+    __m128i value1 = shiftRightVal;
+    __m128i value2 = shiftRightVal;
     for(i = 2; i < NUM_BLOCKS; i++) {
-        __m128i *from = mem + BLOCK_LENGTH*(0xdeadbeef % i);
+        uint32_t randAddr = *(((uint32_t *)to) - 1);
+        __m128i *from = mem + BLOCK_LENGTH*(randAddr % i);
         uint32_t j;
-        for(j = 0; j < BLOCK_LENGTH; j++) {
-            __m128i value = _mm_add_epi64(*prev1++, *prev2++);
-            value = _mm_xor_si128(value, *from++);
-            value = _mm_shuffle_epi32(value, _MM_SHUFFLE(2, 3, 0, 1));
-            *to++ = value;
+        for(j = 0; j < BLOCK_LENGTH/2; j++) {
+            value1 = _mm_add_epi32(value1, *prev1++);
+            value1 = _mm_add_epi32(value1, *prev2++);
+            value1 = _mm_xor_si128(value1, *from++);
+            // Rotate right 7
+            value1 = _mm_or_si128(_mm_srl_epi32(value1, shiftRightVal), _mm_sll_epi32(value1, shiftLeftVal));
+            *to++ = value1;
+            value2 = _mm_add_epi32(value2, *prev1++);
+            value2 = _mm_add_epi32(value2, *prev2++);
+            value2 = _mm_xor_si128(value2, *from++);
+            // Rotate right 7
+            value2 = _mm_or_si128(_mm_srl_epi32(value2, shiftRightVal), _mm_sll_epi32(value2, shiftLeftVal));
+            *to++ = value2;
+            //printM128(value1);
+            //printM128(value2);
         }
-        prev2 = prev1 - BLOCK_LENGTH;
     }
     pthread_exit(NULL);
 }
