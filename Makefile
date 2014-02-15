@@ -2,7 +2,10 @@ CFLAGS=-O3 -std=c11 -W -Wall -funroll-loops
 #CFLAGS=-O3 -std=c11 -W -Wall -msse4.2
 #CFLAGS=-g -std=c11 -W -Wall
 
-all: noelkdf-ref noelkdf noelkdf-test fasthash
+all: noelkdf-ref noelkdf noelkdf-test fasthash parahash
+
+parahash: parahash.c
+	gcc -O3 -std=c11 -pthread -msse4.2 parahash.c -o parahash
 
 fasthash: fasthash.c
 	gcc $(CFLAGS) -msse4.2 fasthash.c sha256.c -o fasthash
