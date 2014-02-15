@@ -4,14 +4,14 @@
 #include <ctype.h>
 #include <string.h>
 #include <getopt.h>
-#include "noelkdf.h"
+#include "tigerkdf.h"
 
 static void usage(char *format, ...) {
     va_list ap;
     va_start(ap, format);
     vfprintf(stderr, (char *)format, ap);
     va_end(ap);
-    fprintf(stderr, "\nUsage: noelkdf-test [OPTIONS]\n"
+    fprintf(stderr, "\nUsage: tigerkdf-test [OPTIONS]\n"
         "    -h hashSize     -- The output derived key length in bytes\n"
         "    -p password     -- Set the password to hash\n"
         "    -s salt         -- Set the salt.  Salt must be in hexidecimal\n"
@@ -143,7 +143,7 @@ int main(int argc, char **argv) {
     printf("garlic:%u memorySize:%u repetitions:%u numThreads:%u blockSize:%u\n", 
         garlic, memorySize, repetitions, parallelism, blockSize);
     uint8_t *derivedKey = (uint8_t *)calloc(derivedKeySize, sizeof(uint8_t));
-    if(!NoelKDF_HashPassword(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize,
+    if(!TigerKDF_HashPassword(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize,
             memorySize, garlic, NULL, 0, blockSize, parallelism, repetitions)) {
         fprintf(stderr, "Key stretching failed.\n");
         return 1;

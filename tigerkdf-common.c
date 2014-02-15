@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 #include "sha256.h"
-#include "noelkdf.h"
+#include "tigerkdf.h"
 
-// Raw interface to NoelKDF.
-bool NoelKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t startGarlic, uint8_t stopGarlic,
+// Raw interface to TigerKDF.
+bool TigerKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t startGarlic, uint8_t stopGarlic,
     uint32_t blockSize, uint32_t parallelism, uint32_t repetitions, bool skipLastHash);
 
 // Verify that parameters are valid for password hashing.
@@ -36,17 +36,17 @@ void H(uint8_t *hash, uint32_t hashSize, uint8_t *password, uint32_t passwordSiz
 }
 
 // A simple password hashing interface.  MemSize is in MiB.
-bool NoelKDF_SimpleHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t *password, uint32_t passwordSize,
+bool TigerKDF_SimpleHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t *password, uint32_t passwordSize,
         uint8_t *salt, uint32_t saltSize, uint32_t memSize) {
     if(!verifyParameters(hashSize, passwordSize, saltSize, memSize, 0, 0, 0, 4096, 1, 1)) {
         return false;
     }
     H(hash, hashSize, password, passwordSize, salt, saltSize);
-    return NoelKDF(hash, hashSize, memSize, 0, 0, 4096, 1, 1, false);
+    return TigerKDF(hash, hashSize, memSize, 0, 0, 4096, 1, 1, false);
 }
 
 // The full password hashing interface.  MemSize is in MiB.
-bool NoelKDF_HashPassword(uint8_t *hash, uint32_t hashSize, uint8_t *password, uint8_t passwordSize,
+bool TigerKDF_HashPassword(uint8_t *hash, uint32_t hashSize, uint8_t *password, uint8_t passwordSize,
         uint8_t *salt, uint32_t saltSize, uint32_t memSize, uint8_t garlic, uint8_t *data, uint32_t dataSize,
         uint32_t blockSize, uint32_t parallelism, uint32_t repetitions) {
     if(!verifyParameters(hashSize, passwordSize, saltSize, memSize, 0, garlic, dataSize,
@@ -60,22 +60,22 @@ bool NoelKDF_HashPassword(uint8_t *hash, uint32_t hashSize, uint8_t *password, u
     } else {
         H(hash, hashSize, password, passwordSize, salt, saltSize);
     }
-    return NoelKDF(hash, hashSize, memSize, 0, garlic, blockSize, parallelism, repetitions, false);
+    return TigerKDF(hash, hashSize, memSize, 0, garlic, blockSize, parallelism, repetitions, false);
 }
 
 // Update an existing password hash to a more difficult level of garlic.
-bool NoelKDF_UpdatePasswordHash(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t oldGarlic,
+bool TigerKDF_UpdatePasswordHash(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t oldGarlic,
         uint8_t newGarlic, uint32_t blockSize, uint32_t parallelism, uint32_t repetitions) {
     if(!verifyParameters(hashSize, 16, 16, memSize, oldGarlic, newGarlic, 0,
             blockSize, parallelism, repetitions)) {
         return false;
     }
-    return NoelKDF(hash, hashSize, memSize, oldGarlic, newGarlic, blockSize, parallelism,
+    return TigerKDF(hash, hashSize, memSize, oldGarlic, newGarlic, blockSize, parallelism,
             repetitions, false);
 }
 
 // Client-side portion of work for server-relief mode.
-bool NoelKDF_ClientHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t *password, uint8_t passwordSize,
+bool TigerKDF_ClientHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t *password, uint8_t passwordSize,
         uint8_t *salt, uint32_t saltSize, uint32_t memSize, uint8_t garlic, uint8_t *data, uint32_t dataSize,
         uint32_t blockSize, uint32_t parallelism, uint32_t repetitions) {
     if(!verifyParameters(hashSize, passwordSize, saltSize, memSize, 0, garlic, dataSize,
@@ -89,11 +89,11 @@ bool NoelKDF_ClientHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t *passw
     } else {
         H(hash, hashSize, password, passwordSize, salt, saltSize);
     }
-    return NoelKDF(hash, hashSize, memSize, 0, garlic, blockSize, parallelism, repetitions, true);
+    return TigerKDF(hash, hashSize, memSize, 0, garlic, blockSize, parallelism, repetitions, true);
 }
 
 // Server portion of work for server-relief mode.
-void NoelKDF_ServerHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t garlic) {
+void TigerKDF_ServerHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t garlic) {
     H(hash, hashSize, hash, hashSize, &garlic, 1);
 }
 
@@ -101,6 +101,6 @@ void NoelKDF_ServerHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t garlic
 // t_cost is an integer multiplier on CPU work.  m_cost is an integer number of MiB of memory to hash.
 int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt, size_t saltlen,
         unsigned int t_cost, unsigned int m_cost) {
-    return !NoelKDF_HashPassword(out, outlen, (void *)in, inlen, (void *)salt, saltlen, m_cost, 0,
+    return !TigerKDF_HashPassword(out, outlen, (void *)in, inlen, (void *)salt, saltlen, m_cost, 0,
         NULL, 0, 4096, 1, t_cost);
 }

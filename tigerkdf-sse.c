@@ -3,7 +3,7 @@
 #include <string.h>
 #include <pthread.h>
 #include "sha256.h"
-#include "noelkdf.h"
+#include "tigerkdf.h"
 
 // Forward declarations
 static void *hashWithoutPassword(void *contextPtr);
@@ -14,7 +14,7 @@ static void xorIntoHash(uint8_t *hash, uint32_t hashSize, uint32_t *mem, uint32_
         uint32_t numblocks, uint32_t parallelism);
 static uint32_t bitReverse(uint32_t value, uint32_t mask);
 
-struct NoelKDFContextStruct {
+struct TigerKDFContextStruct {
     uint32_t *mem;
     uint8_t *hash;
     uint32_t hashSize;
@@ -25,8 +25,8 @@ struct NoelKDFContextStruct {
     uint32_t repetitions;
 };
 
-// The NoelKDF password hashing function.  MemSize is in MiB.
-bool NoelKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t startGarlic, uint8_t stopGarlic,
+// The TigerKDF password hashing function.  MemSize is in MiB.
+bool TigerKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t startGarlic, uint8_t stopGarlic,
         uint32_t blockSize, uint32_t parallelism, uint32_t repetitions, bool skipLastHash) {
     uint64_t memlen = (1 << 20)*(uint64_t)memSize/sizeof(uint32_t);
     uint32_t blocklen = blockSize/sizeof(uint32_t);
@@ -40,8 +40,8 @@ bool NoelKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t startGa
     if(threads == NULL) {
         return false;
     }
-    struct NoelKDFContextStruct *c = (struct NoelKDFContextStruct *)malloc(
-            parallelism*sizeof(struct NoelKDFContextStruct));
+    struct TigerKDFContextStruct *c = (struct TigerKDFContextStruct *)malloc(
+            parallelism*sizeof(struct TigerKDFContextStruct));
     if(c == NULL) {
         return false;
     }
@@ -89,7 +89,7 @@ bool NoelKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t startGa
 
 // Hash memory without doing any password dependent memory addressing to thwart cache-timing-attacks.
 static void *hashWithoutPassword(void *contextPtr) {
-    struct NoelKDFContextStruct *c = (struct NoelKDFContextStruct *)contextPtr;
+    struct TigerKDFContextStruct *c = (struct TigerKDFContextStruct *)contextPtr;
 
     uint32_t *mem = c->mem;
     uint8_t *hash = c->hash;
@@ -126,7 +126,7 @@ static void *hashWithoutPassword(void *contextPtr) {
 
 // Hash memory with dependent memory addressing to thwart TMTO attacks.
 static void *hashWithPassword(void *contextPtr) {
-    struct NoelKDFContextStruct *c = (struct NoelKDFContextStruct *)contextPtr;
+    struct TigerKDFContextStruct *c = (struct TigerKDFContextStruct *)contextPtr;
 
     uint32_t *mem = c->mem;
     uint32_t parallelism = c->parallelism;

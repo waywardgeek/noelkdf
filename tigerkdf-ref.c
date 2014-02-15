@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include "sha256.h"
-#include "noelkdf.h"
+#include "tigerkdf.h"
 
 // Forward declarations
 static void hashWithoutPassword(uint32_t p, uint8_t *hash, uint32_t hashSize, uint32_t *mem,
@@ -15,8 +15,8 @@ static void xorIntoHash(uint8_t *hash, uint32_t hashSize, uint32_t *mem, uint32_
         uint32_t numblocks, uint32_t parallelism);
 static uint32_t bitReverse(uint32_t value, uint32_t mask);
 
-// The NoelKDF password hashing function.  MemSize is in MiB.
-bool NoelKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t startGarlic, uint8_t stopGarlic,
+// The TigerKDF password hashing function.  MemSize is in MiB.
+bool TigerKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t startGarlic, uint8_t stopGarlic,
         uint32_t blockSize, uint32_t parallelism, uint32_t repetitions, bool skipLastHash) {
     uint64_t memlen = (1 << 20)*(uint64_t)memSize/sizeof(uint32_t);
     uint32_t blocklen = blockSize/sizeof(uint32_t);

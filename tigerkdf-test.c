@@ -1,5 +1,5 @@
 // I copied this file from Catena's src/catena_test_vectors.c and modified it to call
-// NoelKDF.  It was written by the Catena team and slightly changed by me.
+// TigerKDF.  It was written by the Catena team and slightly changed by me.
 // It therefore falls under Catena's MIT license.
 
 #include <stdint.h>
@@ -7,7 +7,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "noelkdf.h"
+#include "tigerkdf.h"
 
 void print_hex(char *message, uint8_t *x, int len) {
     int i;
@@ -42,7 +42,7 @@ void test_output(uint8_t hashlen,
     printf("Parallelism:    %u\n", parallelism);
     printf("Repetitions:    %u\n", repetitions);
 
-    if(!NoelKDF_HashPassword(hash, hashlen, pwd, pwdlen,
+    if(!TigerKDF_HashPassword(hash, hashlen, pwd, pwdlen,
             salt, saltlen, memlen, garlic, data, datalen,
             blocklen, parallelism, repetitions)) {
         fprintf(stderr, "Password hashing failed!\n");
@@ -107,18 +107,18 @@ void verifyGarlic(void) {
     uint32_t garlic;
     uint8_t hash1[32], hash2[32];
 
-    if(!NoelKDF_HashPassword(hash1, 32, (uint8_t *)"password", 8,
+    if(!TigerKDF_HashPassword(hash1, 32, (uint8_t *)"password", 8,
             (uint8_t *)"salt", 4, 1, 0, NULL, 0, 4096, 1, 1)) {
         fprintf(stderr, "Password hashing failed!\n");
         exit(1);
     }
     for(garlic = 1; garlic < 10; garlic++) {
-        if(!NoelKDF_HashPassword(hash2, 32, (uint8_t *)"password", 8,
+        if(!TigerKDF_HashPassword(hash2, 32, (uint8_t *)"password", 8,
                 (uint8_t *)"salt", 4, 1, garlic, NULL, 0, 4096, 1, 1)) {
             fprintf(stderr, "Password hashing failed!\n");
             exit(1);
         }
-        if(!NoelKDF_UpdatePasswordHash(hash1, 32, 1, garlic, garlic , 4096, 1, 1)) {
+        if(!TigerKDF_UpdatePasswordHash(hash1, 32, 1, garlic, garlic , 4096, 1, 1)) {
             fprintf(stderr, "Password hashing failed!\n");
             exit(1);
         }
@@ -131,14 +131,14 @@ void verifyGarlic(void) {
 
 void verifyClientServer(void) {
     uint8_t hash1[32];
-    if(!NoelKDF_ClientHashPassword(hash1, 32, (uint8_t *)"password", 8, (uint8_t *)"salt",
+    if(!TigerKDF_ClientHashPassword(hash1, 32, (uint8_t *)"password", 8, (uint8_t *)"salt",
             4, 1024, 0, (uint8_t *)"data", 4, 4096, 2, 2)) {
         fprintf(stderr, "Password hashing failed!\n");
         exit(1);
     }
-    NoelKDF_ServerHashPassword(hash1, 32, 0);
+    TigerKDF_ServerHashPassword(hash1, 32, 0);
     uint8_t hash2[32];
-    if(!NoelKDF_HashPassword(hash2, 32, (uint8_t *)"password", 8, (uint8_t *)"salt", 4,
+    if(!TigerKDF_HashPassword(hash2, 32, (uint8_t *)"password", 8, (uint8_t *)"salt", 4,
             1024, 0, (uint8_t *)"data", 4, 4096, 2, 2)) {
         fprintf(stderr, "Password hashing failed!\n");
         exit(1);
