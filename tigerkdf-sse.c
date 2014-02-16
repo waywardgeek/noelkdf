@@ -1,3 +1,4 @@
+#define _POSIX_C_SOURCE 199309L // Otherwise nanosleep is not included
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -26,38 +27,14 @@ struct TigerKDFContextStruct {
 };
 
 // Print the state.
+/*
 static void printState(uint32_t state[8]) {
     uint32_t i;
     for(i = 0; i < 8; i++) {
         printf("%u\n", state[i]);
     }
 }
-
-// XOR the last hashed data from each parallel process into the result.
-static void xorIntoHash(uint8_t *hash, uint32_t hashSize, uint32_t *mem, uint32_t blocklen,
-        uint32_t numblocks, uint32_t parallelism) {
-    uint8_t data[hashSize];
-    uint32_t p;
-    for(p = 0; p < parallelism; p++) {
-        uint64_t pos = 2*(p+1)*numblocks*(uint64_t)blocklen - hashSize/sizeof(uint32_t);
-        be32enc_vect(data, mem + pos, hashSize);
-        uint32_t i;
-        for(i = 0; i < hashSize; i++) {
-            hash[i] ^= data[i];
-        }
-    }
-}
-
-// Compute the bit reversal of value.
-static uint32_t bitReverse(uint32_t value, uint32_t mask) {
-    uint32_t result = 0;
-    while(mask != 1) {
-        result = (result << 1) | (value & 1);
-        value >>= 1;
-        mask >>= 1;
-    }
-    return result;
-}
+*/
 
 // Convert a uint32_t[8] to two __m128i values.
 static void convStateFromUint32ToM128i(uint32_t state[8], __m128i *v1, __m128i *v2) {
@@ -115,6 +92,32 @@ static void *multHash(void *commonPtr) {
         //printState(state);
     }
     pthread_exit(NULL);
+}
+
+// XOR the last hashed data from each parallel process into the result.
+static void xorIntoHash(uint8_t *hash, uint32_t hashSize, uint32_t *mem, uint32_t blocklen,
+        uint32_t numblocks, uint32_t parallelism) {
+    uint8_t data[hashSize];
+    uint32_t p;
+    for(p = 0; p < parallelism; p++) {
+        uint64_t pos = 2*(p+1)*numblocks*(uint64_t)blocklen - hashSize/sizeof(uint32_t);
+        be32enc_vect(data, mem + pos, hashSize);
+        uint32_t i;
+        for(i = 0; i < hashSize; i++) {
+            hash[i] ^= data[i];
+        }
+    }
+}
+
+// Compute the bit reversal of value.
+static uint32_t bitReverse(uint32_t value, uint32_t mask) {
+    uint32_t result = 0;
+    while(mask != 1) {
+        result = (result << 1) | (value & 1);
+        value >>= 1;
+        mask >>= 1;
+    }
+    return result;
 }
 
 // Hash three blocks together with fast SSE friendly hash function optimized for high memory bandwidth.
