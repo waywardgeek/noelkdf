@@ -1,29 +1,36 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <time.h>
 #include <pthread.h>
 #include <immintrin.h>
 #include "sha256.h"
 #include "tigerkdf.h"
 
-struct TigerKDFContextStruct {
+struct TigerKDFCommonDataStruct {
     uint32_t *mem;
+    uint32_t *multHashes;
     uint8_t *hash;
     uint32_t hashSize;
     uint32_t parallelism;
-    uint32_t p;
     uint32_t blocklen;
     uint32_t numblocks;
     uint32_t repetitions;
+    uint32_t multipliesPerBlock;
+    uint32_t completedMultiplies;
+};
+
+struct TigerKDFContextStruct {
+    struct TigerKDFCommonDataStruct *common;
+    uint32_t p;
 };
 
 // Print the state.
 static void printState(uint32_t state[8]) {
     uint32_t i;
     for(i = 0; i < 8; i++) {
-        printf("%u ", state[i]);
+        printf("%u\n", state[i]);
     }
-    printf("\n");
 }
 
 // XOR the last hashed data from each parallel process into the result.
@@ -70,6 +77,46 @@ static void convStateFromM128iToUint32(__m128i *v1, __m128i *v2, uint32_t state[
     state[7] = _mm_extract_epi32(*v2, 3);
 }
 
+// Do low-bandwidth multplication hashing.
+static void *multHash(void *commonPtr) {
+    struct TigerKDFCommonDataStruct *c = (struct TigerKDFCommonDataStruct *)commonPtr;
+
+    uint8_t *hash = c->hash;
+    uint32_t hashSize = c->hashSize;
+    uint32_t numblocks = c->numblocks;
+    uint32_t repetitions = c->repetitions;
+    uint32_t *multHashes = c->multHashes;
+    uint32_t multipliesPerBlock = c->multipliesPerBlock;
+
+    uint8_t s[sizeof(uint32_t)];
+    be32enc(s, c->parallelism);
+    uint8_t threadKey[32];
+    uint32_t state[8];
+    H(threadKey, 32, hash, hashSize, s, sizeof(uint32_t));
+    be32dec_vect(state, threadKey, 32);
+    uint32_t i;
+    for(i = 1; i < numblocks*2; i++) {
+        uint32_t j;
+        for(j = 0; j < 8; j++) {
+            multHashes[8*c->completedMultiplies + j] = state[j];
+        }
+        (c->completedMultiplies)++;
+        for(j = 0; j < multipliesPerBlock * repetitions; j += 8) {
+            // This is reversible, and should not lose entropy
+            state[0] = (state[0]*(state[1] | 1)) ^ (state[2] >> 1);
+            state[1] = (state[1]*(state[2] | 1)) ^ (state[3] >> 1);
+            state[2] = (state[2]*(state[3] | 1)) ^ (state[4] >> 1);
+            state[3] = (state[3]*(state[4] | 1)) ^ (state[5] >> 1);
+            state[4] = (state[4]*(state[5] | 1)) ^ (state[6] >> 1);
+            state[5] = (state[5]*(state[6] | 1)) ^ (state[7] >> 1);
+            state[6] = (state[6]*(state[7] | 1)) ^ (state[0] >> 1);
+            state[7] = (state[7]*(state[0] | 1)) ^ (state[1] >> 1);
+        }
+        //printState(state);
+    }
+    pthread_exit(NULL);
+}
+
 // Hash three blocks together with fast SSE friendly hash function optimized for high memory bandwidth.
 static inline void hashBlocks(uint32_t state[8], uint32_t *mem, uint32_t blocklen, uint64_t fromAddr,
         uint64_t toAddr, uint32_t repetitions) {
@@ -82,7 +129,7 @@ static inline void hashBlocks(uint32_t state[8], uint32_t *mem, uint32_t blockle
     uint32_t i;
     uint32_t r;
     for(r = 0; r < repetitions; r++) {
-        for(i = 0; i < blocklen/8;) {
+        for(i = 0; i < blocklen/4;) {
             s1 = _mm_add_epi32(s1, m[prevAddr/4+i]);
             s1 = _mm_xor_si128(s1, m[fromAddr/4+i]);
             // Rotate right 7
@@ -95,20 +142,38 @@ static inline void hashBlocks(uint32_t state[8], uint32_t *mem, uint32_t blockle
             s2 = _mm_or_si128(_mm_srl_epi32(s2, shiftRightVal), _mm_sll_epi32(s2, shiftLeftVal));
             m[toAddr/4+i] = s2;
             i++;
+//convStateFromM128iToUint32(&s1, &s2, state);
+//printState(state);
         }
     }
     convStateFromM128iToUint32(&s1, &s2, state);
-    printState(state);
+}
+
+// Hash the multiply context into our state.  If the multiplies are falling behind, sleep
+// for a while.
+static void hashMultItoState(uint32_t iteration, struct TigerKDFCommonDataStruct *c, uint32_t *state) {
+    while(iteration >= c->completedMultiplies) {
+        struct timespec ts;
+        ts.tv_sec = 0;
+        ts.tv_nsec = 1000000; // 1ms
+        nanosleep(&ts, NULL);
+printf("Sleeping\n");
+    }
+    uint32_t i;
+    for(i = 0; i < 8; i++) {
+        state[i] ^= c->multHashes[iteration*8 + i];
+    }
 }
 
 // Hash memory without doing any password dependent memory addressing to thwart cache-timing-attacks.
 static void *hashWithoutPassword(void *contextPtr) {
-    struct TigerKDFContextStruct *c = (struct TigerKDFContextStruct *)contextPtr;
+    struct TigerKDFContextStruct *ctx = (struct TigerKDFContextStruct *)contextPtr;
+    struct TigerKDFCommonDataStruct *c = ctx->common;
 
     uint32_t *mem = c->mem;
     uint8_t *hash = c->hash;
     uint32_t hashSize = c->hashSize;
-    uint32_t p = c->p;
+    uint32_t p = ctx->p;
     uint32_t blocklen = c->blocklen;
     uint32_t numblocks = c->numblocks;
     uint32_t repetitions = c->repetitions;
@@ -132,7 +197,9 @@ static void *hashWithoutPassword(void *contextPtr) {
             reversePos += mask;
         }
         uint64_t fromAddr = start + (uint64_t)blocklen*reversePos;
+//printf("hashing block %u without password\n", i);
         hashBlocks(state, mem, blocklen, fromAddr, toAddr, repetitions);
+        hashMultItoState(i, c, state);
         toAddr += blocklen;
     }
     pthread_exit(NULL);
@@ -140,11 +207,12 @@ static void *hashWithoutPassword(void *contextPtr) {
 
 // Hash memory with dependent memory addressing to thwart TMTO attacks.
 static void *hashWithPassword(void *contextPtr) {
-    struct TigerKDFContextStruct *c = (struct TigerKDFContextStruct *)contextPtr;
+    struct TigerKDFContextStruct *ctx = (struct TigerKDFContextStruct *)contextPtr;
+    struct TigerKDFCommonDataStruct *c = ctx->common;
 
     uint32_t *mem = c->mem;
     uint32_t parallelism = c->parallelism;
-    uint32_t p = c->p;
+    uint32_t p = ctx->p;
     uint32_t blocklen = c->blocklen;
     uint32_t numblocks = c->numblocks;
     uint32_t repetitions = c->repetitions;
@@ -166,15 +234,17 @@ static void *hashWithPassword(void *contextPtr) {
             uint32_t b = numblocks - 1 - (distance - i);
             fromAddr = (2*numblocks*q + b)*(uint64_t)blocklen;
         }
+//printf("hashing block %u with password\n", i);
         hashBlocks(state, mem, blocklen, fromAddr, toAddr, repetitions);
+        hashMultItoState(i, c, state);
         toAddr += blocklen;
     }
     pthread_exit(NULL);
 }
 
 // The TigerKDF password hashing function.  MemSize is in KiB.
-bool TigerKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t startGarlic, uint8_t stopGarlic,
-        uint32_t blockSize, uint32_t parallelism, uint32_t repetitions, bool skipLastHash) {
+bool TigerKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint32_t multipliesPerBlock, uint8_t startGarlic,
+        uint8_t stopGarlic, uint32_t blockSize, uint32_t parallelism, uint32_t repetitions, bool skipLastHash) {
     uint64_t memlen = (1 << 10)*(uint64_t)memSize/sizeof(uint32_t);
     uint32_t blocklen = blockSize/sizeof(uint32_t);
     uint32_t numblocks = (memlen/(2*parallelism*blocklen)) << startGarlic;
@@ -183,45 +253,66 @@ bool TigerKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t startG
     if(mem == NULL) {
         return false;
     }
-    pthread_t *threads = (pthread_t *)malloc(parallelism*sizeof(pthread_t));
-    if(threads == NULL) {
+    pthread_t multThread;
+    pthread_t *memThreads = (pthread_t *)aligned_alloc(32, parallelism*sizeof(pthread_t));
+    if(memThreads == NULL) {
         return false;
     }
-    struct TigerKDFContextStruct *c = (struct TigerKDFContextStruct *)malloc(
+    struct TigerKDFContextStruct *c = (struct TigerKDFContextStruct *)aligned_alloc(32,
             parallelism*sizeof(struct TigerKDFContextStruct));
+    if(c == NULL) {
+        return false;
+    }
+    struct TigerKDFCommonDataStruct common;
+    uint32_t *multHashes = (uint32_t *)aligned_alloc(32, 8*sizeof(uint32_t)*memlen/blocklen);
+    if(multHashes == NULL) {
+        return false;
+    }
     if(c == NULL) {
         return false;
     }
     uint8_t i;
     for(i = startGarlic; i <= stopGarlic; i++) {
+        common.multHashes = multHashes;
+        common.multipliesPerBlock = multipliesPerBlock;
+        common.hash = hash;
+        common.hashSize = hashSize;
+        common.mem = mem;
+        common.numblocks = numblocks;
+        common.blocklen = blocklen;
+        common.parallelism = parallelism;
+        common.repetitions = repetitions;
+        common.multHashes = multHashes;
+        common.multipliesPerBlock = multipliesPerBlock;
+        common.completedMultiplies = 0;
+        int rc = pthread_create(&multThread, NULL, multHash, (void *)&common);
+        if(rc) {
+            fprintf(stderr, "Unable to start threads\n");
+            return false;
+        }
         uint32_t p;
         for(p = 0; p < parallelism; p++) {
+            c[p].common = &common;
             c[p].p = p;
-            c[p].hash = hash;
-            c[p].hashSize = hashSize;
-            c[p].mem = mem;
-            c[p].numblocks = numblocks;
-            c[p].blocklen = blocklen;
-            c[p].parallelism = parallelism;
-            c[p].repetitions = repetitions;
-            int rc = pthread_create(&threads[p], NULL, hashWithoutPassword, (void *)(c + p));
-            if (rc){
+            rc = pthread_create(&memThreads[p], NULL, hashWithoutPassword, (void *)(c + p));
+            if(rc) {
                 fprintf(stderr, "Unable to start threads\n");
                 return false;
             }
         }
         for(p = 0; p < parallelism; p++) {
-            (void)pthread_join(threads[p], NULL);
+            (void)pthread_join(memThreads[p], NULL);
         }
+        (void)pthread_join(multThread, NULL);
         for(p = 0; p < parallelism; p++) {
-            int rc = pthread_create(&threads[p], NULL, hashWithPassword, (void *)(c + p));
-            if (rc){
+            int rc = pthread_create(&memThreads[p], NULL, hashWithPassword, (void *)(c + p));
+            if(rc) {
                 fprintf(stderr, "Unable to start threads\n");
                 return false;
             }
         }
         for(p = 0; p < parallelism; p++) {
-            (void)pthread_join(threads[p], NULL);
+            (void)pthread_join(memThreads[p], NULL);
         }
         xorIntoHash(hash, hashSize, mem, blocklen, numblocks, parallelism);
         numblocks *= 2;
@@ -229,7 +320,9 @@ bool TigerKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t startG
             H(hash, hashSize, hash, hashSize, &i, 1);
         }
     }
+    free(multHashes);
+    free(c);
+    free(memThreads);
     free(mem);
-    free(threads);
     return true;
 }

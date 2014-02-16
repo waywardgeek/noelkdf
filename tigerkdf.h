@@ -11,21 +11,21 @@ int PHS(void *out, size_t outlen, const void *in, size_t inlen, const void *salt
 
 // A simple password hashing interface.  MemSize is in MiB.
 bool TigerKDF_SimpleHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t *password, uint32_t passwordSize,
-        uint8_t *salt, uint32_t saltSize, uint32_t memSize);
+    uint8_t *salt, uint32_t saltSize, uint32_t memSize);
 
 // The full password hashing interface.  MemSize is in MiB.
 bool TigerKDF_HashPassword(uint8_t *hash, uint32_t hashSize, uint8_t *password, uint8_t passwordSize,
-        uint8_t *salt, uint32_t saltSize, uint32_t memSize, uint8_t garlic, uint8_t *data, uint32_t dataSize,
-        uint32_t blockSize, uint32_t parallelism, uint32_t repetitions);
+    uint8_t *salt, uint32_t saltSize, uint32_t memSize, uint32_t multipliesPerBlock, uint8_t garlic,
+    uint8_t *data, uint32_t dataSize, uint32_t blockSize, uint32_t parallelism, uint32_t repetitions);
 
 // Update an existing password hash to a more difficult level of garlic.
-bool TigerKDF_UpdatePasswordHash(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint8_t oldGarlic,
-        uint8_t newGarlic, uint32_t blockSize, uint32_t parallelism, uint32_t repetitions);
+bool TigerKDF_UpdatePasswordHash(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint32_t multipliesPerBlock,
+        uint8_t oldGarlic, uint8_t newGarlic, uint32_t blockSize, uint32_t parallelism, uint32_t repetitions);
 
 // Client-side portion of work for server-relief mode.
 bool TigerKDF_ClientHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t *password, uint8_t passwordSize,
-        uint8_t *salt, uint32_t saltSize, uint32_t memSize, uint8_t garlic, uint8_t *data, uint32_t dataSize,
-        uint32_t blockSize, uint32_t parallelism, uint32_t repetitions);
+    uint8_t *salt, uint32_t saltSize, uint32_t memSize, uint32_t multipliesPerBlock, uint8_t garlic, uint8_t *data,
+    uint32_t dataSize, uint32_t blockSize, uint32_t parallelism, uint32_t repetitions);
 
 // Server portion of work for server-relief mode.
 void TigerKDF_ServerHashPassword(uint8_t *hash, uint32_t hashSize, uint8_t garlic);

@@ -27,24 +27,24 @@ void test_output(uint8_t hashlen,
                  uint8_t *pwd,   uint32_t pwdlen,
                  uint8_t *salt,  uint8_t saltlen,
                  uint8_t *data,  uint32_t datalen,
-                 uint32_t memlen, uint8_t garlic,
-                 uint32_t blocklen, uint32_t parallelism,
-                 uint32_t repetitions)
+                 uint32_t memlen, uint32_t multipliesPerBlock,
+                 uint8_t garlic, uint32_t blocklen,
+                 uint32_t parallelism, uint32_t repetitions)
 {
     uint8_t hash[hashlen];
 
     print_hex("Password: ",pwd, pwdlen);
     print_hex("Salt: ",salt, saltlen);
     print_hex("Associated data:", data, datalen);
-    printf("Memlen:    %u\n", memlen);
-    printf("Garlic:    %u\n", garlic);
-    printf("Blocklen:    %u\n", blocklen);
-    printf("Parallelism:    %u\n", parallelism);
-    printf("Repetitions:    %u\n", repetitions);
+    printf("Memlen: %u\n", memlen);
+    printf("MultipliesPerBlock: %u\n", multipliesPerBlock);
+    printf("Garlic: %u\n", garlic);
+    printf("Blocklen: %u\n", blocklen);
+    printf("Parallelism: %u\n", parallelism);
+    printf("Repetitions: %u\n", repetitions);
 
-    if(!TigerKDF_HashPassword(hash, hashlen, pwd, pwdlen,
-            salt, saltlen, memlen, garlic, data, datalen,
-            blocklen, parallelism, repetitions)) {
+    if(!TigerKDF_HashPassword(hash, hashlen, pwd, pwdlen, salt, saltlen, memlen,
+            multipliesPerBlock, garlic, data, datalen, blocklen, parallelism, repetitions)) {
         fprintf(stderr, "Password hashing failed!\n");
         exit(1);
     }
@@ -59,7 +59,7 @@ void test_output(uint8_t hashlen,
 void simpletest(char *password, char *salt, char *data, uint32_t memlen)
 {
     test_output(64, (uint8_t *)password, strlen(password), (uint8_t *)salt, strlen(salt),
-        (uint8_t *)data, strlen(data), memlen, 0, 4096, 1, 1);
+        (uint8_t *)data, strlen(data), memlen, 4096, 0, 16384, 1, 1);
 }
 
 /*******************************************************************/
@@ -71,35 +71,35 @@ void PHC_test(void)
 
     printf("****************************************** Test passwords\n");
     for(i=0; i < 256; i++) {
-        test_output(32, (uint8_t *) &i, 1, &j, 1, NULL, 0, 10, 0, 4096, 1, 1);
+        test_output(32, (uint8_t *) &i, 1, &j, 1, NULL, 0, 1*1024, 4096, 0, 16384, 1, 1);
     }
     printf("****************************************** Test salt\n");
     for(i=0; i < 256; i++) {
-        test_output(32, &j, 1, (uint8_t *) &i, 1, NULL, 0, 10, 0, 4096, 1, 1);
+        test_output(32, &j, 1, (uint8_t *) &i, 1, NULL, 0, 1*1024, 4096, 0, 16384, 1, 1);
     }
     printf("****************************************** Test data\n");
     for(i=0; i < 256; i++) {
-        test_output(32, &j, 1, &j, 1, (uint8_t *) &i, 1, 10, 0, 4096, 1, 1);
+        test_output(32, &j, 1, &j, 1, (uint8_t *) &i, 1, 10*1024, 4096, 0, 16384, 1, 1);
     }
     printf("****************************************** Test garlic\n");
     for(i=0; i < 6; i++) {
-        test_output(32, &j, 1, &j, 1, NULL, 0, 1, i, 4096, 1, 1);
+        test_output(32, &j, 1, &j, 1, NULL, 0, 1*1024, 4096, i, 16384, 1, 1);
     }
     printf("****************************************** Test parallelism\n");
     for(i=1; i < 10; i++) {
-        test_output(32, &j, 1, &j, 1, NULL, 0, 1, 0, 4096, i, 1);
+        test_output(32, &j, 1, &j, 1, NULL, 0, 1*1024, 4096, 0, 16384, i, 1);
     }
     printf("****************************************** Test repetitions\n");
     for(i=1; i < 10; i++) {
-        test_output(32, &j, 1, &j, 1, NULL, 0, 1, 0, 4096, 1, i);
+        test_output(32, &j, 1, &j, 1, NULL, 0, 1*1024, 4096, 0, 16384, 1, i);
     }
     printf("****************************************** Test blocklen\n");
     for(i=12; i < 256; i += 4) {
-        test_output(12, &j, 1, &j, 1, NULL, 0, 1, 0, i, 1, 1);
+        test_output(12, &j, 1, &j, 1, NULL, 0, 1*1024, i, 0, i, 1, 1);
     }
     printf("****************************************** Test memlen\n");
     for(i=1; i < 16; i += 4) {
-        test_output(32, &j, 1, &j, 1, NULL, 0, i, 0, 4096, 1, 1);
+        test_output(32, &j, 1, &j, 1, NULL, 0, i*1024, 4096, 0, 16384, 1, 1);
     }
 }
 
@@ -108,17 +108,17 @@ void verifyGarlic(void) {
     uint8_t hash1[32], hash2[32];
 
     if(!TigerKDF_HashPassword(hash1, 32, (uint8_t *)"password", 8,
-            (uint8_t *)"salt", 4, 1, 0, NULL, 0, 4096, 1, 1)) {
+            (uint8_t *)"salt", 4, 1*1024, 4096, 0, NULL, 0, 16384, 1, 1)) {
         fprintf(stderr, "Password hashing failed!\n");
         exit(1);
     }
     for(garlic = 1; garlic < 10; garlic++) {
         if(!TigerKDF_HashPassword(hash2, 32, (uint8_t *)"password", 8,
-                (uint8_t *)"salt", 4, 1, garlic, NULL, 0, 4096, 1, 1)) {
+                (uint8_t *)"salt", 4, 1*1024, 4096, garlic, NULL, 0, 16384, 1, 1)) {
             fprintf(stderr, "Password hashing failed!\n");
             exit(1);
         }
-        if(!TigerKDF_UpdatePasswordHash(hash1, 32, 1, garlic, garlic , 4096, 1, 1)) {
+        if(!TigerKDF_UpdatePasswordHash(hash1, 32, 1*1024, 4096, garlic, garlic , 16384, 1, 1)) {
             fprintf(stderr, "Password hashing failed!\n");
             exit(1);
         }
@@ -132,14 +132,14 @@ void verifyGarlic(void) {
 void verifyClientServer(void) {
     uint8_t hash1[32];
     if(!TigerKDF_ClientHashPassword(hash1, 32, (uint8_t *)"password", 8, (uint8_t *)"salt",
-            4, 1024, 0, (uint8_t *)"data", 4, 4096, 2, 2)) {
+            4, 1024*1024, 4096, 0, (uint8_t *)"data", 4, 16384, 2, 2)) {
         fprintf(stderr, "Password hashing failed!\n");
         exit(1);
     }
     TigerKDF_ServerHashPassword(hash1, 32, 0);
     uint8_t hash2[32];
     if(!TigerKDF_HashPassword(hash2, 32, (uint8_t *)"password", 8, (uint8_t *)"salt", 4,
-            1024, 0, (uint8_t *)"data", 4, 4096, 2, 2)) {
+            1024*1024, 4096, 0, (uint8_t *)"data", 4, 16384, 2, 2)) {
         fprintf(stderr, "Password hashing failed!\n");
         exit(1);
     }
@@ -168,11 +168,11 @@ int main()
 
     printf("****************************************** Misc tests\n");
     test_output(128, (uint8_t *)"password", strlen("password"), (uint8_t *)"salt",
-        strlen("salt"), NULL, 0, 1024, 0, 4096, 2, 1);
+        strlen("salt"), NULL, 0, 1024*1024, 4096, 0, 16384, 2, 1);
     test_output(64, (uint8_t *)"password", strlen("password"), (uint8_t *)"salt",
-        strlen("salt"), NULL, 0, 10, 0, 64, 1, 64);
+        strlen("salt"), NULL, 0, 10*1024, 4096, 0, 64, 1, 64);
     test_output(64, (uint8_t *)"password", strlen("password"), (uint8_t *)"salt",
-        strlen("salt"), NULL, 0, 10, 4, 128, 1, 1);
+        strlen("salt"), NULL, 0, 10*1024, 4096, 4, 128, 1, 1);
 
     return 0;
 }
