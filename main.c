@@ -4,19 +4,20 @@
 #include <ctype.h>
 #include <string.h>
 #include <getopt.h>
-#include "noelkdf.h"
+#include "tigerkdf.h"
 
 static void usage(char *format, ...) {
     va_list ap;
     va_start(ap, format);
     vfprintf(stderr, (char *)format, ap);
     va_end(ap);
-    fprintf(stderr, "\nUsage: noelkdf-test [OPTIONS]\n"
+    fprintf(stderr, "\nUsage: tigerkdf-test [OPTIONS]\n"
         "    -h hashSize     -- The output derived key length in bytes\n"
         "    -p password     -- Set the password to hash\n"
         "    -s salt         -- Set the salt.  Salt must be in hexidecimal\n"
         "    -g garlic       -- Multiplies memory and CPU work by 2^garlic\n"
-        "    -m memorySize   -- The ammount of memory to use in MB\n"
+        "    -m memorySize   -- The amount of memory to use in KB\n"
+        "    -M multipliesPerBlock -- The number of sequential multiplies to execute per block\n"
         "    -r repetitions  -- A multiplier on the total number of times we hash\n"
         "    -t parallelism  -- Parallelism parameter, typically the number of threads\n"
         "    -b blockSize    -- Memory hashed in the inner loop at once, in bytes\n");
@@ -96,16 +97,17 @@ static void printHex(
 }
 
 int main(int argc, char **argv) {
-    uint32_t memorySize = 1024, derivedKeySize = 32;
-    uint32_t repetitions = 1, parallelism = 1, blockSize = 4096;
+    uint32_t memorySize = 2048*1024, derivedKeySize = 32;
+    uint32_t repetitions = 1, parallelism = 2, blockSize = 16384;
     uint8_t garlic = 0;
     uint8_t *salt = (uint8_t *)"salt";
     uint32_t saltSize = 4;
     uint8_t *password = (uint8_t *)"password";
     uint32_t passwordSize = 8;
+    uint32_t multipliesPerBlock = 4096;
 
     char c;
-    while((c = getopt(argc, argv, "h:p:s:g:m:r:t:b:d")) != -1) {
+    while((c = getopt(argc, argv, "h:p:s:g:m:M:r:t:b:d")) != -1) {
         switch (c) {
         case 'h':
             derivedKeySize = readuint32_t(c, optarg);
@@ -122,6 +124,9 @@ int main(int argc, char **argv) {
             break;
         case 'm':
             memorySize = readuint32_t(c, optarg);
+            break;
+        case 'M':
+            multipliesPerBlock = readuint32_t(c, optarg);
             break;
         case 'r':
             repetitions = readuint32_t(c, optarg);
@@ -140,11 +145,11 @@ int main(int argc, char **argv) {
         usage("Extra parameters not recognised\n");
     }
 
-    printf("garlic:%u memorySize:%u repetitions:%u numThreads:%u blockSize:%u\n", 
-        garlic, memorySize, repetitions, parallelism, blockSize);
+    printf("garlic:%u memorySize:%u multipliesPerBlock:%u repetitions:%u numThreads:%u blockSize:%u\n", 
+        garlic, memorySize, multipliesPerBlock, repetitions, parallelism, blockSize);
     uint8_t *derivedKey = (uint8_t *)calloc(derivedKeySize, sizeof(uint8_t));
-    if(!NoelKDF_HashPassword(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize,
-            memorySize, garlic, NULL, 0, blockSize, parallelism, repetitions)) {
+    if(!TigerKDF_HashPassword(derivedKey, derivedKeySize, password, passwordSize, salt, saltSize,
+            memorySize, multipliesPerBlock, garlic, NULL, 0, blockSize, parallelism, repetitions)) {
         fprintf(stderr, "Key stretching failed.\n");
         return 1;
     }
