@@ -5,7 +5,8 @@
 #include <time.h>
 #include <pthread.h>
 #include <immintrin.h>
-#include "sha256.h"
+#include "blake2/blake2.h"
+#include "pbkdf2.h"
 #include "tigerkdf.h"
 
 struct TigerKDFCommonDataStruct {
@@ -27,14 +28,12 @@ struct TigerKDFContextStruct {
 };
 
 // Print the state.
-/*
 static void printState(uint32_t state[8]) {
     uint32_t i;
     for(i = 0; i < 8; i++) {
         printf("%u\n", state[i]);
     }
 }
-*/
 
 // Convert a uint32_t[8] to two __m128i values.
 static void convStateFromUint32ToM128i(uint32_t state[8], __m128i *v1, __m128i *v2) {
@@ -88,8 +87,8 @@ static void *multHash(void *commonPtr) {
             state[5] = (state[5]*(state[6] | 1)) ^ (state[7] >> 1);
             state[6] = (state[6]*(state[7] | 1)) ^ (state[0] >> 1);
             state[7] = (state[7]*(state[0] | 1)) ^ (state[1] >> 1);
+            //printState(state);
         }
-        //printState(state);
     }
     pthread_exit(NULL);
 }
@@ -160,12 +159,16 @@ static void hashMultItoState(uint32_t iteration, struct TigerKDFCommonDataStruct
         ts.tv_sec = 0;
         ts.tv_nsec = 1000000; // 1ms
         nanosleep(&ts, NULL);
-printf("Sleeping\n");
     }
     uint32_t i;
     for(i = 0; i < 8; i++) {
         state[i] ^= c->multHashes[iteration*8 + i];
     }
+    // Perform blake2s hash on the state
+    uint8_t buf[32];
+    be32enc_vect(buf, state, 32);
+    blake2s(buf, buf, NULL, 32, 32, 0);
+    be32dec_vect(state, buf, 32);
 }
 
 // Hash memory without doing any password dependent memory addressing to thwart cache-timing-attacks.

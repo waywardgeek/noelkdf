@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sha256.h"
+#include "pbkdf2.h"
 #include "tigerkdf.h"
 
 // Forward declarations

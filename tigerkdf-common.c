@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "sha256.h"
+#include "pbkdf2.h"
 #include "tigerkdf.h"
 
 bool TigerKDF(uint8_t *hash, uint32_t hashSize, uint32_t memSize, uint32_t multipliesPerBlock, uint8_t startGarlic,
@@ -30,7 +30,7 @@ static bool verifyParameters(uint32_t hashSize, uint32_t passwordSize, uint32_t 
 void H(uint8_t *hash, uint32_t hashSize, uint8_t *password, uint32_t passwordSize, uint8_t *salt,
         uint32_t saltSize) {
     uint8_t result[hashSize];
-    PBKDF2_SHA256(password, passwordSize, salt, saltSize, 1, result, hashSize);
+    PBKDF2_BLAKE2(password, passwordSize, salt, saltSize, 1, result, hashSize);
     memcpy(hash, result, hashSize);
 }
 
