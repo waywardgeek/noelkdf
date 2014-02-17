@@ -2,7 +2,7 @@ CFLAGS=-O3 -std=c11 -W -Wall -funroll-loops
 #CFLAGS=-O3 -std=c11 -W -Wall -msse4.2
 #CFLAGS=-g -std=c11 -W -Wall
 
-all: tigerkdf-ref tigerkdf tigerkdf-test fasthash parahash
+all: tigerkdf-ref tigerkdf tigerkdf-test
 
 parahash: parahash.c
 	gcc -O3 -std=c11 -pthread -msse4.2 parahash.c -o parahash

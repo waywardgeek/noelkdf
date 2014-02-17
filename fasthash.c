@@ -4,7 +4,7 @@
 #include <string.h>
 #include <getopt.h>
 #include <immintrin.h>
-#include "sha256.h"
+#include "pbkdf2.h"
 
 void SHA256_Uint8(const uint8_t input[32], uint8_t hash[32]) {
   SHA256_CTX ctx;
